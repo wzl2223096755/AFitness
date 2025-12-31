@@ -34,10 +34,10 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npm run test:unit -- --run
+        run: npm run test:unit
 
       - name: Run unit tests with coverage
-        run: npm run test:coverage -- --run
+        run: npm run test:coverage
         continue-on-error: true
 
       - name: Upload coverage report
@@ -45,7 +45,7 @@ jobs:
         if: always()
         with:
           name: frontend-coverage
-          path: Fitness/frontend/coverage/
+          path: coverage/
           retention-days: 7
 
   # 前端E2E测试任务
@@ -87,8 +87,8 @@ jobs:
         with:
           name: e2e-test-results
           path: |
-            Fitness/frontend/playwright-report/
-            Fitness/frontend/test-results/
+            playwright-report/
+            test-results/
           retention-days: 7
 
   # 后端测试任务
@@ -118,7 +118,7 @@ jobs:
         if: always()
         with:
           name: backend-test-results
-          path: Fitness/target/surefire-reports/
+          path: target/surefire-reports/
           retention-days: 7
 
   # 构建任务
