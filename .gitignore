@@ -54,3 +54,13 @@ mvn_single_test.log
 playwright-report/
 test-results/
 playwright/.cache/
+
+# --- Test Coverage ---
+coverage/
+
+# --- Lighthouse Reports ---
+lighthouse-report*.html
+lighthouse-report*.json
+
+# --- Build Artifacts ---
+*.jqwik-database

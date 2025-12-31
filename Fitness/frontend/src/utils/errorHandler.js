@@ -1,7 +1,17 @@
 // 全局错误处理器
+import { captureError, addBreadcrumb } from './errorMonitoring'
+
 class ErrorHandler {
   static handle(error, context = '') {
     console.error(`[Error${context ? ` in ${context}` : ''}]:`, error)
+    
+    // 添加面包屑用于错误追踪
+    addBreadcrumb({
+      category: 'error',
+      message: `Error in ${context || 'unknown context'}`,
+      level: 'error',
+      data: { errorMessage: error.message }
+    })
     
     // 如果是API响应错误
     if (error.response) {
@@ -141,11 +151,14 @@ class ErrorHandler {
       console.groupEnd()
     }
     
-    // 在生产环境中可以将错误发送到错误监控服务
-    if (import.meta.env.PROD) {
-      // 这里可以集成 Sentry 或其他错误监控服务
-      // Sentry.captureException(errorInfo)
-    }
+    // 上报到错误监控服务
+    captureError(new Error(errorInfo.message), {
+      type: errorInfo.type,
+      context: errorInfo.context,
+      url: errorInfo.url,
+      method: errorInfo.method,
+      status: errorInfo.status
+    })
     
     // 存储错误日志到本地（可选）
     this.storeErrorLog(errorInfo)

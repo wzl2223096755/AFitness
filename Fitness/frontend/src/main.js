@@ -15,11 +15,16 @@ import { registerSW } from 'virtual:pwa-register'
 import { initSyncManager } from './utils/syncManager'
 // 导入离线存储初始化
 import { openDatabase } from './utils/offlineStorage'
+// 导入错误监控服务
+import { initErrorMonitoring } from './utils/errorMonitoring'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+
+// 初始化错误监控服务（在其他初始化之前）
+initErrorMonitoring(app, router)
 
 // 注册懒加载指令
 registerLazyDirectives(app)
