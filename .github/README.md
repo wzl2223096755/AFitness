@@ -72,7 +72,7 @@ docker-compose up --build
 
 ### 访问应用
 
-- 前端: http://localhost:80
+- 前端: http://localhost:3001 (开发模式) / http://localhost:80 (Docker)
 - 后端 API: http://localhost:8080
 - H2 Console (开发环境): http://localhost:8080/h2-console
 
