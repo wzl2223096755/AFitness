@@ -1,0 +1,453 @@
+// =============================================================================
+// Spacing System - Typography and Layout Optimization
+// =============================================================================
+// 本文件定义间距系统，包括语义化间距令牌、组件间距变量和工具类
+// Requirements: 4.1, 4.2, 4.3, 4.4
+
+@use 'tokens' as *;
+
+// =============================================================================
+// Semantic Spacing Tokens
+// =============================================================================
+// 语义化间距令牌，用于特定场景
+// Requirements: 4.3
+
+$semantic-spacing: (
+  'tight': $spacing-tight,      // 8px - 紧凑间距
+  'normal': $spacing-normal,    // 16px - 标准间距
+  'loose': $spacing-loose,      // 24px - 宽松间距
+  'section': $spacing-section   // 32px - 区块间距
+) !default;
+
+// =============================================================================
+// Card Internal Spacing
+// =============================================================================
+// 卡片内边距变量（sm、md、lg）
+// Requirements: 6.1, 6.2
+
+$card-padding-sm: $spacing-4 !default;    // 16px
+$card-padding-md: $spacing-5 !default;    // 20px
+$card-padding-lg: $spacing-6 !default;    // 24px
+$card-padding-xl: $spacing-7 !default;    // 28px
+
+// Card spacing map for programmatic access
+$card-paddings: (
+  'sm': $card-padding-sm,
+  'md': $card-padding-md,
+  'lg': $card-padding-lg,
+  'xl': $card-padding-xl
+) !default;
+
+// =============================================================================
+// Form Field Spacing
+// =============================================================================
+// 表单字段间距变量
+// Requirements: 8.2
+
+$form-field-gap: $spacing-4 !default;     // 16px - 字段间垂直间距
+$form-field-gap-sm: $spacing-3 !default;  // 12px - 紧凑字段间距
+$form-field-gap-lg: $spacing-6 !default;  // 24px - 宽松字段间距
+$form-group-gap: $spacing-6 !default;     // 24px - 字段组间距
+$form-label-gap: $spacing-2 !default;     // 8px - 标签与输入框间距
+
+// Form spacing map for programmatic access
+$form-spacings: (
+  'field-gap': $form-field-gap,
+  'field-gap-sm': $form-field-gap-sm,
+  'field-gap-lg': $form-field-gap-lg,
+  'group-gap': $form-group-gap,
+  'label-gap': $form-label-gap
+) !default;
+
+// =============================================================================
+// Table Cell Padding
+// =============================================================================
+// 表格单元格内边距变量
+// Requirements: 7.3
+
+
+$table-cell-padding-y: $spacing-3 !default;     // 12px - 垂直内边距
+$table-cell-padding-x: $spacing-4 !default;     // 16px - 水平内边距
+$table-cell-padding-y-sm: $spacing-2 !default;  // 8px - 紧凑垂直内边距
+$table-cell-padding-y-lg: $spacing-4 !default;  // 16px - 宽松垂直内边距
+$table-header-padding-y: $spacing-3 !default;   // 12px - 表头垂直内边距
+$table-header-padding-x: $spacing-4 !default;   // 16px - 表头水平内边距
+
+// Table spacing map for programmatic access
+$table-spacings: (
+  'cell-padding-y': $table-cell-padding-y,
+  'cell-padding-x': $table-cell-padding-x,
+  'cell-padding-y-sm': $table-cell-padding-y-sm,
+  'cell-padding-y-lg': $table-cell-padding-y-lg,
+  'header-padding-y': $table-header-padding-y,
+  'header-padding-x': $table-header-padding-x
+) !default;
+
+// =============================================================================
+// Gutter Widths (Responsive)
+// =============================================================================
+// 响应式 gutter 宽度
+// Requirements: 3.3
+
+$gutter-sm: $spacing-4 !default;    // 16px - 移动端
+$gutter-md: $spacing-5 !default;    // 20px - 平板
+$gutter-lg: $spacing-6 !default;    // 24px - 桌面端
+
+// Gutter map for programmatic access
+$gutters: (
+  'sm': $gutter-sm,
+  'md': $gutter-md,
+  'lg': $gutter-lg
+) !default;
+
+// =============================================================================
+// CSS Custom Properties Export
+// =============================================================================
+// 导出为 CSS 自定义属性，便于在组件中使用
+
+:root {
+  // Semantic spacing
+  --spacing-tight: #{$spacing-tight};
+  --spacing-normal: #{$spacing-normal};
+  --spacing-loose: #{$spacing-loose};
+  --spacing-section: #{$spacing-section};
+
+  // Card padding
+  --card-padding-sm: #{$card-padding-sm};
+  --card-padding-md: #{$card-padding-md};
+  --card-padding-lg: #{$card-padding-lg};
+  --card-padding-xl: #{$card-padding-xl};
+
+  // Form spacing
+  --form-field-gap: #{$form-field-gap};
+  --form-field-gap-sm: #{$form-field-gap-sm};
+  --form-field-gap-lg: #{$form-field-gap-lg};
+  --form-group-gap: #{$form-group-gap};
+  --form-label-gap: #{$form-label-gap};
+
+  // Table spacing
+  --table-cell-padding-y: #{$table-cell-padding-y};
+  --table-cell-padding-x: #{$table-cell-padding-x};
+  --table-cell-padding-y-sm: #{$table-cell-padding-y-sm};
+  --table-cell-padding-y-lg: #{$table-cell-padding-y-lg};
+  --table-header-padding-y: #{$table-header-padding-y};
+  --table-header-padding-x: #{$table-header-padding-x};
+
+  // Gutters
+  --gutter-sm: #{$gutter-sm};
+  --gutter-md: #{$gutter-md};
+  --gutter-lg: #{$gutter-lg};
+}
+
+// =============================================================================
+// Spacing Utility Classes
+// =============================================================================
+// 间距工具类（m-0 到 m-16、p-0 到 p-16）
+// Requirements: 4.1, 4.2
+
+// Margin utilities
+@each $key, $value in $spacing-scale {
+  // All sides
+  .m-#{$key} {
+    margin: $value !important;
+  }
+
+  // Horizontal (left and right)
+  .mx-#{$key} {
+    margin-left: $value !important;
+    margin-right: $value !important;
+  }
+
+  // Vertical (top and bottom)
+  .my-#{$key} {
+    margin-top: $value !important;
+    margin-bottom: $value !important;
+  }
+
+  // Individual sides
+  .mt-#{$key} {
+    margin-top: $value !important;
+  }
+
+  .mr-#{$key} {
+    margin-right: $value !important;
+  }
+
+  .mb-#{$key} {
+    margin-bottom: $value !important;
+  }
+
+  .ml-#{$key} {
+    margin-left: $value !important;
+  }
+}
+
+// Padding utilities
+@each $key, $value in $spacing-scale {
+  // All sides
+  .p-#{$key} {
+    padding: $value !important;
+  }
+
+  // Horizontal (left and right)
+  .px-#{$key} {
+    padding-left: $value !important;
+    padding-right: $value !important;
+  }
+
+  // Vertical (top and bottom)
+  .py-#{$key} {
+    padding-top: $value !important;
+    padding-bottom: $value !important;
+  }
+
+  // Individual sides
+  .pt-#{$key} {
+    padding-top: $value !important;
+  }
+
+  .pr-#{$key} {
+    padding-right: $value !important;
+  }
+
+  .pb-#{$key} {
+    padding-bottom: $value !important;
+  }
+
+  .pl-#{$key} {
+    padding-left: $value !important;
+  }
+}
+
+// =============================================================================
+// Semantic Spacing Utility Classes
+// =============================================================================
+// 语义化间距工具类
+
+// Semantic margin utilities
+@each $name, $value in $semantic-spacing {
+  .m-#{$name} {
+    margin: $value !important;
+  }
+
+  .mx-#{$name} {
+    margin-left: $value !important;
+    margin-right: $value !important;
+  }
+
+  .my-#{$name} {
+    margin-top: $value !important;
+    margin-bottom: $value !important;
+  }
+
+  .mt-#{$name} {
+    margin-top: $value !important;
+  }
+
+  .mb-#{$name} {
+    margin-bottom: $value !important;
+  }
+}
+
+// Semantic padding utilities
+@each $name, $value in $semantic-spacing {
+  .p-#{$name} {
+    padding: $value !important;
+  }
+
+  .px-#{$name} {
+    padding-left: $value !important;
+    padding-right: $value !important;
+  }
+
+  .py-#{$name} {
+    padding-top: $value !important;
+    padding-bottom: $value !important;
+  }
+
+  .pt-#{$name} {
+    padding-top: $value !important;
+  }
+
+  .pb-#{$name} {
+    padding-bottom: $value !important;
+  }
+}
+
+// =============================================================================
+// Gap Utility Classes (for Flexbox and Grid)
+// =============================================================================
+// 间隙工具类，用于 Flexbox 和 Grid 布局
+
+@each $key, $value in $spacing-scale {
+  .gap-#{$key} {
+    gap: $value !important;
+  }
+
+  .gap-x-#{$key} {
+    column-gap: $value !important;
+  }
+
+  .gap-y-#{$key} {
+    row-gap: $value !important;
+  }
+}
+
+// Semantic gap utilities
+@each $name, $value in $semantic-spacing {
+  .gap-#{$name} {
+    gap: $value !important;
+  }
+}
+
+// =============================================================================
+// Space Between Utility Classes
+// =============================================================================
+// 子元素间距工具类（使用 > * + * 选择器）
+
+@each $key, $value in $spacing-scale {
+  .space-x-#{$key} > * + * {
+    margin-left: $value !important;
+  }
+
+  .space-y-#{$key} > * + * {
+    margin-top: $value !important;
+  }
+}
+
+// =============================================================================
+// Component-Specific Spacing Mixins
+// =============================================================================
+// 组件特定的间距混入
+
+// Card padding mixin
+@mixin card-padding($size: 'md') {
+  @if $size == 'sm' {
+    padding: $card-padding-sm;
+  } @else if $size == 'lg' {
+    padding: $card-padding-lg;
+  } @else if $size == 'xl' {
+    padding: $card-padding-xl;
+  } @else {
+    padding: $card-padding-md;
+  }
+}
+
+// Form field spacing mixin
+@mixin form-field-spacing($size: 'normal') {
+  @if $size == 'sm' {
+    margin-bottom: $form-field-gap-sm;
+  } @else if $size == 'lg' {
+    margin-bottom: $form-field-gap-lg;
+  } @else {
+    margin-bottom: $form-field-gap;
+  }
+}
+
+// Table cell padding mixin
+@mixin table-cell-padding($size: 'normal') {
+  @if $size == 'sm' {
+    padding: $table-cell-padding-y-sm $table-cell-padding-x;
+  } @else if $size == 'lg' {
+    padding: $table-cell-padding-y-lg $table-cell-padding-x;
+  } @else {
+    padding: $table-cell-padding-y $table-cell-padding-x;
+  }
+}
+
+// Section spacing mixin
+@mixin section-spacing {
+  margin-bottom: $spacing-section;
+
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: $spacing-12;
+  }
+}
+
+// =============================================================================
+// Responsive Spacing Utilities
+// =============================================================================
+// 响应式间距工具类
+// Requirements: 4.5
+
+// Mobile-first responsive margin utilities
+@media (min-width: $breakpoint-sm) {
+  @each $key, $value in $spacing-scale {
+    .sm\:m-#{$key} {
+      margin: $value !important;
+    }
+    .sm\:mx-#{$key} {
+      margin-left: $value !important;
+      margin-right: $value !important;
+    }
+    .sm\:my-#{$key} {
+      margin-top: $value !important;
+      margin-bottom: $value !important;
+    }
+    .sm\:p-#{$key} {
+      padding: $value !important;
+    }
+    .sm\:px-#{$key} {
+      padding-left: $value !important;
+      padding-right: $value !important;
+    }
+    .sm\:py-#{$key} {
+      padding-top: $value !important;
+      padding-bottom: $value !important;
+    }
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  @each $key, $value in $spacing-scale {
+    .md\:m-#{$key} {
+      margin: $value !important;
+    }
+    .md\:mx-#{$key} {
+      margin-left: $value !important;
+      margin-right: $value !important;
+    }
+    .md\:my-#{$key} {
+      margin-top: $value !important;
+      margin-bottom: $value !important;
+    }
+    .md\:p-#{$key} {
+      padding: $value !important;
+    }
+    .md\:px-#{$key} {
+      padding-left: $value !important;
+      padding-right: $value !important;
+    }
+    .md\:py-#{$key} {
+      padding-top: $value !important;
+      padding-bottom: $value !important;
+    }
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  @each $key, $value in $spacing-scale {
+    .lg\:m-#{$key} {
+      margin: $value !important;
+    }
+    .lg\:mx-#{$key} {
+      margin-left: $value !important;
+      margin-right: $value !important;
+    }
+    .lg\:my-#{$key} {
+      margin-top: $value !important;
+      margin-bottom: $value !important;
+    }
+    .lg\:p-#{$key} {
+      padding: $value !important;
+    }
+    .lg\:px-#{$key} {
+      padding-left: $value !important;
+      padding-right: $value !important;
+    }
+    .lg\:py-#{$key} {
+      padding-top: $value !important;
+      padding-bottom: $value !important;
+    }
+  }
+}

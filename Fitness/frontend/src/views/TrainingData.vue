@@ -1,15 +1,15 @@
 <template>
-  <div class="training-data-page">
+  <div class="training-data-page p-5">
     <!-- 页面头部 -->
-    <div class="page-header">
-      <h1>训练数据</h1>
-      <div class="page-description">记录每次训练的详细数据，追踪您的进步</div>
+    <div class="page-header mb-6">
+      <h1 class="responsive-h1 font-bold mb-2">训练数据</h1>
+      <div class="page-description text-sm leading-relaxed">记录每次训练的详细数据，追踪您的进步</div>
     </div>
     
     <!-- 数据录入表单卡片 -->
-    <div class="form-card">
-      <div class="card-header">
-        <h3>训练数据录入</h3>
+    <div class="form-card p-6 mb-6">
+      <div class="card-header mb-5">
+        <h3 class="text-lg font-semibold">训练数据录入</h3>
       </div>
       <el-form 
         :model="trainingForm" 
@@ -171,10 +171,10 @@
     </div>
     
     <!-- 最近训练记录 -->
-    <div class="recent-records">
-      <div class="card-header">
-        <h3>最近训练记录</h3>
-        <div class="record-actions">
+    <div class="recent-records p-6">
+      <div class="card-header mb-5">
+        <h3 class="text-lg font-semibold">最近训练记录</h3>
+        <div class="record-actions gap-3">
           <el-select v-model="filterOptions.exerciseType" placeholder="筛选动作类型" @change="handleFilterChange">
             <el-option label="全部" value="" />
             <el-option label="上肢" value="上肢" />
@@ -846,52 +846,41 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.training-data-page {
-  padding: 20px;
-}
+/* TrainingData - Using design tokens from typography and layout system */
+/* Requirements: 7.1, 7.2, 7.3 - Table and list typography */
 
-.page-header {
-  margin-bottom: 24px;
+.training-data-page {
+  background: var(--bg-color, #f5f7fa);
+  min-height: 100vh;
 }
 
 .page-header h1 {
-  margin: 0 0 8px 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--primary-text-color);
+  color: var(--text-primary, #1e293b);
 }
 
 .page-description {
-  font-size: 14px;
-  color: var(--secondary-text-color);
-  margin-bottom: 0;
+  color: var(--text-secondary, #64748b);
 }
 
 .form-card {
-  background: var(--white);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--box-shadow);
-  padding: 24px;
-  margin-bottom: 24px;
+  background: var(--white, #ffffff);
+  border-radius: var(--border-radius-lg, 16px);
+  box-shadow: var(--box-shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .card-header h3 {
+  color: var(--text-primary, #1e293b);
   margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--primary-text-color);
 }
 
 .record-actions {
   display: flex;
-  gap: 10px;
   align-items: center;
 }
 
@@ -937,33 +926,48 @@ onUnmounted(() => {
 }
 
 .recent-records {
-  background: var(--white);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--box-shadow);
-  padding: 24px;
+  background: var(--white, #ffffff);
+  border-radius: var(--border-radius-lg, 16px);
+  box-shadow: var(--box-shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
 .pagination-container {
-  margin-top: 20px;
+  margin-top: var(--spacing-5, 1.25rem);
   display: flex;
   justify-content: flex-end;
 }
 
+/* Table styling - Requirements: 7.1, 7.2, 7.3 */
+/* Using tabular-nums for numeric data */
 .weight-value {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium, 500);
+  font-variant-numeric: tabular-nums;
 }
 
 .highlight-volume {
-  font-weight: 600;
-  color: var(--success-color);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--success-color, #10b981);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Table cell padding - Requirements: 7.3 - 12-16px vertical padding */
+:deep(.el-table .cell) {
+  padding: var(--table-cell-padding-y, 0.75rem) var(--table-cell-padding-x, 1rem);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Table header styling - Requirements: 7.2 */
+:deep(.el-table th .cell) {
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-primary, #1e293b);
 }
 
 .table-row-even {
-  background-color: var(--table-even-row-bg);
+  background-color: var(--table-even-row-bg, #f9fafb);
 }
 
 .table-row-odd {
-  background-color: var(--white);
+  background-color: var(--white, #ffffff);
 }
 
 .training-volume .el-input__wrapper {

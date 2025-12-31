@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"))
-    @Cacheable(value = "users", key = "#username")
+    @Cacheable(value = "users", key = "'user:' + #username", unless = "#result == null")
     Optional<User> findByUsername(String username);
     
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"))

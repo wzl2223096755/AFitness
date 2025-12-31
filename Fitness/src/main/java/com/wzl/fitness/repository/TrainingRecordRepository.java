@@ -134,4 +134,11 @@ public interface TrainingRecordRepository extends JpaRepository<TrainingRecord, 
      */
     @Query(value = "SELECT COUNT(*) FROM training_records WHERE user_id = :userId AND deleted = true", nativeQuery = true)
     long countDeletedByUserId(@Param("userId") Long userId);
+    
+    /**
+     * 删除用户的所有训练记录
+     */
+    @Modifying
+    @Query("DELETE FROM TrainingRecord tr WHERE tr.user.id = :userId")
+    void deleteAllByUserId(@Param("userId") Long userId);
 }

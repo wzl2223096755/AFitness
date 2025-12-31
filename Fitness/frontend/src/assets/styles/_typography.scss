@@ -1,0 +1,941 @@
+// =============================================================================
+// Typography System - Typography and Layout Optimization
+// =============================================================================
+// 本文件定义排版系统，包括标题混入、正文混入、流体排版和文本工具类
+// Requirements: 1.1, 1.2, 1.3, 2.3
+
+@use 'sass:math';
+
+// Import design tokens
+@import './tokens';
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+/// Strip unit from a value
+/// @param {Number} $value - Value with unit
+/// @return {Number} - Unitless value
+@function strip-unit($value) {
+  @if type-of($value) == 'number' and not unitless($value) {
+    @return math.div($value, ($value * 0 + 1));
+  }
+  @return $value;
+}
+
+// =============================================================================
+// Heading Mixins
+// =============================================================================
+// 标题混入，使用 600-800 字重建立视觉层次
+// Requirements: 1.2
+
+/// Heading 1 Style
+/// Font size: 4xl (36px), Weight: extrabold (800)
+@mixin heading-1 {
+  font-family: $font-family-sans;
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-extrabold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+/// Heading 2 Style
+/// Font size: 3xl (30px), Weight: bold (700)
+@mixin heading-2 {
+  font-family: $font-family-sans;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+/// Heading 3 Style
+/// Font size: 2xl (24px), Weight: semibold (600)
+@mixin heading-3 {
+  font-family: $font-family-sans;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+  letter-spacing: $letter-spacing-normal;
+}
+
+/// Heading 4 Style
+/// Font size: xl (20px), Weight: semibold (600)
+@mixin heading-4 {
+  font-family: $font-family-sans;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+  letter-spacing: $letter-spacing-normal;
+}
+
+// =============================================================================
+// Body Text Mixins
+// =============================================================================
+// 正文混入，行高在 1.4-1.8 范围内确保舒适阅读
+// Requirements: 1.3
+
+/// Body Text Mixin with size variants
+/// @param {String} $size - Size variant: 'sm', 'base', or 'lg'
+@mixin body-text($size: 'base') {
+  font-family: $font-family-sans;
+  
+  @if $size == 'sm' {
+    font-size: $font-size-sm;
+    line-height: $line-height-normal; // 1.5
+  } @else if $size == 'lg' {
+    font-size: $font-size-lg;
+    line-height: $line-height-relaxed; // 1.625
+  } @else {
+    // base
+    font-size: $font-size-base;
+    line-height: $line-height-relaxed; // 1.625
+  }
+  
+  font-weight: $font-weight-normal;
+  letter-spacing: $letter-spacing-normal;
+}
+
+/// Small body text
+@mixin body-sm {
+  @include body-text('sm');
+}
+
+/// Base body text
+@mixin body-base {
+  @include body-text('base');
+}
+
+/// Large body text
+@mixin body-lg {
+  @include body-text('lg');
+}
+
+// =============================================================================
+// Fluid Typography Mixin
+// =============================================================================
+// 使用 CSS clamp() 实现流体排版
+// Requirements: 2.3
+
+/// Fluid Typography Mixin
+/// Creates responsive font sizes that scale smoothly between breakpoints
+/// @param {Length} $min-size - Minimum font size
+/// @param {Length} $max-size - Maximum font size
+/// @param {Length} $min-vw - Minimum viewport width (default: 320px)
+/// @param {Length} $max-vw - Maximum viewport width (default: 1200px)
+@mixin fluid-type($min-size, $max-size, $min-vw: 320px, $max-vw: 1200px) {
+  // Calculate the slope and intercept for the linear interpolation
+  $min-size-unitless: strip-unit($min-size);
+  $max-size-unitless: strip-unit($max-size);
+  $min-vw-unitless: strip-unit($min-vw);
+  $max-vw-unitless: strip-unit($max-vw);
+  
+  // Calculate preferred value
+  $slope: math.div(($max-size-unitless - $min-size-unitless), ($max-vw-unitless - $min-vw-unitless));
+  $intercept: $min-size-unitless - ($slope * $min-vw-unitless);
+  
+  // Convert slope to vw units and intercept to rem
+  $slope-vw: $slope * 100;
+  
+  // Use clamp for fluid typography
+  font-size: clamp(#{$min-size}, #{$intercept}px + #{$slope-vw}vw, #{$max-size});
+}
+
+/// Fluid Heading 1
+@mixin fluid-heading-1 {
+  @include fluid-type(28px, 36px);
+  font-weight: $font-weight-extrabold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+/// Fluid Heading 2
+@mixin fluid-heading-2 {
+  @include fluid-type(24px, 30px);
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+/// Fluid Heading 3
+@mixin fluid-heading-3 {
+  @include fluid-type(20px, 24px);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+}
+
+/// Fluid Heading 4
+@mixin fluid-heading-4 {
+  @include fluid-type(18px, 20px);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+}
+
+// =============================================================================
+// Text Utility Classes
+// =============================================================================
+// 文本工具类，从 text-xs 到 text-5xl
+// Requirements: 1.1
+
+// Font size utilities
+.text-2xs {
+  font-size: $font-size-2xs;
+}
+
+.text-xs {
+  font-size: $font-size-xs;
+}
+
+.text-sm {
+  font-size: $font-size-sm;
+}
+
+.text-base {
+  font-size: $font-size-base;
+}
+
+.text-lg {
+  font-size: $font-size-lg;
+}
+
+.text-xl {
+  font-size: $font-size-xl;
+}
+
+.text-2xl {
+  font-size: $font-size-2xl;
+}
+
+.text-3xl {
+  font-size: $font-size-3xl;
+}
+
+.text-4xl {
+  font-size: $font-size-4xl;
+}
+
+.text-5xl {
+  font-size: $font-size-5xl;
+}
+
+// Font weight utilities
+.font-light {
+  font-weight: $font-weight-light;
+}
+
+.font-normal {
+  font-weight: $font-weight-normal;
+}
+
+.font-medium {
+  font-weight: $font-weight-medium;
+}
+
+.font-semibold {
+  font-weight: $font-weight-semibold;
+}
+
+.font-bold {
+  font-weight: $font-weight-bold;
+}
+
+.font-extrabold {
+  font-weight: $font-weight-extrabold;
+}
+
+// Line height utilities
+.leading-none {
+  line-height: $line-height-none;
+}
+
+.leading-tight {
+  line-height: $line-height-tight;
+}
+
+.leading-snug {
+  line-height: $line-height-snug;
+}
+
+.leading-normal {
+  line-height: $line-height-normal;
+}
+
+.leading-relaxed {
+  line-height: $line-height-relaxed;
+}
+
+.leading-loose {
+  line-height: $line-height-loose;
+}
+
+// Letter spacing utilities
+.tracking-tighter {
+  letter-spacing: $letter-spacing-tighter;
+}
+
+.tracking-tight {
+  letter-spacing: $letter-spacing-tight;
+}
+
+.tracking-normal {
+  letter-spacing: $letter-spacing-normal;
+}
+
+.tracking-wide {
+  letter-spacing: $letter-spacing-wide;
+}
+
+.tracking-wider {
+  letter-spacing: $letter-spacing-wider;
+}
+
+.tracking-widest {
+  letter-spacing: $letter-spacing-widest;
+}
+
+// =============================================================================
+// Heading Element Styles
+// =============================================================================
+// 标题元素样式，应用标题混入
+// Requirements: 5.1 - 定义至少 4 级标题样式 (h1, h2, h3, h4)
+// Requirements: 5.4 - 数据值使用更大字号和更重字重
+
+h1,
+.h1 {
+  @include heading-1;
+  margin-top: 0;
+  margin-bottom: $spacing-6;
+}
+
+h2,
+.h2 {
+  @include heading-2;
+  margin-top: $spacing-8;
+  margin-bottom: $spacing-4;
+}
+
+h3,
+.h3 {
+  @include heading-3;
+  margin-top: $spacing-6;
+  margin-bottom: $spacing-3;
+}
+
+h4,
+.h4 {
+  @include heading-4;
+  margin-top: $spacing-4;
+  margin-bottom: $spacing-2;
+}
+
+// =============================================================================
+// Visual Hierarchy Styles
+// =============================================================================
+// Requirements: 5.1, 5.4, 5.5 - 视觉层次优化
+
+// 页面标题样式
+.page-title {
+  @include heading-1;
+  margin-bottom: $spacing-6;
+  color: var(--text-primary, #ffffff);
+}
+
+// 区块标题样式
+.section-title {
+  @include heading-2;
+  margin-bottom: $spacing-4;
+  color: var(--text-primary, #ffffff);
+}
+
+// 卡片标题样式
+.card-title {
+  @include heading-3;
+  margin-bottom: $spacing-3;
+  color: var(--text-primary, #ffffff);
+}
+
+// 子标题样式
+.subtitle {
+  @include heading-4;
+  margin-bottom: $spacing-2;
+  color: var(--text-regular, #e0e0ff);
+}
+
+// =============================================================================
+// Data Value Styles
+// =============================================================================
+// Requirements: 5.4 - 数据值使用更大字号和更重字重
+
+// 大型数据值（用于仪表盘主要指标）
+.data-value {
+  font-family: $font-family-sans;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary, #ffffff);
+  
+  &--sm {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+  }
+  
+  &--lg {
+    font-size: $font-size-4xl;
+    font-weight: $font-weight-extrabold;
+  }
+  
+  &--xl {
+    font-size: $font-size-5xl;
+    font-weight: $font-weight-extrabold;
+  }
+}
+
+// 数据标签（与数据值配对使用）
+.data-label {
+  font-family: $font-family-sans;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-normal;
+  color: var(--text-secondary, #8888aa);
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+  
+  &--lg {
+    font-size: $font-size-base;
+  }
+}
+
+// 数据单位（用于数值后的单位显示）
+.data-unit {
+  font-family: $font-family-sans;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-normal;
+  color: var(--text-secondary, #8888aa);
+  margin-left: $spacing-1;
+}
+
+// 数据组合（标签 + 值的组合）
+.data-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  
+  &--horizontal {
+    flex-direction: row;
+    align-items: baseline;
+    gap: $spacing-2;
+  }
+  
+  &--inline {
+    flex-direction: row;
+    align-items: center;
+    gap: $spacing-3;
+  }
+}
+
+// =============================================================================
+// Icon and Text Alignment
+// =============================================================================
+// Requirements: 5.5 - 图标尺寸与文本对齐
+
+// 图标尺寸变量（与文本尺寸对应）
+$icon-size-xs: 0.75rem;   // 12px - 对应 text-xs
+$icon-size-sm: 0.875rem;  // 14px - 对应 text-sm
+$icon-size-base: 1rem;    // 16px - 对应 text-base
+$icon-size-lg: 1.25rem;   // 20px - 对应 text-lg
+$icon-size-xl: 1.5rem;    // 24px - 对应 text-xl
+$icon-size-2xl: 2rem;     // 32px - 对应 text-2xl
+$icon-size-3xl: 2.5rem;   // 40px - 对应 text-3xl
+$icon-size-4xl: 3rem;     // 48px - 对应 text-4xl
+
+// 图标尺寸工具类
+.icon-xs {
+  font-size: $icon-size-xs;
+  width: $icon-size-xs;
+  height: $icon-size-xs;
+}
+
+.icon-sm {
+  font-size: $icon-size-sm;
+  width: $icon-size-sm;
+  height: $icon-size-sm;
+}
+
+.icon-base {
+  font-size: $icon-size-base;
+  width: $icon-size-base;
+  height: $icon-size-base;
+}
+
+.icon-lg {
+  font-size: $icon-size-lg;
+  width: $icon-size-lg;
+  height: $icon-size-lg;
+}
+
+.icon-xl {
+  font-size: $icon-size-xl;
+  width: $icon-size-xl;
+  height: $icon-size-xl;
+}
+
+.icon-2xl {
+  font-size: $icon-size-2xl;
+  width: $icon-size-2xl;
+  height: $icon-size-2xl;
+}
+
+.icon-3xl {
+  font-size: $icon-size-3xl;
+  width: $icon-size-3xl;
+  height: $icon-size-3xl;
+}
+
+.icon-4xl {
+  font-size: $icon-size-4xl;
+  width: $icon-size-4xl;
+  height: $icon-size-4xl;
+}
+
+// 图标与文本对齐混入
+@mixin icon-text-align($size: 'base') {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  
+  @if $size == 'xs' {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-xs;
+      width: $icon-size-xs;
+      height: $icon-size-xs;
+    }
+  } @else if $size == 'sm' {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-sm;
+      width: $icon-size-sm;
+      height: $icon-size-sm;
+    }
+  } @else if $size == 'lg' {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-lg;
+      width: $icon-size-lg;
+      height: $icon-size-lg;
+    }
+  } @else if $size == 'xl' {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-xl;
+      width: $icon-size-xl;
+      height: $icon-size-xl;
+    }
+  } @else {
+    // base
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-base;
+      width: $icon-size-base;
+      height: $icon-size-base;
+    }
+  }
+}
+
+// 图标文本对齐工具类
+.icon-text {
+  @include icon-text-align('base');
+  
+  &--xs {
+    @include icon-text-align('xs');
+  }
+  
+  &--sm {
+    @include icon-text-align('sm');
+  }
+  
+  &--lg {
+    @include icon-text-align('lg');
+  }
+  
+  &--xl {
+    @include icon-text-align('xl');
+  }
+}
+
+// 带图标的标题样式
+.heading-with-icon {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  
+  .icon, [class*="el-icon"], svg {
+    flex-shrink: 0;
+  }
+  
+  &.h1, &.heading-1 {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-4xl;
+      width: $icon-size-4xl;
+      height: $icon-size-4xl;
+    }
+  }
+  
+  &.h2, &.heading-2 {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-3xl;
+      width: $icon-size-3xl;
+      height: $icon-size-3xl;
+    }
+  }
+  
+  &.h3, &.heading-3 {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-2xl;
+      width: $icon-size-2xl;
+      height: $icon-size-2xl;
+    }
+  }
+  
+  &.h4, &.heading-4 {
+    .icon, [class*="el-icon"], svg {
+      font-size: $icon-size-xl;
+      width: $icon-size-xl;
+      height: $icon-size-xl;
+    }
+  }
+}
+
+// =============================================================================
+// Body Text Element Styles
+// =============================================================================
+// 正文元素样式
+
+p,
+.body-text {
+  @include body-base;
+}
+
+.body-sm {
+  @include body-sm;
+}
+
+.body-lg {
+  @include body-lg;
+}
+
+// =============================================================================
+// Special Text Styles
+// =============================================================================
+
+// Monospace text for code
+.font-mono {
+  font-family: $font-family-mono;
+}
+
+// Tabular numbers for data tables
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+// Text truncation
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Multi-line truncation
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--line-clamp, 3);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-1 {
+  --line-clamp: 1;
+  @extend .line-clamp;
+}
+
+.line-clamp-2 {
+  --line-clamp: 2;
+  @extend .line-clamp;
+}
+
+.line-clamp-3 {
+  --line-clamp: 3;
+  @extend .line-clamp;
+}
+
+// =============================================================================
+// Responsive Typography System
+// =============================================================================
+// 响应式字体缩放规则
+// Requirements: 2.1, 2.2, 2.4
+
+// Responsive breakpoints for typography
+$typography-breakpoint-tablet: 768px;
+$typography-breakpoint-mobile: 480px;
+
+// Minimum font sizes (Requirements 2.4: minimum 14px for body text)
+$min-font-size-body: 14px;
+$min-font-size-heading-4: 16px;
+$min-font-size-heading-3: 18px;
+$min-font-size-heading-2: 22px;
+$min-font-size-heading-1: 26px;
+
+// Desktop font sizes (base values)
+$desktop-font-size-base: 16px;
+$desktop-font-size-lg: 18px;
+$desktop-font-size-xl: 20px;
+$desktop-font-size-2xl: 24px;
+$desktop-font-size-3xl: 30px;
+$desktop-font-size-4xl: 36px;
+
+// Tablet font sizes (10-15% reduction at 768px - Requirements 2.1)
+$tablet-font-size-base: 14.4px;   // 16px * 0.9 = 14.4px (10% reduction)
+$tablet-font-size-lg: 16.2px;     // 18px * 0.9 = 16.2px
+$tablet-font-size-xl: 18px;       // 20px * 0.9 = 18px
+$tablet-font-size-2xl: 21.6px;    // 24px * 0.9 = 21.6px
+$tablet-font-size-3xl: 27px;      // 30px * 0.9 = 27px
+$tablet-font-size-4xl: 32.4px;    // 36px * 0.9 = 32.4px
+
+// Mobile font sizes (proportional reduction at 480px - Requirements 2.2)
+$mobile-font-size-base: 14px;     // Minimum 14px
+$mobile-font-size-lg: 15px;
+$mobile-font-size-xl: 16px;
+$mobile-font-size-2xl: 18px;
+$mobile-font-size-3xl: 22px;
+$mobile-font-size-4xl: 26px;
+
+/// Responsive Font Size Mixin using clamp()
+/// Creates fluid typography that scales between mobile and desktop
+/// @param {Length} $min-size - Minimum font size (mobile)
+/// @param {Length} $max-size - Maximum font size (desktop)
+/// @param {Length} $min-vw - Minimum viewport width (default: 320px)
+/// @param {Length} $max-vw - Maximum viewport width (default: 1200px)
+@mixin responsive-font-size($min-size, $max-size, $min-vw: 320px, $max-vw: 1200px) {
+  // Ensure minimum font size is at least 14px for body text
+  $safe-min: if($min-size < $min-font-size-body, $min-font-size-body, $min-size);
+  
+  // Calculate the slope for fluid scaling
+  $min-size-unitless: strip-unit($safe-min);
+  $max-size-unitless: strip-unit($max-size);
+  $min-vw-unitless: strip-unit($min-vw);
+  $max-vw-unitless: strip-unit($max-vw);
+  
+  $slope: math.div(($max-size-unitless - $min-size-unitless), ($max-vw-unitless - $min-vw-unitless));
+  $intercept: $min-size-unitless - ($slope * $min-vw-unitless);
+  $slope-vw: $slope * 100;
+  
+  // Use clamp for fluid typography (Requirements 2.3)
+  font-size: clamp(#{$safe-min}, #{$intercept}px + #{$slope-vw}vw, #{$max-size});
+}
+
+/// Responsive Heading 1 with fluid scaling
+/// Desktop: 36px, Tablet: ~32px, Mobile: 26px (minimum)
+@mixin responsive-heading-1 {
+  @include responsive-font-size($min-font-size-heading-1, $desktop-font-size-4xl);
+  font-weight: $font-weight-extrabold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+/// Responsive Heading 2 with fluid scaling
+/// Desktop: 30px, Tablet: ~27px, Mobile: 22px (minimum)
+@mixin responsive-heading-2 {
+  @include responsive-font-size($min-font-size-heading-2, $desktop-font-size-3xl);
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+/// Responsive Heading 3 with fluid scaling
+/// Desktop: 24px, Tablet: ~22px, Mobile: 18px (minimum)
+@mixin responsive-heading-3 {
+  @include responsive-font-size($min-font-size-heading-3, $desktop-font-size-2xl);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+}
+
+/// Responsive Heading 4 with fluid scaling
+/// Desktop: 20px, Tablet: ~18px, Mobile: 16px (minimum)
+@mixin responsive-heading-4 {
+  @include responsive-font-size($min-font-size-heading-4, $desktop-font-size-xl);
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+}
+
+/// Responsive Body Text with fluid scaling
+/// Desktop: 16px, Mobile: 14px (minimum)
+@mixin responsive-body-text($size: 'base') {
+  font-family: $font-family-sans;
+  font-weight: $font-weight-normal;
+  letter-spacing: $letter-spacing-normal;
+  
+  @if $size == 'sm' {
+    @include responsive-font-size($min-font-size-body, $desktop-font-size-base);
+    line-height: $line-height-normal;
+  } @else if $size == 'lg' {
+    @include responsive-font-size(15px, $desktop-font-size-lg);
+    line-height: $line-height-relaxed;
+  } @else {
+    // base
+    @include responsive-font-size($min-font-size-body, $desktop-font-size-base);
+    line-height: $line-height-relaxed;
+  }
+}
+
+// =============================================================================
+// Responsive Typography Utility Classes
+// =============================================================================
+// 响应式字体工具类，使用 clamp() 实现流体排版
+
+// Responsive heading classes
+.responsive-h1 {
+  @include responsive-heading-1;
+}
+
+.responsive-h2 {
+  @include responsive-heading-2;
+}
+
+.responsive-h3 {
+  @include responsive-heading-3;
+}
+
+.responsive-h4 {
+  @include responsive-heading-4;
+}
+
+// Responsive body text classes
+.responsive-body {
+  @include responsive-body-text('base');
+}
+
+.responsive-body-sm {
+  @include responsive-body-text('sm');
+}
+
+.responsive-body-lg {
+  @include responsive-body-text('lg');
+}
+
+// =============================================================================
+// Responsive Font Size Utility Classes with clamp()
+// =============================================================================
+// 使用 clamp() 的响应式字号工具类
+
+.text-responsive-xs {
+  font-size: clamp(#{$min-font-size-body}, 2.5vw, #{$font-size-xs});
+}
+
+.text-responsive-sm {
+  font-size: clamp(#{$min-font-size-body}, 2.8vw, #{$font-size-sm});
+}
+
+.text-responsive-base {
+  font-size: clamp(#{$min-font-size-body}, 3vw, #{$font-size-base});
+}
+
+.text-responsive-lg {
+  font-size: clamp(15px, 3.2vw, #{$font-size-lg});
+}
+
+.text-responsive-xl {
+  font-size: clamp(16px, 3.5vw, #{$font-size-xl});
+}
+
+.text-responsive-2xl {
+  font-size: clamp(18px, 4vw, #{$font-size-2xl});
+}
+
+.text-responsive-3xl {
+  font-size: clamp(22px, 5vw, #{$font-size-3xl});
+}
+
+.text-responsive-4xl {
+  font-size: clamp(26px, 6vw, #{$font-size-4xl});
+}
+
+.text-responsive-5xl {
+  font-size: clamp(32px, 8vw, #{$font-size-5xl});
+}
+
+// =============================================================================
+// Media Query Based Responsive Typography
+// =============================================================================
+// 基于媒体查询的响应式排版（作为 clamp() 的回退方案）
+
+@media (max-width: #{$typography-breakpoint-tablet}) {
+  // Tablet: 10-15% reduction (Requirements 2.1)
+  :root {
+    --responsive-font-size-base: #{$tablet-font-size-base};
+    --responsive-font-size-lg: #{$tablet-font-size-lg};
+    --responsive-font-size-xl: #{$tablet-font-size-xl};
+    --responsive-font-size-2xl: #{$tablet-font-size-2xl};
+    --responsive-font-size-3xl: #{$tablet-font-size-3xl};
+    --responsive-font-size-4xl: #{$tablet-font-size-4xl};
+  }
+}
+
+@media (max-width: #{$typography-breakpoint-mobile}) {
+  // Mobile: proportional reduction (Requirements 2.2)
+  :root {
+    --responsive-font-size-base: #{$mobile-font-size-base};
+    --responsive-font-size-lg: #{$mobile-font-size-lg};
+    --responsive-font-size-xl: #{$mobile-font-size-xl};
+    --responsive-font-size-2xl: #{$mobile-font-size-2xl};
+    --responsive-font-size-3xl: #{$mobile-font-size-3xl};
+    --responsive-font-size-4xl: #{$mobile-font-size-4xl};
+  }
+}
+
+// =============================================================================
+// CSS Custom Properties for Typography
+// =============================================================================
+
+:root {
+  // Heading styles as CSS custom properties
+  --heading-1-size: #{$font-size-4xl};
+  --heading-1-weight: #{$font-weight-extrabold};
+  --heading-1-line-height: #{$line-height-tight};
+  
+  --heading-2-size: #{$font-size-3xl};
+  --heading-2-weight: #{$font-weight-bold};
+  --heading-2-line-height: #{$line-height-tight};
+  
+  --heading-3-size: #{$font-size-2xl};
+  --heading-3-weight: #{$font-weight-semibold};
+  --heading-3-line-height: #{$line-height-snug};
+  
+  --heading-4-size: #{$font-size-xl};
+  --heading-4-weight: #{$font-weight-semibold};
+  --heading-4-line-height: #{$line-height-snug};
+  
+  // Body text styles
+  --body-sm-size: #{$font-size-sm};
+  --body-sm-line-height: #{$line-height-normal};
+  
+  --body-base-size: #{$font-size-base};
+  --body-base-line-height: #{$line-height-relaxed};
+  
+  --body-lg-size: #{$font-size-lg};
+  --body-lg-line-height: #{$line-height-relaxed};
+  
+  // Responsive font sizes (desktop defaults)
+  --responsive-font-size-base: #{$desktop-font-size-base};
+  --responsive-font-size-lg: #{$desktop-font-size-lg};
+  --responsive-font-size-xl: #{$desktop-font-size-xl};
+  --responsive-font-size-2xl: #{$desktop-font-size-2xl};
+  --responsive-font-size-3xl: #{$desktop-font-size-3xl};
+  --responsive-font-size-4xl: #{$desktop-font-size-4xl};
+  
+  // Minimum font sizes
+  --min-font-size-body: #{$min-font-size-body};
+  --min-font-size-heading-4: #{$min-font-size-heading-4};
+  --min-font-size-heading-3: #{$min-font-size-heading-3};
+  --min-font-size-heading-2: #{$min-font-size-heading-2};
+  --min-font-size-heading-1: #{$min-font-size-heading-1};
+  
+  // Typography breakpoints
+  --typography-breakpoint-tablet: #{$typography-breakpoint-tablet};
+  --typography-breakpoint-mobile: #{$typography-breakpoint-mobile};
+}

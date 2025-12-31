@@ -231,6 +231,19 @@ public class SwaggerConfig {
     }
 
     /**
+     * 创建错误响应示例Map（支持null值）
+     */
+    private Map<String, Object> createErrorExample(int code, String message) {
+        Map<String, Object> example = new HashMap<>();
+        example.put("code", code);
+        example.put("message", message);
+        example.put("data", null);
+        example.put("timestamp", "2024-01-01 12:00:00");
+        example.put("success", false);
+        return example;
+    }
+
+    /**
      * 创建401未授权响应
      */
     private ApiResponse createUnauthorizedResponse() {
@@ -238,13 +251,7 @@ public class SwaggerConfig {
                 .description("未授权 - Token无效或已过期")
                 .content(new Content()
                         .addMediaType("application/json", new MediaType()
-                                .example(Map.of(
-                                        "code", 401,
-                                        "message", "未授权，请先登录",
-                                        "data", null,
-                                        "timestamp", "2024-01-01 12:00:00",
-                                        "success", false
-                                ))));
+                                .example(createErrorExample(401, "未授权，请先登录"))));
     }
 
     /**
@@ -255,13 +262,7 @@ public class SwaggerConfig {
                 .description("权限不足 - 无权访问该资源")
                 .content(new Content()
                         .addMediaType("application/json", new MediaType()
-                                .example(Map.of(
-                                        "code", 403,
-                                        "message", "权限不足",
-                                        "data", null,
-                                        "timestamp", "2024-01-01 12:00:00",
-                                        "success", false
-                                ))));
+                                .example(createErrorExample(403, "权限不足"))));
     }
 
     /**
@@ -272,13 +273,7 @@ public class SwaggerConfig {
                 .description("资源不存在")
                 .content(new Content()
                         .addMediaType("application/json", new MediaType()
-                                .example(Map.of(
-                                        "code", 404,
-                                        "message", "资源不存在",
-                                        "data", null,
-                                        "timestamp", "2024-01-01 12:00:00",
-                                        "success", false
-                                ))));
+                                .example(createErrorExample(404, "资源不存在"))));
     }
 
     /**
@@ -289,12 +284,6 @@ public class SwaggerConfig {
                 .description("服务器内部错误")
                 .content(new Content()
                         .addMediaType("application/json", new MediaType()
-                                .example(Map.of(
-                                        "code", 500,
-                                        "message", "服务器内部错误",
-                                        "data", null,
-                                        "timestamp", "2024-01-01 12:00:00",
-                                        "success", false
-                                ))));
+                                .example(createErrorExample(500, "服务器内部错误"))));
     }
 }

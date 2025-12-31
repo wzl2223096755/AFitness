@@ -1,0 +1,787 @@
+// =============================================================================
+// Grid Layout System - Typography and Layout Optimization
+// =============================================================================
+// 本文件定义网格布局系统，包括网格容器、自适应网格、内容容器和区块间距
+// Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 1.4
+
+@use 'tokens' as *;
+@use 'spacing' as *;
+
+// =============================================================================
+// Grid Configuration
+// =============================================================================
+// 网格系统配置变量
+
+$grid-columns: 12 !default;                    // 默认列数
+$grid-columns-16: 16 !default;                 // 16列网格选项
+$grid-min-card-width: 280px !default;          // 卡片最小宽度
+$content-max-width: 75ch !default;             // 内容最大宽度（字符数）
+$content-max-width-wide: 90ch !default;        // 宽内容最大宽度
+$content-max-width-narrow: 60ch !default;      // 窄内容最大宽度
+
+// =============================================================================
+// Responsive Gutter Widths
+// =============================================================================
+// 响应式 gutter 宽度（16px、20px、24px）
+// Requirements: 3.3
+
+$grid-gutter-sm: $gutter-sm !default;    // 16px - 移动端
+$grid-gutter-md: $gutter-md !default;    // 20px - 平板
+$grid-gutter-lg: $gutter-lg !default;    // 24px - 桌面端
+
+// Gutter map for responsive access
+$grid-gutters: (
+  'sm': $grid-gutter-sm,
+  'md': $grid-gutter-md,
+  'lg': $grid-gutter-lg
+) !default;
+
+// =============================================================================
+// CSS Custom Properties Export
+// =============================================================================
+// 导出为 CSS 自定义属性
+
+:root {
+  // Grid configuration
+  --grid-columns: #{$grid-columns};
+  --grid-min-card-width: #{$grid-min-card-width};
+  --content-max-width: #{$content-max-width};
+  
+  // Responsive gutters
+  --grid-gutter: #{$grid-gutter-sm};
+  
+  @media (min-width: $breakpoint-md) {
+    --grid-gutter: #{$grid-gutter-md};
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    --grid-gutter: #{$grid-gutter-lg};
+  }
+}
+
+// =============================================================================
+// Grid Container Mixin (12列网格)
+// =============================================================================
+// 实现标准的 12 列网格容器
+// Requirements: 3.1
+
+@mixin grid-container($columns: $grid-columns, $gap: null) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  
+  // 使用响应式 gutter 如果未指定 gap
+  @if $gap == null {
+    gap: $grid-gutter-sm;
+    
+    @media (min-width: $breakpoint-md) {
+      gap: $grid-gutter-md;
+    }
+    
+    @media (min-width: $breakpoint-lg) {
+      gap: $grid-gutter-lg;
+    }
+  } @else {
+    gap: $gap;
+  }
+}
+
+// 16 列网格变体
+@mixin grid-container-16($gap: null) {
+  @include grid-container($grid-columns-16, $gap);
+}
+
+// =============================================================================
+// Auto-fit Grid Mixin (自适应网格)
+// =============================================================================
+// 实现自适应卡片网格，最小宽度 280px
+// Requirements: 3.2
+
+@mixin auto-grid($min-width: $grid-min-card-width, $gap: null) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr));
+  
+  // 使用响应式 gutter 如果未指定 gap
+  @if $gap == null {
+    gap: $grid-gutter-sm;
+    
+    @media (min-width: $breakpoint-md) {
+      gap: $grid-gutter-md;
+    }
+    
+    @media (min-width: $breakpoint-lg) {
+      gap: $grid-gutter-lg;
+    }
+  } @else {
+    gap: $gap;
+  }
+}
+
+// Auto-fill 变体（不会拉伸项目）
+@mixin auto-fill-grid($min-width: $grid-min-card-width, $gap: null) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($min-width, 1fr));
+  
+  @if $gap == null {
+    gap: $grid-gutter-sm;
+    
+    @media (min-width: $breakpoint-md) {
+      gap: $grid-gutter-md;
+    }
+    
+    @media (min-width: $breakpoint-lg) {
+      gap: $grid-gutter-lg;
+    }
+  } @else {
+    gap: $gap;
+  }
+}
+
+// =============================================================================
+// Content Container Mixin (内容容器)
+// =============================================================================
+// 实现内容容器，最大宽度 75ch 以保持良好阅读体验
+// Requirements: 1.4
+
+@mixin content-container($max-width: $content-max-width) {
+  max-width: $max-width;
+  margin-inline: auto;
+  padding-inline: $spacing-4;
+  
+  @media (min-width: $breakpoint-md) {
+    padding-inline: $spacing-6;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    padding-inline: $spacing-8;
+  }
+}
+
+// 宽内容容器变体
+@mixin content-container-wide {
+  @include content-container($content-max-width-wide);
+}
+
+// 窄内容容器变体
+@mixin content-container-narrow {
+  @include content-container($content-max-width-narrow);
+}
+
+// 全宽容器（带响应式内边距）
+@mixin full-width-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: $spacing-4;
+  
+  @media (min-width: $breakpoint-md) {
+    padding-inline: $spacing-6;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    padding-inline: $spacing-8;
+  }
+  
+  @media (min-width: $breakpoint-xl) {
+    max-width: $breakpoint-xl;
+  }
+}
+
+// =============================================================================
+// Section Spacing Mixin (区块间距)
+// =============================================================================
+// 实现一致的垂直区块间距
+// Requirements: 3.4
+
+@mixin section-spacing($size: 'normal') {
+  @if $size == 'sm' {
+    margin-bottom: $spacing-6;
+    
+    @media (min-width: $breakpoint-md) {
+      margin-bottom: $spacing-8;
+    }
+  } @else if $size == 'lg' {
+    margin-bottom: $spacing-12;
+    
+    @media (min-width: $breakpoint-md) {
+      margin-bottom: $spacing-16;
+    }
+  } @else {
+    // normal
+    margin-bottom: $spacing-8;
+    
+    @media (min-width: $breakpoint-md) {
+      margin-bottom: $spacing-12;
+    }
+  }
+}
+
+// 区块内边距（用于区块内部）
+@mixin section-padding($size: 'normal') {
+  @if $size == 'sm' {
+    padding-block: $spacing-6;
+    
+    @media (min-width: $breakpoint-md) {
+      padding-block: $spacing-8;
+    }
+  } @else if $size == 'lg' {
+    padding-block: $spacing-12;
+    
+    @media (min-width: $breakpoint-md) {
+      padding-block: $spacing-16;
+    }
+  } @else {
+    // normal
+    padding-block: $spacing-8;
+    
+    @media (min-width: $breakpoint-md) {
+      padding-block: $spacing-12;
+    }
+  }
+}
+
+// =============================================================================
+// Grid Span Utilities
+// =============================================================================
+// 网格跨列工具
+
+@mixin grid-span($columns) {
+  grid-column: span $columns;
+}
+
+@mixin grid-span-full {
+  grid-column: 1 / -1;
+}
+
+// =============================================================================
+// Grid Utility Classes
+// =============================================================================
+// 网格工具类
+
+// 基础网格容器类
+.grid-container {
+  @include grid-container;
+}
+
+.grid-container-16 {
+  @include grid-container-16;
+}
+
+// 自适应网格类
+.auto-grid {
+  @include auto-grid;
+}
+
+.auto-grid-sm {
+  @include auto-grid(240px);
+}
+
+.auto-grid-lg {
+  @include auto-grid(320px);
+}
+
+.auto-fill-grid {
+  @include auto-fill-grid;
+}
+
+// 内容容器类
+.content-container {
+  @include content-container;
+}
+
+.content-container-wide {
+  @include content-container-wide;
+}
+
+.content-container-narrow {
+  @include content-container-narrow;
+}
+
+.full-width-container {
+  @include full-width-container;
+}
+
+// 区块间距类
+.section-spacing {
+  @include section-spacing;
+}
+
+.section-spacing-sm {
+  @include section-spacing('sm');
+}
+
+.section-spacing-lg {
+  @include section-spacing('lg');
+}
+
+// 区块内边距类
+.section-padding {
+  @include section-padding;
+}
+
+.section-padding-sm {
+  @include section-padding('sm');
+}
+
+.section-padding-lg {
+  @include section-padding('lg');
+}
+
+// =============================================================================
+// Grid Column Span Classes
+// =============================================================================
+// 网格跨列类
+
+@for $i from 1 through $grid-columns {
+  .col-span-#{$i} {
+    grid-column: span $i;
+  }
+}
+
+.col-span-full {
+  grid-column: 1 / -1;
+}
+
+// 响应式跨列类
+@media (min-width: $breakpoint-sm) {
+  @for $i from 1 through $grid-columns {
+    .sm\:col-span-#{$i} {
+      grid-column: span $i;
+    }
+  }
+  .sm\:col-span-full {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  @for $i from 1 through $grid-columns {
+    .md\:col-span-#{$i} {
+      grid-column: span $i;
+    }
+  }
+  .md\:col-span-full {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  @for $i from 1 through $grid-columns {
+    .lg\:col-span-#{$i} {
+      grid-column: span $i;
+    }
+  }
+  .lg\:col-span-full {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: $breakpoint-xl) {
+  @for $i from 1 through $grid-columns {
+    .xl\:col-span-#{$i} {
+      grid-column: span $i;
+    }
+  }
+  .xl\:col-span-full {
+    grid-column: 1 / -1;
+  }
+}
+
+// =============================================================================
+// Grid Row Span Classes
+// =============================================================================
+// 网格跨行类
+
+@for $i from 1 through 6 {
+  .row-span-#{$i} {
+    grid-row: span $i;
+  }
+}
+
+.row-span-full {
+  grid-row: 1 / -1;
+}
+
+// =============================================================================
+// Grid Start/End Classes
+// =============================================================================
+// 网格起始/结束位置类
+
+@for $i from 1 through $grid-columns {
+  .col-start-#{$i} {
+    grid-column-start: $i;
+  }
+  
+  .col-end-#{$i} {
+    grid-column-end: $i;
+  }
+}
+
+.col-start-auto {
+  grid-column-start: auto;
+}
+
+.col-end-auto {
+  grid-column-end: auto;
+}
+
+// =============================================================================
+// Grid Alignment Classes
+// =============================================================================
+// 网格对齐类
+
+// Justify items (水平对齐)
+.justify-items-start {
+  justify-items: start;
+}
+
+.justify-items-end {
+  justify-items: end;
+}
+
+.justify-items-center {
+  justify-items: center;
+}
+
+.justify-items-stretch {
+  justify-items: stretch;
+}
+
+// Align items (垂直对齐)
+.align-items-start {
+  align-items: start;
+}
+
+.align-items-end {
+  align-items: end;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-stretch {
+  align-items: stretch;
+}
+
+// Place items (同时设置)
+.place-items-center {
+  place-items: center;
+}
+
+.place-items-start {
+  place-items: start;
+}
+
+.place-items-end {
+  place-items: end;
+}
+
+// Justify content (容器内容水平对齐)
+.justify-content-start {
+  justify-content: start;
+}
+
+.justify-content-end {
+  justify-content: end;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+.justify-content-evenly {
+  justify-content: space-evenly;
+}
+
+// Align content (容器内容垂直对齐)
+.align-content-start {
+  align-content: start;
+}
+
+.align-content-end {
+  align-content: end;
+}
+
+.align-content-center {
+  align-content: center;
+}
+
+.align-content-between {
+  align-content: space-between;
+}
+
+.align-content-around {
+  align-content: space-around;
+}
+
+// =============================================================================
+// Grid Item Self Alignment Classes
+// =============================================================================
+// 网格项目自身对齐类
+
+.justify-self-start {
+  justify-self: start;
+}
+
+.justify-self-end {
+  justify-self: end;
+}
+
+.justify-self-center {
+  justify-self: center;
+}
+
+.justify-self-stretch {
+  justify-self: stretch;
+}
+
+.align-self-start {
+  align-self: start;
+}
+
+.align-self-end {
+  align-self: end;
+}
+
+.align-self-center {
+  align-self: center;
+}
+
+.align-self-stretch {
+  align-self: stretch;
+}
+
+.place-self-center {
+  place-self: center;
+}
+
+// =============================================================================
+// Responsive Grid Display Classes
+// =============================================================================
+// 响应式网格显示类
+
+.grid {
+  display: grid;
+}
+
+.inline-grid {
+  display: inline-grid;
+}
+
+@media (min-width: $breakpoint-sm) {
+  .sm\:grid {
+    display: grid;
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  .md\:grid {
+    display: grid;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .lg\:grid {
+    display: grid;
+  }
+}
+
+// =============================================================================
+// Grid Template Columns Classes
+// =============================================================================
+// 网格模板列类
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.grid-cols-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.grid-cols-12 {
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.grid-cols-none {
+  grid-template-columns: none;
+}
+
+// 响应式网格列类
+@media (min-width: $breakpoint-sm) {
+  .sm\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .sm\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .sm\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .sm\:grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+@media (min-width: $breakpoint-md) {
+  .md\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .md\:grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+  .md\:grid-cols-12 { grid-template-columns: repeat(12, 1fr); }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .lg\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .lg\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .lg\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .lg\:grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+  .lg\:grid-cols-12 { grid-template-columns: repeat(12, 1fr); }
+}
+
+@media (min-width: $breakpoint-xl) {
+  .xl\:grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+  .xl\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .xl\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .xl\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .xl\:grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .xl\:grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+  .xl\:grid-cols-12 { grid-template-columns: repeat(12, 1fr); }
+}
+
+// =============================================================================
+// Grid Template Rows Classes
+// =============================================================================
+// 网格模板行类
+
+.grid-rows-1 {
+  grid-template-rows: repeat(1, 1fr);
+}
+
+.grid-rows-2 {
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.grid-rows-3 {
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.grid-rows-4 {
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.grid-rows-5 {
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.grid-rows-6 {
+  grid-template-rows: repeat(6, 1fr);
+}
+
+.grid-rows-none {
+  grid-template-rows: none;
+}
+
+// =============================================================================
+// Auto Flow Classes
+// =============================================================================
+// 自动流向类
+
+.grid-flow-row {
+  grid-auto-flow: row;
+}
+
+.grid-flow-col {
+  grid-auto-flow: column;
+}
+
+.grid-flow-dense {
+  grid-auto-flow: dense;
+}
+
+.grid-flow-row-dense {
+  grid-auto-flow: row dense;
+}
+
+.grid-flow-col-dense {
+  grid-auto-flow: column dense;
+}
+
+// =============================================================================
+// Dashboard Layout Helpers
+// =============================================================================
+// 仪表盘布局辅助类
+
+// 仪表盘卡片网格
+.dashboard-grid {
+  @include auto-grid($grid-min-card-width);
+}
+
+// 统计卡片网格（更紧凑）
+.stats-grid {
+  @include auto-grid(200px, $spacing-4);
+}
+
+// 图表网格
+.chart-grid {
+  @include auto-grid(400px);
+}
+
+// 两列布局
+.two-column-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $grid-gutter-sm;
+  
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: 1fr 1fr;
+    gap: $grid-gutter-md;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    gap: $grid-gutter-lg;
+  }
+}
+
+// 侧边栏布局
+.sidebar-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $grid-gutter-sm;
+  
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: 280px 1fr;
+    gap: $grid-gutter-lg;
+  }
+}
+
+// 主内容 + 侧边栏布局（侧边栏在右）
+.main-sidebar-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $grid-gutter-sm;
+  
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: 1fr 320px;
+    gap: $grid-gutter-lg;
+  }
+}

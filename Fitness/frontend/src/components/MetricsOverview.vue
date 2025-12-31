@@ -1,11 +1,11 @@
 <template>
   <div class="metrics-overview">
-    <div class="section-header">
-      <h2 class="section-title">
-        <span class="title-icon">📊</span>
+    <div class="section-header mb-6">
+      <h2 class="section-title responsive-h2 font-bold">
+        <span class="title-icon icon-2xl">📊</span>
         核心指标概览
       </h2>
-      <div class="section-actions">
+      <div class="section-actions gap-3">
         <el-select v-model="timeRange" @change="refreshMetrics" size="small" class="time-selector">
           <el-option label="本周" value="week" />
           <el-option label="本月" value="month" />
@@ -18,22 +18,22 @@
       </div>
     </div>
     
-    <div class="metrics-grid">
+    <div class="metrics-grid auto-grid">
       <!-- 主要指标卡片 -->
-      <div class="metric-card primary-metric" @click="navigateTo('training-data')" :class="{ 'loading': loading }">
-        <div class="metric-header">
+      <div class="metric-card primary-metric p-5" @click="navigateTo('training-data')" :class="{ 'loading': loading }">
+        <div class="metric-header mb-5">
           <div class="metric-info">
-            <h3 class="metric-title">{{ timeRangeLabels[timeRange].training }}</h3>
-            <p class="metric-subtitle">保持规律训练</p>
+            <h3 class="metric-title text-lg font-bold leading-snug">{{ timeRangeLabels[timeRange].training }}</h3>
+            <p class="metric-subtitle text-sm leading-normal">保持规律训练</p>
           </div>
           <div class="metric-icon primary">
             <el-icon><TrendCharts /></el-icon>
           </div>
         </div>
-        <div class="metric-value">
+        <div class="metric-value mb-4">
           <span v-if="loading" class="loading-placeholder">...</span>
-          <span v-else class="value-number animated-number">{{ weeklyTrainingCount }}</span>
-          <span class="value-unit">次</span>
+          <span v-else class="value-number data-value animated-number">{{ weeklyTrainingCount }}</span>
+          <span class="value-unit data-unit">次</span>
         </div>
         <div class="metric-trend" :class="weeklyChangeClass">
           <el-icon v-if="weeklyChange > 0"><CaretTop /></el-icon>
@@ -48,20 +48,20 @@
         </div>
       </div>
 
-      <div class="metric-card success-metric" @click="navigateTo('load-analysis')" :class="{ 'loading': loading }">
-        <div class="metric-header">
+      <div class="metric-card success-metric p-5" @click="navigateTo('load-analysis')" :class="{ 'loading': loading }">
+        <div class="metric-header mb-5">
           <div class="metric-info">
-            <h3 class="metric-title">{{ timeRangeLabels[timeRange].volume }}</h3>
-            <p class="metric-subtitle">累计负荷</p>
+            <h3 class="metric-title text-lg font-bold leading-snug">{{ timeRangeLabels[timeRange].volume }}</h3>
+            <p class="metric-subtitle text-sm leading-normal">累计负荷</p>
           </div>
           <div class="metric-icon success">
             <el-icon><Histogram /></el-icon>
           </div>
         </div>
-        <div class="metric-value">
+        <div class="metric-value mb-4">
           <span v-if="loading" class="loading-placeholder">...</span>
-          <span v-else class="value-number animated-number">{{ formatNumber(totalVolume) }}</span>
-          <span class="value-unit">kg</span>
+          <span v-else class="value-number data-value animated-number">{{ formatNumber(totalVolume) }}</span>
+          <span class="value-unit data-unit">kg</span>
         </div>
         <div class="metric-trend positive">
           <el-icon><CaretTop /></el-icon>
@@ -72,20 +72,20 @@
         </div>
       </div>
 
-      <div class="metric-card warning-metric" @click="showRecoveryModal = true" :class="{ 'loading': loading }">
-        <div class="metric-header">
+      <div class="metric-card warning-metric p-5" @click="showRecoveryModal = true" :class="{ 'loading': loading }">
+        <div class="metric-header mb-5">
           <div class="metric-info">
-            <h3 class="metric-title">恢复状态</h3>
-            <p class="metric-subtitle">身体恢复评估</p>
+            <h3 class="metric-title text-lg font-bold leading-snug">恢复状态</h3>
+            <p class="metric-subtitle text-sm leading-normal">身体恢复评估</p>
           </div>
           <div class="metric-icon warning" :class="{ 'pulse': recoveryScore < 60 }">
             <el-icon><Timer /></el-icon>
           </div>
         </div>
-        <div class="metric-value">
+        <div class="metric-value mb-4">
           <span v-if="loading" class="loading-placeholder">...</span>
-          <span v-else class="value-number animated-number">{{ recoveryScore }}</span>
-          <span class="value-unit">分</span>
+          <span v-else class="value-number data-value animated-number">{{ recoveryScore }}</span>
+          <span class="value-unit data-unit">分</span>
         </div>
         <div class="metric-trend" :class="recoveryScore >= 80 ? 'positive' : recoveryScore >= 60 ? 'neutral' : 'negative'">
           <span>{{ recoveryStatus }}</span>
@@ -97,20 +97,20 @@
         </div>
       </div>
 
-      <div class="metric-card danger-metric" @click="showGoalModal = true" :class="{ 'loading': loading }">
-        <div class="metric-header">
+      <div class="metric-card danger-metric p-5" @click="showGoalModal = true" :class="{ 'loading': loading }">
+        <div class="metric-header mb-5">
           <div class="metric-info">
-            <h3 class="metric-title">{{ timeRangeLabels[timeRange].goals }}</h3>
-            <p class="metric-subtitle">完成率</p>
+            <h3 class="metric-title text-lg font-bold leading-snug">{{ timeRangeLabels[timeRange].goals }}</h3>
+            <p class="metric-subtitle text-sm leading-normal">完成率</p>
           </div>
           <div class="metric-icon danger">
             <el-icon><Aim /></el-icon>
           </div>
         </div>
-        <div class="metric-value">
+        <div class="metric-value mb-4">
           <span v-if="loading" class="loading-placeholder">...</span>
-          <span v-else class="value-number animated-number">{{ goalCompletionRate }}</span>
-          <span class="value-unit">%</span>
+          <span v-else class="value-number data-value animated-number">{{ goalCompletionRate }}</span>
+          <span class="value-unit data-unit">%</span>
         </div>
         <div class="metric-trend" :class="goalCompletionRate >= 80 ? 'positive' : 'negative'">
           <span>{{ goalCompletionText }}</span>
@@ -522,6 +522,9 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* MetricsOverview - Using design tokens from typography and layout system */
+/* Requirements: 3.2, 6.1, 6.2 */
+
 .metrics-overview {
   width: 100%;
 }
@@ -530,41 +533,38 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary, #1e293b);
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-2, 0.5rem);
 }
 
 .title-icon {
-  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .section-actions {
   display: flex;
-  gap: 12px;
 }
 
 .time-range-selector {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-2, 0.5rem);
 }
 
 .time-range-btn {
-  padding: 8px 16px;
+  padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
   border: 1px solid #e5e7eb;
   background: white;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 14px;
+  font-size: var(--font-size-sm, 0.875rem);
   color: #6b7280;
 }
 
@@ -579,16 +579,18 @@ onUnmounted(() => {
   color: white;
 }
 
+/* Metrics grid uses auto-grid pattern from _grid.scss */
+/* Requirements: 3.2 - auto-fit grid with minimum card width of 280px */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  gap: var(--gutter-md, 1.25rem);
 }
 
+/* Metric card - Requirements: 6.1, 6.2 - consistent internal padding (20-28px) */
 .metric-card {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
-  padding: 24px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -642,25 +644,21 @@ onUnmounted(() => {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .metric-info {
   flex: 1;
 }
 
+/* Using typography classes from _typography.scss */
 .metric-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 4px 0;
+  color: var(--text-primary, #1e293b);
+  margin: 0 0 var(--spacing-1, 0.25rem) 0;
 }
 
 .metric-subtitle {
-  font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-secondary, #64748b);
   margin: 0;
-  font-weight: 400;
 }
 
 .metric-icon {
@@ -670,7 +668,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: var(--font-size-xl, 1.25rem);
   color: white;
   flex-shrink: 0;
 }
@@ -692,32 +690,29 @@ onUnmounted(() => {
 }
 
 .metric-value {
-  margin-bottom: 16px;
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--spacing-2, 0.5rem);
 }
 
+/* Data value styling - Requirements: 5.4 - larger font sizes and bolder weights */
 .value-number {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #1e293b;
-  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight, 1.25);
+  color: var(--text-primary, #1e293b);
 }
 
 .value-unit {
-  font-size: 1rem;
-  color: #64748b;
-  font-weight: 500;
+  color: var(--text-secondary, #64748b);
 }
 
 .metric-trend {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 6px 12px;
+  gap: var(--spacing-1, 0.25rem);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-semibold, 600);
+  padding: var(--spacing-1, 0.25rem) var(--spacing-3, 0.75rem);
   border-radius: 8px;
   width: fit-content;
 }
@@ -756,23 +751,23 @@ onUnmounted(() => {
   }
 }
 
-/* 新增样式 */
+/* Additional metric styles using design tokens */
 .metric-label {
-  font-size: 12px;
+  font-size: var(--font-size-xs, 0.8rem);
   color: #9ca3af;
-  margin-bottom: 4px;
+  margin-bottom: var(--spacing-1, 0.25rem);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--letter-spacing-wide, 0.025em);
 }
 
 .metric-sparkline {
-  margin-top: 12px;
+  margin-top: var(--spacing-3, 0.75rem);
   height: 40px;
   border-radius: 6px;
 }
 
 .metric-progress {
-  margin-top: 12px;
+  margin-top: var(--spacing-3, 0.75rem);
 }
 
 .progress-ring {
@@ -786,21 +781,21 @@ onUnmounted(() => {
 .recovery-factors {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 16px;
+  gap: var(--spacing-3, 0.75rem);
+  margin-top: var(--spacing-4, 1rem);
 }
 
 .factor-item {
   text-align: center;
-  padding: 8px;
+  padding: var(--spacing-2, 0.5rem);
   background: #f9fafb;
   border-radius: 8px;
 }
 
 .factor-label {
-  font-size: 12px;
+  font-size: var(--font-size-xs, 0.8rem);
   color: #6b7280;
-  margin-bottom: 4px;
+  margin-bottom: var(--spacing-1, 0.25rem);
 }
 
 .factor-value {
@@ -810,14 +805,14 @@ onUnmounted(() => {
 }
 
 .goal-details {
-  margin-top: 16px;
+  margin-top: var(--spacing-4, 1rem);
 }
 
 .goal-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: var(--spacing-2, 0.5rem) 0;
   border-bottom: 1px solid #f3f4f6;
 }
 
@@ -830,13 +825,13 @@ onUnmounted(() => {
 }
 
 .goal-name {
-  font-size: 14px;
+  font-size: var(--font-size-sm, 0.875rem);
   color: #374151;
-  margin-bottom: 4px;
+  margin-bottom: var(--spacing-1, 0.25rem);
 }
 
 .goal-progress {
-  font-size: 12px;
+  font-size: var(--font-size-xs, 0.8rem);
   color: #6b7280;
 }
 
@@ -870,7 +865,7 @@ onUnmounted(() => {
 .modal-content {
   background: white;
   border-radius: 16px;
-  padding: 24px;
+  padding: var(--spacing-6, 1.5rem);
   max-width: 500px;
   width: 90%;
   max-height: 80vh;
@@ -894,12 +889,12 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-5, 1.25rem);
 }
 
 .modal-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--font-size-lg, 1.125rem);
+  font-weight: var(--font-weight-semibold, 600);
   color: #1f2937;
   margin: 0;
 }
@@ -923,13 +918,13 @@ onUnmounted(() => {
 
 .recovery-score-display {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-6, 1.5rem);
 }
 
 .score-circle {
   width: 120px;
   height: 120px;
-  margin: 0 auto 16px;
+  margin: 0 auto var(--spacing-4, 1rem);
   position: relative;
 }
 
@@ -938,33 +933,33 @@ onUnmounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 28px;
-  font-weight: 700;
+  font-size: var(--font-size-2xl, 1.5rem);
+  font-weight: var(--font-weight-bold, 700);
 }
 
 .score-label {
-  font-size: 14px;
+  font-size: var(--font-size-sm, 0.875rem);
   color: #6b7280;
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-2, 0.5rem);
 }
 
 .score-description {
-  font-size: 14px;
+  font-size: var(--font-size-sm, 0.875rem);
   color: #374151;
-  line-height: 1.5;
+  line-height: var(--line-height-relaxed, 1.625);
 }
 
 .recommendations {
   background: #f9fafb;
   border-radius: 12px;
-  padding: 16px;
+  padding: var(--spacing-4, 1rem);
 }
 
 .recommendations-title {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--font-size-base, 1rem);
+  font-weight: var(--font-weight-semibold, 600);
   color: #1f2937;
-  margin-bottom: 12px;
+  margin-bottom: var(--spacing-3, 0.75rem);
 }
 
 .recommendation-list {
@@ -976,9 +971,9 @@ onUnmounted(() => {
 .recommendation-item {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: 8px 0;
-  font-size: 14px;
+  gap: var(--spacing-2, 0.5rem);
+  padding: var(--spacing-2, 0.5rem) 0;
+  font-size: var(--font-size-sm, 0.875rem);
   color: #374151;
 }
 
@@ -988,24 +983,25 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
+/* Responsive styles using design token breakpoints */
 @media (max-width: 768px) {
   .metrics-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: var(--spacing-4, 1rem);
   }
   
   .metric-card {
-    padding: 20px;
+    padding: var(--spacing-5, 1.25rem);
   }
   
   .value-number {
-    font-size: 2rem;
+    font-size: var(--font-size-2xl, 1.5rem);
   }
   
   .section-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: var(--spacing-4, 1rem);
   }
   
   .time-range-selector {
@@ -1015,27 +1011,27 @@ onUnmounted(() => {
   
   .recovery-factors {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: var(--spacing-2, 0.5rem);
   }
   
   .modal-content {
-    padding: 20px;
-    margin: 16px;
+    padding: var(--spacing-5, 1.25rem);
+    margin: var(--spacing-4, 1rem);
   }
 }
 
 @media (max-width: 480px) {
   .metric-card {
-    padding: 16px;
+    padding: var(--spacing-4, 1rem);
   }
   
   .value-number {
-    font-size: 1.8rem;
+    font-size: var(--font-size-xl, 1.25rem);
   }
   
   .time-range-btn {
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: var(--spacing-1, 0.25rem) var(--spacing-3, 0.75rem);
+    font-size: var(--font-size-xs, 0.8rem);
   }
 }
 

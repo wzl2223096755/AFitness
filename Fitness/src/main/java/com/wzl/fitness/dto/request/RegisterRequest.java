@@ -18,10 +18,10 @@ public class RegisterRequest {
     private String username;
 
     @NotBlank(message = "密码不能为空")
-    @Size(min = 6, max = 100, message = "密码长度必须在6-100之间")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?&]{6,}$", 
-             message = "密码必须包含至少一个大写字母、一个小写字母和一个数字")
-    @Schema(description = "密码", example = "Password123")
+    @Size(min = 8, max = 100, message = "密码长度必须在8-100之间")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", 
+             message = "密码必须包含至少一个大写字母、一个小写字母、一个数字和一个特殊符号(@$!%*?&)")
+    @Schema(description = "密码", example = "Password123!")
     private String password;
 
     @Email(message = "邮箱格式不正确")

@@ -1,10 +1,18 @@
 @use './variables.scss' as *;
+@use './tokens' as tokens;
+@use './spacing' as spacing;
 
+// =============================================================================
 // 统计卡片组件
+// =============================================================================
+// Requirements: 6.1, 6.2, 6.4, 6.5
+// 卡片内边距在 20-28px 范围内
+
 .stats-card {
   background: $bg-card;
   border-radius: $border-radius-base;
-  padding: $spacing-lg;
+  // 使用新的卡片内边距变量 (20px - 在 20-28px 范围内)
+  padding: spacing.$card-padding-md;
   box-shadow: $shadow-base;
   transition: all $transition-time;
   border-top: 3px solid $primary-color;
@@ -26,33 +34,49 @@
     border-top-color: $danger-color;
   }
   
+  // 卡片尺寸变体
+  &--sm {
+    padding: spacing.$card-padding-sm; // 16px
+  }
+  
+  &--lg {
+    padding: spacing.$card-padding-lg; // 24px
+  }
+  
+  &--xl {
+    padding: spacing.$card-padding-xl; // 28px
+  }
+  
   .stats-card__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: $spacing-md;
+    // 使用语义化间距
+    margin-bottom: tokens.$spacing-normal;
     
     .stats-card__title {
-      font-size: $font-size-sm;
+      font-size: tokens.$font-size-sm;
       color: $text-secondary;
-      font-weight: 500;
+      font-weight: tokens.$font-weight-medium;
     }
     
     .stats-card__icon {
-      font-size: 24px;
+      font-size: tokens.$font-size-2xl;
       color: $primary-color;
     }
   }
   
   .stats-card__value {
-    font-size: $font-size-2xl;
-    font-weight: 600;
+    font-size: tokens.$font-size-2xl;
+    font-weight: tokens.$font-weight-semibold;
     color: $text-primary;
-    margin-bottom: $spacing-xs;
+    margin-bottom: tokens.$spacing-2;
+    // 数字使用等宽数字特性
+    font-variant-numeric: tabular-nums;
   }
   
   .stats-card__change {
-    font-size: $font-size-xs;
+    font-size: tokens.$font-size-xs;
     display: flex;
     align-items: center;
     
@@ -65,17 +89,22 @@
     }
     
     .el-icon {
-      margin-right: 2px;
-      font-size: $font-size-xs;
+      margin-right: tokens.$spacing-1;
+      font-size: tokens.$font-size-xs;
     }
   }
 }
 
+// =============================================================================
 // 图表容器
+// =============================================================================
+// Requirements: 6.1, 6.2
+
 .chart-container {
   background: $bg-card;
   border-radius: $border-radius-base;
-  padding: $spacing-lg;
+  // 使用新的卡片内边距变量 (24px - 在 20-28px 范围内)
+  padding: spacing.$card-padding-lg;
   box-shadow: $shadow-base;
   height: 400px;
   display: flex;
@@ -85,18 +114,19 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: $spacing-md;
+    // 使用语义化间距
+    margin-bottom: tokens.$spacing-normal;
     
     h3 {
-      font-size: $font-size-lg;
-      font-weight: 600;
+      font-size: tokens.$font-size-lg;
+      font-weight: tokens.$font-weight-semibold;
       color: $text-primary;
       margin: 0;
     }
     
     .chart-actions {
       display: flex;
-      gap: $spacing-sm;
+      gap: tokens.$spacing-2;
     }
   }
   
@@ -107,59 +137,69 @@
   }
 }
 
+// =============================================================================
 // 数据表单
+// =============================================================================
+// Requirements: 8.1, 8.2, 8.4, 8.5
+
 .data-form {
   background: $bg-card;
   border-radius: $border-radius-base;
-  padding: $spacing-lg;
+  // 使用新的卡片内边距变量 (24px)
+  padding: spacing.$card-padding-lg;
   box-shadow: $shadow-base;
-  margin-bottom: $spacing-lg;
+  margin-bottom: tokens.$spacing-loose;
   
   .form-title {
-    font-size: $font-size-lg;
-    font-weight: 600;
+    font-size: tokens.$font-size-lg;
+    font-weight: tokens.$font-weight-semibold;
     color: $text-primary;
-    margin-bottom: $spacing-lg;
+    margin-bottom: tokens.$spacing-loose;
   }
   
   .form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: $spacing-lg;
-    margin-bottom: $spacing-md;
+    gap: tokens.$spacing-loose;
+    margin-bottom: tokens.$spacing-normal;
   }
   
   .form-actions {
-    margin-top: $spacing-lg;
+    margin-top: tokens.$spacing-loose;
     display: flex;
-    gap: $spacing-md;
+    gap: tokens.$spacing-normal;
     justify-content: flex-end;
   }
 }
 
+// =============================================================================
 // 数据表格
+// =============================================================================
+// Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
+
 .data-table {
   background: $bg-card;
   border-radius: $border-radius-base;
-  padding: $spacing-lg;
+  // 使用新的卡片内边距变量 (24px)
+  padding: spacing.$card-padding-lg;
   box-shadow: $shadow-base;
   
   .table-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: $spacing-lg;
+    margin-bottom: tokens.$spacing-loose;
     
     h3 {
-      font-size: $font-size-lg;
-      font-weight: 600;
+      font-size: tokens.$font-size-lg;
+      font-weight: tokens.$font-weight-semibold;
       color: $text-primary;
       margin: 0;
     }
     
     .table-actions {
       display: flex;
-      gap: $spacing-sm;
+      gap: tokens.$spacing-2;
     }
   }
   
@@ -167,9 +207,12 @@
     .el-table__header-wrapper {
       th {
         background-color: $bg-secondary;
-        font-weight: 600;
+        // 表头使用更重的字重和不同颜色
+        font-weight: tokens.$font-weight-semibold;
         color: $text-primary;
         border-bottom: 1px solid $border-color;
+        // 使用表格单元格内边距
+        padding: spacing.$table-header-padding-y spacing.$table-header-padding-x;
       }
     }
     
@@ -182,59 +225,661 @@
       
       .el-table__cell {
         border-bottom: 1px solid $border-light;
+        // 使用表格单元格内边距 (12-16px)
+        padding: spacing.$table-cell-padding-y spacing.$table-cell-padding-x;
       }
     }
   }
 }
 
+// =============================================================================
 // 筛选器组件
+// =============================================================================
+
 .filter-bar {
   background: $bg-card;
   border-radius: $border-radius-base;
-  padding: $spacing-md $spacing-lg;
+  padding: tokens.$spacing-normal spacing.$card-padding-lg;
   box-shadow: $shadow-base;
-  margin-bottom: $spacing-lg;
+  margin-bottom: tokens.$spacing-loose;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: $spacing-md;
+  gap: tokens.$spacing-normal;
   
   .filter-group {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
+    gap: tokens.$spacing-normal;
     flex-wrap: wrap;
   }
   
   .filter-actions {
     display: flex;
-    gap: $spacing-sm;
+    gap: tokens.$spacing-2;
   }
 }
 
+// =============================================================================
 // 卡片网格
+// =============================================================================
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: $spacing-lg;
-  margin-bottom: $spacing-lg;
+  gap: tokens.$spacing-loose;
+  margin-bottom: tokens.$spacing-loose;
 }
 
 // 统计卡片网格
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: $spacing-lg;
-  margin-bottom: $spacing-lg;
+  gap: tokens.$spacing-loose;
+  margin-bottom: tokens.$spacing-loose;
 }
 
 // 图表网格
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: $spacing-lg;
-  margin-bottom: $spacing-lg;
+  gap: tokens.$spacing-loose;
+  margin-bottom: tokens.$spacing-loose;
+}
+
+// =============================================================================
+// Metric Card 组件
+// =============================================================================
+// Requirements: 6.1, 6.2, 6.4, 6.5
+// 卡片内边距在 20-28px 范围内
+
+.metric-card {
+  background: $bg-card;
+  border-radius: $border-radius-base;
+  // 使用新的卡片内边距变量 (20px - 在 20-28px 范围内)
+  padding: spacing.$card-padding-md;
+  box-shadow: $shadow-base;
+  transition: all $transition-time;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-light;
+  }
+  
+  // 卡片尺寸变体
+  &--sm {
+    padding: spacing.$card-padding-sm; // 16px
+  }
+  
+  &--lg {
+    padding: spacing.$card-padding-lg; // 24px
+  }
+  
+  &--xl {
+    padding: spacing.$card-padding-xl; // 28px
+  }
+  
+  .metric-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: tokens.$spacing-3;
+    
+    .metric-card__title {
+      font-size: tokens.$font-size-sm;
+      color: $text-secondary;
+      font-weight: tokens.$font-weight-medium;
+    }
+    
+    .metric-card__icon {
+      font-size: tokens.$font-size-xl;
+      color: $primary-color;
+    }
+  }
+  
+  .metric-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.$spacing-2;
+  }
+  
+  .metric-card__value {
+    font-size: tokens.$font-size-3xl;
+    font-weight: tokens.$font-weight-bold;
+    color: $text-primary;
+    // 数字使用等宽数字特性
+    font-variant-numeric: tabular-nums;
+    line-height: tokens.$line-height-tight;
+  }
+  
+  .metric-card__label {
+    font-size: tokens.$font-size-sm;
+    color: $text-secondary;
+    font-weight: tokens.$font-weight-normal;
+  }
+  
+  .metric-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: tokens.$spacing-3;
+    padding-top: tokens.$spacing-3;
+    border-top: 1px solid $border-light;
+    
+    .metric-card__trend {
+      font-size: tokens.$font-size-xs;
+      display: flex;
+      align-items: center;
+      gap: tokens.$spacing-1;
+      
+      &.positive {
+        color: $success-color;
+      }
+      
+      &.negative {
+        color: $danger-color;
+      }
+    }
+    
+    .metric-card__period {
+      font-size: tokens.$font-size-xs;
+      color: $text-placeholder;
+    }
+  }
+}
+
+// =============================================================================
+// 表格样式优化
+// =============================================================================
+// Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
+
+// 通用表格样式
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  // 表头样式 - Requirements: 7.2
+  thead {
+    th {
+      background-color: $bg-secondary;
+      font-weight: tokens.$font-weight-semibold;
+      color: $text-primary;
+      text-align: left;
+      // 表头内边距 - Requirements: 7.3
+      padding: spacing.$table-header-padding-y spacing.$table-header-padding-x;
+      border-bottom: 2px solid $border-color;
+      font-size: tokens.$font-size-sm;
+      letter-spacing: tokens.$letter-spacing-wide;
+      text-transform: uppercase;
+    }
+  }
+  
+  // 表体样式
+  tbody {
+    tr {
+      transition: background-color $transition-fast;
+      
+      &:hover {
+        background-color: $border-lighter;
+      }
+      
+      &:not(:last-child) {
+        td {
+          border-bottom: 1px solid $border-light;
+        }
+      }
+    }
+    
+    td {
+      // 单元格内边距 (12-16px) - Requirements: 7.3
+      padding: spacing.$table-cell-padding-y spacing.$table-cell-padding-x;
+      color: $text-regular;
+      font-size: tokens.$font-size-sm;
+      vertical-align: middle;
+    }
+  }
+  
+  // 紧凑表格变体
+  &--compact {
+    thead th {
+      padding: spacing.$table-cell-padding-y-sm spacing.$table-cell-padding-x;
+    }
+    
+    tbody td {
+      padding: spacing.$table-cell-padding-y-sm spacing.$table-cell-padding-x;
+    }
+  }
+  
+  // 宽松表格变体
+  &--relaxed {
+    thead th {
+      padding: spacing.$table-cell-padding-y-lg spacing.$table-cell-padding-x;
+    }
+    
+    tbody td {
+      padding: spacing.$table-cell-padding-y-lg spacing.$table-cell-padding-x;
+    }
+  }
+}
+
+// 数字列样式 - Requirements: 7.1, 7.5
+.table-numeric,
+.numeric-column,
+td.numeric,
+th.numeric {
+  // 使用 tabular-nums 字体特性 - Requirements: 7.1
+  font-variant-numeric: tabular-nums;
+  font-family: tokens.$font-family-mono;
+  // 数字列右对齐 - Requirements: 7.5
+  text-align: right;
+}
+
+// 表格数字工具类
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+// 右对齐工具类
+.text-right {
+  text-align: right;
+}
+
+// =============================================================================
+// 列表样式优化
+// =============================================================================
+// Requirements: 7.4
+
+// 通用列表样式
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  // 列表项样式 - Requirements: 7.4
+  .list__item {
+    // 列表项间距
+    padding: tokens.$spacing-3 0;
+    border-bottom: 1px solid $border-light;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  // 紧凑列表变体
+  &--compact {
+    .list__item {
+      padding: tokens.$spacing-2 0;
+    }
+  }
+  
+  // 宽松列表变体
+  &--relaxed {
+    .list__item {
+      padding: tokens.$spacing-4 0;
+    }
+  }
+  
+  // 带缩进的列表
+  &--indented {
+    .list__item {
+      padding-left: tokens.$spacing-4;
+    }
+  }
+}
+
+// 数据列表样式
+.data-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  .data-list__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: tokens.$spacing-3 0;
+    border-bottom: 1px solid $border-light;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  .data-list__label {
+    font-size: tokens.$font-size-sm;
+    color: $text-secondary;
+    font-weight: tokens.$font-weight-normal;
+  }
+  
+  .data-list__value {
+    font-size: tokens.$font-size-sm;
+    color: $text-primary;
+    font-weight: tokens.$font-weight-medium;
+    // 数字使用等宽数字特性
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// 有序列表样式
+ol.styled-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: list-counter;
+  
+  li {
+    counter-increment: list-counter;
+    padding: tokens.$spacing-3 0 tokens.$spacing-3 tokens.$spacing-8;
+    position: relative;
+    
+    &::before {
+      content: counter(list-counter) ".";
+      position: absolute;
+      left: 0;
+      color: $primary-color;
+      font-weight: tokens.$font-weight-semibold;
+    }
+    
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-light;
+    }
+  }
+}
+
+// 无序列表样式
+ul.styled-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  li {
+    padding: tokens.$spacing-3 0 tokens.$spacing-3 tokens.$spacing-6;
+    position: relative;
+    
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: $primary-color;
+    }
+    
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-light;
+    }
+  }
+}
+
+// =============================================================================
+// 表单样式优化
+// =============================================================================
+// Requirements: 8.1, 8.2, 8.4, 8.5
+
+// 表单字段组
+.form-field {
+  // 字段间距 (16-24px) - Requirements: 8.2
+  margin-bottom: spacing.$form-field-gap;
+  
+  // 紧凑变体
+  &--compact {
+    margin-bottom: spacing.$form-field-gap-sm;
+  }
+  
+  // 宽松变体
+  &--relaxed {
+    margin-bottom: spacing.$form-field-gap-lg;
+  }
+}
+
+// 表单标签样式 - Requirements: 8.1, 8.5
+.form-label {
+  display: block;
+  // 标签字号 (14px) - Requirements: 8.5
+  font-size: tokens.$font-size-sm;
+  font-weight: tokens.$font-weight-medium;
+  color: $text-primary;
+  // 标签与输入框间距
+  margin-bottom: spacing.$form-label-gap;
+  
+  // 必填标记
+  &.required::after {
+    content: "*";
+    color: $danger-color;
+    margin-left: tokens.$spacing-1;
+  }
+}
+
+// 表单输入框样式 - Requirements: 8.5
+.form-input {
+  width: 100%;
+  // 输入框字号 (16px) - Requirements: 8.5
+  font-size: tokens.$font-size-base;
+  font-family: tokens.$font-family-sans;
+  color: $text-primary;
+  background-color: $bg-secondary;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-base;
+  padding: tokens.$spacing-3 tokens.$spacing-4;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  
+  &::placeholder {
+    color: $text-placeholder;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+  
+  &:disabled {
+    background-color: $border-lighter;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  // 错误状态
+  &.error,
+  &--error {
+    border-color: $danger-color;
+    
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($danger-color, 0.2);
+    }
+  }
+  
+  // 成功状态
+  &.success,
+  &--success {
+    border-color: $success-color;
+    
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($success-color, 0.2);
+    }
+  }
+}
+
+// 表单文本域样式
+.form-textarea {
+  @extend .form-input;
+  min-height: 100px;
+  resize: vertical;
+  line-height: tokens.$line-height-relaxed;
+}
+
+// 表单选择框样式
+.form-select {
+  @extend .form-input;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888aa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right tokens.$spacing-4 center;
+  padding-right: tokens.$spacing-10;
+  cursor: pointer;
+}
+
+// 表单字段组（水平布局）- Requirements: 8.4
+.form-group {
+  // 字段组间距
+  margin-bottom: spacing.$form-group-gap;
+  
+  // 水平布局
+  &--horizontal {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-4;
+    
+    .form-label {
+      margin-bottom: 0;
+      min-width: 120px;
+      flex-shrink: 0;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+      flex: 1;
+    }
+  }
+  
+  // 内联布局
+  &--inline {
+    display: flex;
+    align-items: flex-end;
+    gap: tokens.$spacing-4;
+    flex-wrap: wrap;
+    
+    .form-field {
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 200px;
+    }
+  }
+}
+
+// 表单行（网格布局）
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: spacing.$form-group-gap;
+  margin-bottom: spacing.$form-field-gap;
+}
+
+// 表单帮助文本
+.form-help {
+  font-size: tokens.$font-size-xs;
+  color: $text-secondary;
+  margin-top: tokens.$spacing-1;
+  line-height: tokens.$line-height-normal;
+}
+
+// 表单错误消息
+.form-error {
+  font-size: tokens.$font-size-xs;
+  color: $danger-color;
+  margin-top: tokens.$spacing-1;
+  line-height: tokens.$line-height-normal;
+}
+
+// 表单操作按钮区域
+.form-actions {
+  display: flex;
+  gap: tokens.$spacing-4;
+  margin-top: spacing.$form-group-gap;
+  
+  // 右对齐
+  &--right {
+    justify-content: flex-end;
+  }
+  
+  // 居中
+  &--center {
+    justify-content: center;
+  }
+  
+  // 两端对齐
+  &--between {
+    justify-content: space-between;
+  }
+}
+
+// 复选框和单选框样式
+.form-checkbox,
+.form-radio {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-2;
+  cursor: pointer;
+  
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: $primary-color;
+    cursor: pointer;
+  }
+  
+  span {
+    font-size: tokens.$font-size-sm;
+    color: $text-regular;
+  }
+}
+
+// 复选框/单选框组
+.form-checkbox-group,
+.form-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-3;
+  
+  // 水平布局
+  &--horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: tokens.$spacing-4;
+  }
+}
+
+// Element Plus 表单覆盖样式
+.el-form {
+  // 表单项间距
+  .el-form-item {
+    margin-bottom: spacing.$form-field-gap;
+  }
+  
+  // 标签样式
+  .el-form-item__label {
+    font-size: tokens.$font-size-sm;
+    font-weight: tokens.$font-weight-medium;
+    color: $text-primary;
+    padding-bottom: spacing.$form-label-gap;
+  }
+  
+  // 输入框样式
+  .el-input__inner,
+  .el-textarea__inner {
+    font-size: tokens.$font-size-base;
+    font-family: tokens.$font-family-sans;
+  }
+  
+  // 紧凑表单
+  &--compact {
+    .el-form-item {
+      margin-bottom: spacing.$form-field-gap-sm;
+    }
+  }
+  
+  // 宽松表单
+  &--relaxed {
+    .el-form-item {
+      margin-bottom: spacing.$form-field-gap-lg;
+    }
+  }
 }
 
 // =====================================================
@@ -242,60 +887,78 @@
 // =====================================================
 
 // 移动端统计卡片网格
-@media (max-width: 768px) {
+@media (max-width: tokens.$breakpoint-md) {
   .stats-grid {
     grid-template-columns: 1fr;
-    gap: $spacing-md;
+    gap: tokens.$spacing-normal;
   }
   
   .card-grid {
     grid-template-columns: 1fr;
-    gap: $spacing-md;
+    gap: tokens.$spacing-normal;
   }
   
   .charts-grid {
     grid-template-columns: 1fr;
-    gap: $spacing-md;
+    gap: tokens.$spacing-normal;
   }
 }
 
 // 移动端统计卡片
-@media (max-width: 768px) {
+@media (max-width: tokens.$breakpoint-md) {
   .stats-card {
-    padding: $spacing-md;
+    // 移动端使用较小的内边距
+    padding: tokens.$spacing-normal;
     
     .stats-card__header {
-      margin-bottom: $spacing-sm;
+      margin-bottom: tokens.$spacing-2;
       
       .stats-card__title {
-        font-size: $font-size-xs;
+        font-size: tokens.$font-size-xs;
       }
       
       .stats-card__icon {
-        font-size: 20px;
+        font-size: tokens.$font-size-xl;
       }
     }
     
     .stats-card__value {
-      font-size: $font-size-xl;
+      font-size: tokens.$font-size-xl;
+    }
+  }
+  
+  .metric-card {
+    // 移动端使用较小的内边距
+    padding: tokens.$spacing-normal;
+    
+    .metric-card__header {
+      margin-bottom: tokens.$spacing-2;
+      
+      .metric-card__title {
+        font-size: tokens.$font-size-xs;
+      }
+    }
+    
+    .metric-card__value {
+      font-size: tokens.$font-size-2xl;
     }
   }
 }
 
 // 移动端图表容器
-@media (max-width: 768px) {
+@media (max-width: tokens.$breakpoint-md) {
   .chart-container {
     height: 300px;
-    padding: $spacing-md;
+    padding: tokens.$spacing-normal;
     
     .chart-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: $spacing-sm;
-      margin-bottom: $spacing-sm;
+      gap: tokens.$spacing-2;
+      margin-bottom: tokens.$spacing-2;
       
       h3 {
-        font-size: $font-size-base;
+        font-size: tokens.$font-size-base;
       }
       
       .chart-actions {
@@ -307,23 +970,23 @@
 }
 
 // 移动端数据表单
-@media (max-width: 768px) {
+@media (max-width: tokens.$breakpoint-md) {
   .data-form {
-    padding: $spacing-md;
+    padding: tokens.$spacing-normal;
     
     .form-title {
-      font-size: $font-size-base;
-      margin-bottom: $spacing-md;
+      font-size: tokens.$font-size-base;
+      margin-bottom: tokens.$spacing-normal;
     }
     
     .form-row {
       grid-template-columns: 1fr;
-      gap: $spacing-md;
+      gap: tokens.$spacing-normal;
     }
     
     .form-actions {
       flex-direction: column;
-      gap: $spacing-sm;
+      gap: tokens.$spacing-2;
       
       .el-button {
         width: 100%;
@@ -334,18 +997,18 @@
 }
 
 // 移动端数据表格
-@media (max-width: 768px) {
+@media (max-width: tokens.$breakpoint-md) {
   .data-table {
-    padding: $spacing-md;
+    padding: tokens.$spacing-normal;
     
     .table-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: $spacing-sm;
-      margin-bottom: $spacing-md;
+      gap: tokens.$spacing-2;
+      margin-bottom: tokens.$spacing-normal;
       
       h3 {
-        font-size: $font-size-base;
+        font-size: tokens.$font-size-base;
       }
       
       .table-actions {
@@ -357,11 +1020,11 @@
 }
 
 // 移动端筛选器
-@media (max-width: 768px) {
+@media (max-width: tokens.$breakpoint-md) {
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
-    padding: $spacing-md;
+    padding: tokens.$spacing-normal;
     
     .filter-group {
       width: 100%;

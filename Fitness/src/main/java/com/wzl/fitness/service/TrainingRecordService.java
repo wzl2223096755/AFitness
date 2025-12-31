@@ -124,4 +124,11 @@ public interface TrainingRecordService {
      * 删除用户的训练记录
      */
     void deleteByUserAndId(User user, Long id);
+    
+    /**
+     * 删除用户的所有训练记录
+     * 
+     * @param userId 用户ID
+     */
+    void deleteAllByUserId(Long userId);
 }

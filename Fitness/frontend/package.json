@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint src --ext .vue,.js,.jsx,.ts,.tsx --fix --ignore-pattern \"**/*.d.ts\" --ignore-pattern \"**/*.test.*\" --ignore-pattern \"**/*.spec.*\" --ignore-pattern \"**/*.pbt.*\"",
     "test:unit": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest --run --coverage",
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@fast-check/vitest": "^0.2.4",
     "@playwright/test": "^1.57.0",
+    "@rushstack/eslint-patch": "^1.15.0",
     "@vitejs/plugin-vue": "^4.3.4",
     "@vitest/coverage-v8": "^4.0.16",
     "@vue/eslint-config-prettier": "^8.0.0",

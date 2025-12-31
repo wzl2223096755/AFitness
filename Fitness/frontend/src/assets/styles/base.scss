@@ -1,20 +1,58 @@
 @use './variables.scss' as *;
+@use './tokens' as tokens;
+@use './typography' as typography;
 
+// =============================================================================
+// Base Styles - Typography and Layout Optimization
+// =============================================================================
+// 本文件定义全局基础样式，应用新的排版系统
+// Requirements: 1.1, 1.3, 1.4, 1.6
+
+// =============================================================================
 // 全局重置样式
+// =============================================================================
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: $font-size-base;
-  color: $text-primary;
-  background-color: $bg-secondary;
+// =============================================================================
+// HTML/Body 字体设置
+// =============================================================================
+// Requirements: 1.1 - 使用设计令牌中定义的字体族
+// Requirements: 1.3 - 应用适当的行高确保舒适阅读
+// Requirements: 1.6 - 使用包含中文字体的字体栈
+
+html {
+  // 使用新的字体族令牌（包含中文字体栈）
+  font-family: tokens.$font-family-sans;
+  // 基础字号设置
+  font-size: tokens.$font-size-base;
+  // 行高设置在 1.4-1.8 范围内
+  line-height: tokens.$line-height-relaxed;
+  // 字体渲染优化
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  // 文本大小调整
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  height: 100%;
+  // 继承 html 的字体设置
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  // 字重设置
+  font-weight: tokens.$font-weight-normal;
+  // 颜色设置
+  color: $text-primary;
+  background-color: $bg-secondary;
+  // 文本溢出处理
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 #app {
@@ -23,7 +61,72 @@ html, body {
   flex-direction: column;
 }
 
+// =============================================================================
+// 内容容器最大宽度限制
+// =============================================================================
+// Requirements: 1.4 - 当文本内容超过 75 字符时限制最大宽度
+
+.content-container {
+  max-width: $content-max-width; // 75ch
+  margin-inline: auto;
+  padding-inline: tokens.$spacing-4;
+  
+  @media (min-width: $breakpoint-md) {
+    padding-inline: tokens.$spacing-6;
+  }
+}
+
+.content-container-wide {
+  max-width: $content-max-width-wide; // 90ch
+  margin-inline: auto;
+  padding-inline: tokens.$spacing-4;
+  
+  @media (min-width: $breakpoint-md) {
+    padding-inline: tokens.$spacing-6;
+  }
+}
+
+.content-container-narrow {
+  max-width: $content-max-width-narrow; // 60ch
+  margin-inline: auto;
+  padding-inline: tokens.$spacing-4;
+  
+  @media (min-width: $breakpoint-md) {
+    padding-inline: tokens.$spacing-6;
+  }
+}
+
+// 阅读优化容器（用于长文本内容）
+.prose {
+  max-width: $content-max-width;
+  margin-inline: auto;
+  
+  // 段落间距
+  p {
+    margin-bottom: tokens.$spacing-4;
+    line-height: tokens.$line-height-relaxed;
+  }
+  
+  // 标题间距
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: tokens.$spacing-8;
+    margin-bottom: tokens.$spacing-4;
+  }
+  
+  // 列表间距
+  ul, ol {
+    margin-bottom: tokens.$spacing-4;
+    padding-left: tokens.$spacing-6;
+  }
+  
+  li {
+    margin-bottom: tokens.$spacing-2;
+  }
+}
+
+// =============================================================================
 // 滚动条样式
+// =============================================================================
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -42,7 +145,9 @@ html, body {
   background: $text-secondary;
 }
 
+// =============================================================================
 // 通用布局类
+// =============================================================================
 .app-container {
   height: 100%;
   display: flex;
@@ -74,7 +179,12 @@ html, body {
   flex-wrap: wrap;
 }
 
-// 通用间距类
+// =============================================================================
+// 通用间距类 (使用新令牌)
+// =============================================================================
+// 保留原有类名以确保向后兼容性
+
+// 旧版间距类（向后兼容）
 .m-0 { margin: 0; }
 .m-xs { margin: $spacing-xs; }
 .m-sm { margin: $spacing-sm; }
@@ -89,11 +199,85 @@ html, body {
 .p-lg { padding: $spacing-lg; }
 .p-xl { padding: $spacing-xl; }
 
-// 文本样式
+// 新版间距类（使用设计令牌）
+// Margin utilities
+.m-1 { margin: tokens.$spacing-1; }
+.m-2 { margin: tokens.$spacing-2; }
+.m-3 { margin: tokens.$spacing-3; }
+.m-4 { margin: tokens.$spacing-4; }
+.m-5 { margin: tokens.$spacing-5; }
+.m-6 { margin: tokens.$spacing-6; }
+.m-8 { margin: tokens.$spacing-8; }
+.m-10 { margin: tokens.$spacing-10; }
+.m-12 { margin: tokens.$spacing-12; }
+.m-16 { margin: tokens.$spacing-16; }
+
+// Padding utilities
+.p-1 { padding: tokens.$spacing-1; }
+.p-2 { padding: tokens.$spacing-2; }
+.p-3 { padding: tokens.$spacing-3; }
+.p-4 { padding: tokens.$spacing-4; }
+.p-5 { padding: tokens.$spacing-5; }
+.p-6 { padding: tokens.$spacing-6; }
+.p-8 { padding: tokens.$spacing-8; }
+.p-10 { padding: tokens.$spacing-10; }
+.p-12 { padding: tokens.$spacing-12; }
+.p-16 { padding: tokens.$spacing-16; }
+
+// Margin-top utilities
+.mt-1 { margin-top: tokens.$spacing-1; }
+.mt-2 { margin-top: tokens.$spacing-2; }
+.mt-3 { margin-top: tokens.$spacing-3; }
+.mt-4 { margin-top: tokens.$spacing-4; }
+.mt-5 { margin-top: tokens.$spacing-5; }
+.mt-6 { margin-top: tokens.$spacing-6; }
+.mt-8 { margin-top: tokens.$spacing-8; }
+
+// Margin-bottom utilities
+.mb-1 { margin-bottom: tokens.$spacing-1; }
+.mb-2 { margin-bottom: tokens.$spacing-2; }
+.mb-3 { margin-bottom: tokens.$spacing-3; }
+.mb-4 { margin-bottom: tokens.$spacing-4; }
+.mb-5 { margin-bottom: tokens.$spacing-5; }
+.mb-6 { margin-bottom: tokens.$spacing-6; }
+.mb-8 { margin-bottom: tokens.$spacing-8; }
+
+// Padding-x (horizontal) utilities
+.px-1 { padding-left: tokens.$spacing-1; padding-right: tokens.$spacing-1; }
+.px-2 { padding-left: tokens.$spacing-2; padding-right: tokens.$spacing-2; }
+.px-3 { padding-left: tokens.$spacing-3; padding-right: tokens.$spacing-3; }
+.px-4 { padding-left: tokens.$spacing-4; padding-right: tokens.$spacing-4; }
+.px-5 { padding-left: tokens.$spacing-5; padding-right: tokens.$spacing-5; }
+.px-6 { padding-left: tokens.$spacing-6; padding-right: tokens.$spacing-6; }
+
+// Padding-y (vertical) utilities
+.py-1 { padding-top: tokens.$spacing-1; padding-bottom: tokens.$spacing-1; }
+.py-2 { padding-top: tokens.$spacing-2; padding-bottom: tokens.$spacing-2; }
+.py-3 { padding-top: tokens.$spacing-3; padding-bottom: tokens.$spacing-3; }
+.py-4 { padding-top: tokens.$spacing-4; padding-bottom: tokens.$spacing-4; }
+.py-5 { padding-top: tokens.$spacing-5; padding-bottom: tokens.$spacing-5; }
+.py-6 { padding-top: tokens.$spacing-6; padding-bottom: tokens.$spacing-6; }
+
+// Gap utilities (for flexbox/grid)
+.gap-1 { gap: tokens.$spacing-1; }
+.gap-2 { gap: tokens.$spacing-2; }
+.gap-3 { gap: tokens.$spacing-3; }
+.gap-4 { gap: tokens.$spacing-4; }
+.gap-5 { gap: tokens.$spacing-5; }
+.gap-6 { gap: tokens.$spacing-6; }
+.gap-8 { gap: tokens.$spacing-8; }
+
+// =============================================================================
+// 文本样式 (使用新令牌)
+// =============================================================================
+// Requirements: 1.1 - 使用模块化字号比例
+
+// 文本对齐
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
 
+// 文本颜色
 .text-primary { color: $text-primary; }
 .text-regular { color: $text-regular; }
 .text-secondary { color: $text-secondary; }
@@ -101,27 +285,90 @@ html, body {
 .text-warning { color: $warning-color; }
 .text-danger { color: $danger-color; }
 
-.text-xs { font-size: $font-size-xs; }
-.text-sm { font-size: $font-size-sm; }
-.text-base { font-size: $font-size-base; }
-.text-lg { font-size: $font-size-lg; }
-.text-xl { font-size: $font-size-xl; }
+// 字号工具类 (使用新令牌)
+// Requirements: 1.1 - 定义模块化字号比例
+.text-2xs { font-size: tokens.$font-size-2xs; }
+.text-xs { font-size: tokens.$font-size-xs; }
+.text-sm { font-size: tokens.$font-size-sm; }
+.text-base { font-size: tokens.$font-size-base; }
+.text-lg { font-size: tokens.$font-size-lg; }
+.text-xl { font-size: tokens.$font-size-xl; }
+.text-2xl { font-size: tokens.$font-size-2xl; }
+.text-3xl { font-size: tokens.$font-size-3xl; }
+.text-4xl { font-size: tokens.$font-size-4xl; }
+.text-5xl { font-size: tokens.$font-size-5xl; }
 
+// 行高工具类 (使用新令牌)
+// Requirements: 1.3 - 行高在 1.4-1.8 范围内
+.leading-none { line-height: tokens.$line-height-none; }
+.leading-tight { line-height: tokens.$line-height-tight; }
+.leading-snug { line-height: tokens.$line-height-snug; }
+.leading-normal { line-height: tokens.$line-height-normal; }
+.leading-relaxed { line-height: tokens.$line-height-relaxed; }
+.leading-loose { line-height: tokens.$line-height-loose; }
+
+// 字重工具类 (使用新令牌)
+.font-light { font-weight: tokens.$font-weight-light; }
+.font-normal { font-weight: tokens.$font-weight-normal; }
+.font-medium { font-weight: tokens.$font-weight-medium; }
+.font-semibold { font-weight: tokens.$font-weight-semibold; }
+.font-bold { font-weight: tokens.$font-weight-bold; }
+.font-extrabold { font-weight: tokens.$font-weight-extrabold; }
+
+// 字间距工具类 (使用新令牌)
+.tracking-tighter { letter-spacing: tokens.$letter-spacing-tighter; }
+.tracking-tight { letter-spacing: tokens.$letter-spacing-tight; }
+.tracking-normal { letter-spacing: tokens.$letter-spacing-normal; }
+.tracking-wide { letter-spacing: tokens.$letter-spacing-wide; }
+.tracking-wider { letter-spacing: tokens.$letter-spacing-wider; }
+
+// 字体族工具类
+.font-sans { font-family: tokens.$font-family-sans; }
+.font-mono { font-family: tokens.$font-family-mono; }
+
+// 文本截断
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 多行截断
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--line-clamp, 3);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-1 { --line-clamp: 1; @extend .line-clamp; }
+.line-clamp-2 { --line-clamp: 2; @extend .line-clamp; }
+.line-clamp-3 { --line-clamp: 3; @extend .line-clamp; }
+
+// 数字表格对齐（用于数据表格）
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+// =============================================================================
 // 卡片样式
+// =============================================================================
 .card {
   background: $bg-card;
   border-radius: $border-radius-base;
-  padding: $spacing-lg;
+  padding: tokens.$spacing-6; // 24px - 使用新令牌
   box-shadow: $shadow-base;
   transition: box-shadow $transition-time;
-  margin-bottom: $spacing-lg;
+  margin-bottom: tokens.$spacing-6;
   
   &:hover {
     box-shadow: $shadow-light;
   }
 }
 
+// =============================================================================
 // 按钮样式增强
+// =============================================================================
 .btn-primary {
   background-color: $primary-color;
   border-color: $primary-color;
@@ -133,34 +380,59 @@ html, body {
   }
 }
 
+// =============================================================================
 // 加载状态
+// =============================================================================
 .loading {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: $spacing-xl;
+  padding: tokens.$spacing-8;
   color: $text-secondary;
 }
 
+// =============================================================================
 // 空状态
+// =============================================================================
 .empty-state {
   text-align: center;
-  padding: $spacing-xl;
+  padding: tokens.$spacing-8;
   color: $text-secondary;
   
   &__icon {
-    font-size: 48px;
-    margin-bottom: $spacing-md;
+    font-size: tokens.$font-size-5xl;
+    margin-bottom: tokens.$spacing-4;
     opacity: 0.5;
   }
   
   &__text {
-    font-size: $font-size-base;
-    margin-bottom: $spacing-sm;
+    font-size: tokens.$font-size-base;
+    line-height: tokens.$line-height-relaxed;
+    margin-bottom: tokens.$spacing-2;
   }
   
   &__description {
-    font-size: $font-size-sm;
+    font-size: tokens.$font-size-sm;
+    line-height: tokens.$line-height-normal;
     color: $text-placeholder;
+  }
+}
+
+// =============================================================================
+// 响应式字体缩放
+// =============================================================================
+// Requirements: 2.1, 2.2, 2.4
+
+@media (max-width: $breakpoint-md) {
+  html {
+    // 在 768px 以下减少基础字号 10-15%
+    font-size: 14.4px; // 16px * 0.9 = 14.4px
+  }
+}
+
+@media (max-width: $breakpoint-xs) {
+  html {
+    // 在 480px 以下确保最小字号不低于 14px
+    font-size: 14px;
   }
 }

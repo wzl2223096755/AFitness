@@ -1,59 +1,59 @@
 <template>
-  <div class="nutrition-page">
+  <div class="nutrition-page p-5">
     <!-- 页面头部 -->
-    <div class="page-header">
-      <h1>营养追踪</h1>
-      <div class="page-description">记录每日饮食，监控营养摄入，助力健身目标</div>
+    <div class="page-header mb-8">
+      <h1 class="responsive-h1 font-extrabold mb-3">营养追踪</h1>
+      <div class="page-description text-lg leading-relaxed">记录每日饮食，监控营养摄入，助力健身目标</div>
     </div>
     
     <!-- 营养概览卡片 -->
-    <div class="overview-cards">
+    <div class="overview-cards mb-8">
       <el-row :gutter="20">
         <el-col :span="6">
-          <div class="overview-card calories">
+          <div class="overview-card calories p-5">
             <div class="card-icon">
               <el-icon size="32"><Odometer /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title">今日卡路里</div>
-              <div class="card-value">{{ todayCalories }}</div>
-              <div class="card-unit">千卡</div>
+              <div class="card-title text-sm leading-normal">今日卡路里</div>
+              <div class="card-value data-value">{{ todayCalories }}</div>
+              <div class="card-unit data-unit">千卡</div>
             </div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="overview-card protein">
+          <div class="overview-card protein p-5">
             <div class="card-icon">
               <el-icon size="32"><KnifeFork /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title">蛋白质</div>
-              <div class="card-value">{{ todayProtein }}</div>
-              <div class="card-unit">克</div>
+              <div class="card-title text-sm leading-normal">蛋白质</div>
+              <div class="card-value data-value">{{ todayProtein }}</div>
+              <div class="card-unit data-unit">克</div>
             </div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="overview-card carbs">
+          <div class="overview-card carbs p-5">
             <div class="card-icon">
               <el-icon size="32"><Coffee /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title">碳水化合物</div>
-              <div class="card-value">{{ todayCarbs }}</div>
-              <div class="card-unit">克</div>
+              <div class="card-title text-sm leading-normal">碳水化合物</div>
+              <div class="card-value data-value">{{ todayCarbs }}</div>
+              <div class="card-unit data-unit">克</div>
             </div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="overview-card fat">
+          <div class="overview-card fat p-5">
             <div class="card-icon">
               <el-icon size="32"><IceTea /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title">脂肪</div>
-              <div class="card-value">{{ todayFat }}</div>
-              <div class="card-unit">克</div>
+              <div class="card-title text-sm leading-normal">脂肪</div>
+              <div class="card-value data-value">{{ todayFat }}</div>
+              <div class="card-unit data-unit">克</div>
             </div>
           </div>
         </el-col>
@@ -61,10 +61,10 @@
     </div>
     
     <!-- 营养摄入分布图表 -->
-    <div class="chart-section">
+    <div class="chart-section mb-8">
       <el-card class="chart-card">
-        <div class="chart-header">
-          <h3>今日营养摄入分布</h3>
+        <div class="chart-header mb-5">
+          <h3 class="text-xl font-bold">今日营养摄入分布</h3>
           <el-date-picker
             v-model="selectedDate"
             type="date"
@@ -80,9 +80,9 @@
     </div>
     
     <!-- 饮食记录表单 -->
-    <el-card class="form-card">
-      <div class="card-header">
-        <h3>添加饮食记录</h3>
+    <el-card class="form-card mb-8">
+      <div class="card-header mb-5">
+        <h3 class="text-xl font-bold">添加饮食记录</h3>
       </div>
       <el-form 
         :model="nutritionForm" 
@@ -221,8 +221,8 @@
     
     <!-- 今日饮食记录 -->
     <el-card class="records-card">
-      <div class="card-header">
-        <h3>今日饮食记录</h3>
+      <div class="card-header mb-5">
+        <h3 class="text-xl font-bold">今日饮食记录</h3>
         <el-button type="primary" @click="exportNutritionData">
           <el-icon><Download /></el-icon>
           导出数据
@@ -480,37 +480,30 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* NutritionTracking - Using design tokens from typography and layout system */
+/* Requirements: 7.1, 7.2, 7.3 - Table and list typography */
+
 .nutrition-page {
-  padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: calc(100vh - 60px);
 }
 
 .page-header {
   text-align: center;
-  margin-bottom: 30px;
   color: white;
 }
 
 .page-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  font-weight: 700;
+  margin-bottom: var(--spacing-3, 0.75rem);
 }
 
 .page-description {
-  font-size: 1.1rem;
   opacity: 0.9;
-}
-
-.overview-cards {
-  margin-bottom: 30px;
 }
 
 .overview-card {
   display: flex;
   align-items: center;
-  padding: 20px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -524,8 +517,8 @@ onMounted(() => {
 }
 
 .card-icon {
-  margin-right: 16px;
-  padding: 12px;
+  margin-right: var(--spacing-4, 1rem);
+  padding: var(--spacing-3, 0.75rem);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -557,26 +550,19 @@ onMounted(() => {
 }
 
 .card-title {
-  font-size: 0.9rem;
-  color: #64748b;
-  margin-bottom: 4px;
+  color: var(--text-secondary, #64748b);
+  margin-bottom: var(--spacing-1, 0.25rem);
 }
 
+/* Data value styling using typography system */
 .card-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1e293b;
-  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight, 1.25);
+  color: var(--text-primary, #1e293b);
 }
 
 .card-unit {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin-top: 4px;
-}
-
-.chart-section {
-  margin-bottom: 30px;
+  margin-top: var(--spacing-1, 0.25rem);
 }
 
 .chart-card {
@@ -591,13 +577,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .chart-header h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary, #1e293b);
   margin: 0;
 }
 
@@ -616,25 +599,21 @@ onMounted(() => {
   border-radius: 16px;
   border: none;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .card-header h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary, #1e293b);
   margin: 0;
 }
 
 .nutrition-form {
-  padding: 0 10px;
+  padding: 0 var(--spacing-2, 0.5rem);
 }
 
 .food-suggestions {
@@ -651,7 +630,7 @@ onMounted(() => {
 }
 
 .suggestion-item {
-  padding: 10px 16px;
+  padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
   cursor: pointer;
   transition: background-color 0.2s;
   border-bottom: 1px solid #f0f0f0;
@@ -667,13 +646,24 @@ onMounted(() => {
 }
 
 .food-name {
-  font-weight: 500;
-  color: #1e293b;
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-primary, #1e293b);
 }
 
 .food-calories {
-  font-size: 0.85rem;
-  color: #64748b;
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-secondary, #64748b);
+}
+
+/* Table styling - Requirements: 7.1, 7.2, 7.3 */
+:deep(.el-table .cell) {
+  padding: var(--table-cell-padding-y, 0.75rem) var(--table-cell-padding-x, 1rem);
+  font-variant-numeric: tabular-nums;
+}
+
+:deep(.el-table th .cell) {
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-primary, #1e293b);
 }
 
 @media (max-width: 768px) {

@@ -15,7 +15,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    include: ['src/**/*.{test,spec}.{js,ts}', 'tests/**/*.{test,spec}.{js,ts}'],
+    include: ['src/**/*.{test,spec,pbt.test}.{js,ts}', 'tests/**/*.{test,spec}.{js,ts}'],
     exclude: ['node_modules', 'dist'],
     deps: {
       inline: [/element-plus/, /echarts/, /vue-echarts/]

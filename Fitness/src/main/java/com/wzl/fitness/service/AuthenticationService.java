@@ -55,27 +55,27 @@ public class AuthenticationService {
         try {
             logger.debug("尝试登录用户: {}", request.getUsername());
             
-            // 先从缓存获取用户信息
+            // 先认证用户（不提前暴露用户是否存在）
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            
+            // 认证成功后获取用户信息
             String cacheKey = "user:" + request.getUsername();
             User user = cacheService.get("users", cacheKey, User.class);
             
             if (user == null) {
                 user = userRepository.findByUsername(request.getUsername())
-                    .orElseThrow(() -> new BusinessException("用户不存在"));
+                    .orElseThrow(() -> new BusinessException("用户名或密码错误"));
                 
                 // 缓存用户信息30分钟
                 cacheService.put("users", cacheKey, user, 30, TimeUnit.MINUTES);
                 logger.debug("用户信息已缓存: {}", request.getUsername());
             }
             
-            logger.debug("找到用户: {}", user.getUsername());
-            
-            // 认证用户
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-            );
-
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            logger.debug("用户登录成功: {}", user.getUsername());
             
             // 生成访问令牌
             String accessToken = jwtTokenProvider.generateToken(userDetails, user.getId());
@@ -113,6 +113,7 @@ public class AuthenticationService {
             logger.warn("用户登录失败: {}, 错误: {}", request.getUsername(), e.getMessage());
             // 记录登录失败审计日志
             auditLogService.logLoginFailure(request.getUsername(), e.getMessage());
+            // 统一返回"用户名或密码错误"，不暴露用户是否存在
             throw new BusinessException("用户名或密码错误");
         }
     }

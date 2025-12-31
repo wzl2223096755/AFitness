@@ -111,7 +111,7 @@ service.interceptors.response.use(
       // 处理HTTP错误码
       const status = error.response.status
       switch (status) {
-        case 401:
+        case 401: {
           // 处理token过期
           const originalRequest = error.config
           
@@ -160,6 +160,7 @@ service.interceptors.response.use(
             }, 1500)
           }
           break
+        }
         case 403:
           ElMessage.error('没有权限访问该资源')
           break

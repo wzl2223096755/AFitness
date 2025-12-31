@@ -1,0 +1,263 @@
+// =============================================================================
+// Design Tokens - Typography and Layout Optimization
+// =============================================================================
+// 本文件定义所有设计令牌，包括字体、间距、行高等基础变量
+// Requirements: 1.1, 1.5, 4.1
+
+// =============================================================================
+// Font Family Tokens
+// =============================================================================
+// 包含中文字体栈，优先使用系统字体以确保最佳渲染效果
+
+$font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+  'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial,
+  sans-serif !default;
+
+$font-family-mono: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Monaco,
+  'Courier New', monospace !default;
+
+// =============================================================================
+// Type Scale Tokens (1.25 ratio - Major Third)
+// =============================================================================
+// 模块化字号比例，基于 1.25 的比例因子
+// 基准字号: 16px (1rem)
+
+$type-scale-ratio: 1.25 !default;
+
+$font-size-2xs: 0.64rem !default;   // 10.24px
+$font-size-xs: 0.8rem !default;     // 12.8px
+$font-size-sm: 0.875rem !default;   // 14px
+$font-size-base: 1rem !default;     // 16px
+$font-size-lg: 1.125rem !default;   // 18px
+$font-size-xl: 1.25rem !default;    // 20px
+$font-size-2xl: 1.5rem !default;    // 24px
+$font-size-3xl: 1.875rem !default;  // 30px
+$font-size-4xl: 2.25rem !default;   // 36px
+$font-size-5xl: 3rem !default;      // 48px
+
+// Type scale map for programmatic access
+$type-scale: (
+  '2xs': $font-size-2xs,
+  'xs': $font-size-xs,
+  'sm': $font-size-sm,
+  'base': $font-size-base,
+  'lg': $font-size-lg,
+  'xl': $font-size-xl,
+  '2xl': $font-size-2xl,
+  '3xl': $font-size-3xl,
+  '4xl': $font-size-4xl,
+  '5xl': $font-size-5xl
+) !default;
+
+// =============================================================================
+// Line Height Tokens
+// =============================================================================
+// 行高令牌，用于不同文本类型的行高设置
+
+$line-height-none: 1 !default;
+$line-height-tight: 1.25 !default;
+$line-height-snug: 1.375 !default;
+$line-height-normal: 1.5 !default;
+$line-height-relaxed: 1.625 !default;
+$line-height-loose: 1.75 !default;
+
+// Line height map for programmatic access
+$line-heights: (
+  'none': $line-height-none,
+  'tight': $line-height-tight,
+  'snug': $line-height-snug,
+  'normal': $line-height-normal,
+  'relaxed': $line-height-relaxed,
+  'loose': $line-height-loose
+) !default;
+
+
+// =============================================================================
+// Font Weight Tokens
+// =============================================================================
+// 字重令牌，从 light 到 extrabold
+
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
+$font-weight-extrabold: 800 !default;
+
+// Font weight map for programmatic access
+$font-weights: (
+  'light': $font-weight-light,
+  'normal': $font-weight-normal,
+  'medium': $font-weight-medium,
+  'semibold': $font-weight-semibold,
+  'bold': $font-weight-bold,
+  'extrabold': $font-weight-extrabold
+) !default;
+
+// =============================================================================
+// Letter Spacing Tokens
+// =============================================================================
+// 字间距令牌
+
+$letter-spacing-tighter: -0.05em !default;
+$letter-spacing-tight: -0.025em !default;
+$letter-spacing-normal: 0 !default;
+$letter-spacing-wide: 0.025em !default;
+$letter-spacing-wider: 0.05em !default;
+$letter-spacing-widest: 0.1em !default;
+
+// Letter spacing map for programmatic access
+$letter-spacings: (
+  'tighter': $letter-spacing-tighter,
+  'tight': $letter-spacing-tight,
+  'normal': $letter-spacing-normal,
+  'wide': $letter-spacing-wide,
+  'wider': $letter-spacing-wider,
+  'widest': $letter-spacing-widest
+) !default;
+
+// =============================================================================
+// Spacing Scale Tokens (4px base unit)
+// =============================================================================
+// 间距比例尺，基于 4px 基准单位
+// Requirements: 4.1
+
+$spacing-base-unit: 4px !default;
+
+$spacing-0: 0 !default;
+$spacing-1: 0.25rem !default;   // 4px
+$spacing-2: 0.5rem !default;    // 8px
+$spacing-3: 0.75rem !default;   // 12px
+$spacing-4: 1rem !default;      // 16px
+$spacing-5: 1.25rem !default;   // 20px
+$spacing-6: 1.5rem !default;    // 24px
+$spacing-7: 1.75rem !default;   // 28px
+$spacing-8: 2rem !default;      // 32px
+$spacing-9: 2.25rem !default;   // 36px
+$spacing-10: 2.5rem !default;   // 40px
+$spacing-11: 2.75rem !default;  // 44px
+$spacing-12: 3rem !default;     // 48px
+$spacing-14: 3.5rem !default;   // 56px
+$spacing-16: 4rem !default;     // 64px
+
+// Spacing scale map for programmatic access
+$spacing-scale: (
+  0: $spacing-0,
+  1: $spacing-1,
+  2: $spacing-2,
+  3: $spacing-3,
+  4: $spacing-4,
+  5: $spacing-5,
+  6: $spacing-6,
+  7: $spacing-7,
+  8: $spacing-8,
+  9: $spacing-9,
+  10: $spacing-10,
+  11: $spacing-11,
+  12: $spacing-12,
+  14: $spacing-14,
+  16: $spacing-16
+) !default;
+
+// =============================================================================
+// Semantic Spacing Tokens
+// =============================================================================
+// 语义化间距令牌，用于特定场景
+
+$spacing-tight: $spacing-2 !default;      // 8px - 紧凑间距
+$spacing-normal: $spacing-4 !default;     // 16px - 标准间距
+$spacing-loose: $spacing-6 !default;      // 24px - 宽松间距
+$spacing-section: $spacing-8 !default;    // 32px - 区块间距
+
+// =============================================================================
+// Responsive Breakpoints
+// =============================================================================
+// 响应式断点
+
+$breakpoint-sm: 640px !default;
+$breakpoint-md: 768px !default;
+$breakpoint-lg: 1024px !default;
+$breakpoint-xl: 1280px !default;
+$breakpoint-2xl: 1536px !default;
+
+// Breakpoints map for programmatic access
+$breakpoints: (
+  'sm': $breakpoint-sm,
+  'md': $breakpoint-md,
+  'lg': $breakpoint-lg,
+  'xl': $breakpoint-xl,
+  '2xl': $breakpoint-2xl
+) !default;
+
+// =============================================================================
+// CSS Custom Properties Export
+// =============================================================================
+// 导出为 CSS 自定义属性，便于在组件中使用
+
+:root {
+  // Font families
+  --font-family-sans: #{$font-family-sans};
+  --font-family-mono: #{$font-family-mono};
+
+  // Type scale
+  --font-size-2xs: #{$font-size-2xs};
+  --font-size-xs: #{$font-size-xs};
+  --font-size-sm: #{$font-size-sm};
+  --font-size-base: #{$font-size-base};
+  --font-size-lg: #{$font-size-lg};
+  --font-size-xl: #{$font-size-xl};
+  --font-size-2xl: #{$font-size-2xl};
+  --font-size-3xl: #{$font-size-3xl};
+  --font-size-4xl: #{$font-size-4xl};
+  --font-size-5xl: #{$font-size-5xl};
+
+  // Line heights
+  --line-height-none: #{$line-height-none};
+  --line-height-tight: #{$line-height-tight};
+  --line-height-snug: #{$line-height-snug};
+  --line-height-normal: #{$line-height-normal};
+  --line-height-relaxed: #{$line-height-relaxed};
+  --line-height-loose: #{$line-height-loose};
+
+  // Font weights
+  --font-weight-light: #{$font-weight-light};
+  --font-weight-normal: #{$font-weight-normal};
+  --font-weight-medium: #{$font-weight-medium};
+  --font-weight-semibold: #{$font-weight-semibold};
+  --font-weight-bold: #{$font-weight-bold};
+  --font-weight-extrabold: #{$font-weight-extrabold};
+
+  // Letter spacing
+  --letter-spacing-tighter: #{$letter-spacing-tighter};
+  --letter-spacing-tight: #{$letter-spacing-tight};
+  --letter-spacing-normal: #{$letter-spacing-normal};
+  --letter-spacing-wide: #{$letter-spacing-wide};
+  --letter-spacing-wider: #{$letter-spacing-wider};
+  --letter-spacing-widest: #{$letter-spacing-widest};
+
+  // Spacing scale
+  --spacing-0: #{$spacing-0};
+  --spacing-1: #{$spacing-1};
+  --spacing-2: #{$spacing-2};
+  --spacing-3: #{$spacing-3};
+  --spacing-4: #{$spacing-4};
+  --spacing-5: #{$spacing-5};
+  --spacing-6: #{$spacing-6};
+  --spacing-7: #{$spacing-7};
+  --spacing-8: #{$spacing-8};
+  --spacing-9: #{$spacing-9};
+  --spacing-10: #{$spacing-10};
+  --spacing-11: #{$spacing-11};
+  --spacing-12: #{$spacing-12};
+  --spacing-14: #{$spacing-14};
+  --spacing-16: #{$spacing-16};
+
+  // Semantic spacing
+  --spacing-tight: #{$spacing-tight};
+  --spacing-normal: #{$spacing-normal};
+  --spacing-loose: #{$spacing-loose};
+  --spacing-section: #{$spacing-section};
+
+  // Type scale ratio (for JavaScript access)
+  --type-scale-ratio: #{$type-scale-ratio};
+}

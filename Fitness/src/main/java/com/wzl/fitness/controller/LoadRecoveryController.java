@@ -434,6 +434,78 @@ public class LoadRecoveryController extends BaseController {
     }
 
     /**
+     * 更新健身数据
+     */
+    @PutMapping("/data/{id}")
+    @RequireUser
+    @Operation(
+            summary = "更新健身数据", 
+            description = "更新指定ID的健身数据记录，只能更新自己的数据"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "更新成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "更新成功示例",
+                                    value = """
+                                            {
+                                              "code": 200,
+                                              "message": "更新成功",
+                                              "data": {
+                                                "id": 1,
+                                                "exerciseName": "深蹲",
+                                                "exerciseType": "STRENGTH",
+                                                "weight": 110.0,
+                                                "reps": 8,
+                                                "sets": 4,
+                                                "trainingLoad": 3520.0,
+                                                "timestamp": "2024-01-01T12:00:00"
+                                              },
+                                              "timestamp": "2024-01-01 12:00:00",
+                                              "success": true
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<ApiResponse<FitnessData>> updateFitnessData(
+            @Parameter(description = "数据ID", required = true, example = "1")
+            @PathVariable Long id,
+            @RequestBody FitnessData updatedData,
+            HttpServletRequest request) {
+        User user = getUser(request);
+        FitnessData existingData = fitnessDataRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("数据不存在"));
+        
+        if (!existingData.getUser().getId().equals(user.getId())) {
+            throw new BusinessException("无权操作此数据");
+        }
+        
+        // 更新字段
+        existingData.setExerciseName(updatedData.getExerciseName());
+        existingData.setExerciseType(updatedData.getExerciseType());
+        existingData.setWeight(updatedData.getWeight());
+        existingData.setReps(updatedData.getReps());
+        existingData.setSets(updatedData.getSets());
+        if (updatedData.getTimestamp() != null) {
+            existingData.setTimestamp(updatedData.getTimestamp());
+        }
+        if (updatedData.getPerceivedExertion() != null) {
+            existingData.setPerceivedExertion(updatedData.getPerceivedExertion());
+        }
+        
+        // 重新计算训练负荷
+        FitnessData calculatedData = loadRecoveryService.calculateTrainingLoad(existingData);
+        FitnessData savedData = fitnessDataRepository.save(calculatedData);
+        
+        return ResponseEntity.ok(ApiResponse.success("更新成功", savedData));
+    }
+
+    /**
      * 删除健身数据
      */
     @DeleteMapping("/data/{id}")

@@ -188,4 +188,11 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     public void deleteByUserAndId(User user, Long id) {
         trainingRecordRepository.deleteByUserAndId(user, id);
     }
+    
+    @Override
+    public void deleteAllByUserId(Long userId) {
+        logger.info("删除用户所有训练记录，用户ID: {}", userId);
+        trainingRecordRepository.deleteAllByUserId(userId);
+        logger.info("用户训练记录删除完成，用户ID: {}", userId);
+    }
 }

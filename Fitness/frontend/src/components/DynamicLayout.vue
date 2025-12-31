@@ -44,7 +44,7 @@
       :style="layoutStyles"
     >
       <div 
-        v-for="(item, index) in layoutItems" 
+        v-for="item in layoutItems" 
         :key="item.id"
         class="layout-item"
         :class="{

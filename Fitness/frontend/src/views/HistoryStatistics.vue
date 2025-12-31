@@ -1,13 +1,13 @@
 <template>
-  <div class="history-statistics-page">
+  <div class="history-statistics-page p-5">
     <!-- 页面头部 -->
-    <div class="page-header">
-      <h1>历史统计</h1>
-      <div class="page-description">全面分析您的训练历史数据和进度</div>
+    <div class="page-header mb-6">
+      <h1 class="responsive-h1 font-bold mb-2">历史统计</h1>
+      <div class="page-description text-sm leading-relaxed">全面分析您的训练历史数据和进度</div>
     </div>
     
     <!-- 时间范围筛选器 -->
-    <div class="filter-container">
+    <div class="filter-container p-4 mb-6 gap-3">
       <el-date-picker
         v-model="dateRange"
         type="daterange"
@@ -28,41 +28,41 @@
     </div>
     
     <!-- 统计卡片 -->
-    <div class="stats-card-grid">
-      <div class="stats-card">
-        <div class="stats-card__header">
-          <span class="stats-card__title">总训练次数</span>
-          <el-icon class="stats-card__icon"><TrendCharts /></el-icon>
+    <div class="stats-card-grid auto-grid mb-6">
+      <div class="stats-card p-5">
+        <div class="stats-card__header mb-3">
+          <span class="stats-card__title text-sm">总训练次数</span>
+          <el-icon class="stats-card__icon icon-xl"><TrendCharts /></el-icon>
         </div>
-        <div class="stats-card__value">{{ totalTrainingSessions }}</div>
-        <div class="stats-card__description">所选时间范围内的训练次数</div>
+        <div class="stats-card__value data-value--lg">{{ totalTrainingSessions }}</div>
+        <div class="stats-card__description text-xs">所选时间范围内的训练次数</div>
       </div>
       
-      <div class="stats-card stats-card--success">
-        <div class="stats-card__header">
-          <span class="stats-card__title">总训练量</span>
-          <el-icon class="stats-card__icon"><Histogram /></el-icon>
+      <div class="stats-card stats-card--success p-5">
+        <div class="stats-card__header mb-3">
+          <span class="stats-card__title text-sm">总训练量</span>
+          <el-icon class="stats-card__icon icon-xl"><Histogram /></el-icon>
         </div>
-        <div class="stats-card__value">{{ totalVolume }}</div>
-        <div class="stats-card__description">所有训练的重量×组数×次数总和</div>
+        <div class="stats-card__value data-value--lg">{{ totalVolume }}</div>
+        <div class="stats-card__description text-xs">所有训练的重量×组数×次数总和</div>
       </div>
       
-      <div class="stats-card stats-card--info">
-        <div class="stats-card__header">
-          <span class="stats-card__title">平均训练时长</span>
-          <el-icon class="stats-card__icon"><Timer /></el-icon>
+      <div class="stats-card stats-card--info p-5">
+        <div class="stats-card__header mb-3">
+          <span class="stats-card__title text-sm">平均训练时长</span>
+          <el-icon class="stats-card__icon icon-xl"><Timer /></el-icon>
         </div>
-        <div class="stats-card__value">{{ averageDuration }}</div>
-        <div class="stats-card__description">每次训练的平均时长</div>
+        <div class="stats-card__value data-value--lg">{{ averageDuration }}</div>
+        <div class="stats-card__description text-xs">每次训练的平均时长</div>
       </div>
       
-      <div class="stats-card stats-card--warning">
-        <div class="stats-card__header">
-          <span class="stats-card__title">最常训练动作</span>
-          <el-icon class="stats-card__icon"><Star /></el-icon>
+      <div class="stats-card stats-card--warning p-5">
+        <div class="stats-card__header mb-3">
+          <span class="stats-card__title text-sm">最常训练动作</span>
+          <el-icon class="stats-card__icon icon-xl"><Star /></el-icon>
         </div>
-        <div class="stats-card__value">{{ mostFrequentExercise }}</div>
-        <div class="stats-card__description">{{ mostFrequentExerciseCount }}次训练</div>
+        <div class="stats-card__value data-value--lg">{{ mostFrequentExercise }}</div>
+        <div class="stats-card__description text-xs">{{ mostFrequentExerciseCount }}次训练</div>
       </div>
     </div>
     
@@ -775,48 +775,54 @@ onUnmounted(() => {
 
 
 <style scoped>
+/* Page Layout - using design tokens */
 .history-statistics-page {
-  padding: 20px;
+  padding: var(--spacing-5);
 }
 
 .page-header {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-6);
 }
 
 .page-header h1 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-2);
   color: var(--el-text-color-primary);
+  line-height: var(--line-height-tight);
 }
 
 .page-description {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: var(--el-text-color-secondary);
+  line-height: var(--line-height-relaxed);
 }
 
+/* Filter Container */
 .filter-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding: 16px;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-4);
   background: var(--el-bg-color);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Stats Card Grid - using auto-grid pattern */
 .stats-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
 }
 
+/* Stats Card - consistent internal padding (20-28px per Req 6.1, 6.2) */
 .stats-card {
   background: var(--el-bg-color);
   border-radius: 12px;
-  padding: 20px;
+  padding: var(--spacing-5);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-top: 4px solid #409eff;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -843,42 +849,48 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--spacing-3);
 }
 
 .stats-card__title {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: var(--el-text-color-secondary);
+  line-height: var(--line-height-normal);
 }
 
 .stats-card__icon {
-  font-size: 24px;
+  font-size: var(--font-size-2xl);
   color: #409eff;
 }
 
 .stats-card__value {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
   color: var(--el-text-color-primary);
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-2);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight);
 }
 
 .stats-card__description {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--el-text-color-secondary);
+  line-height: var(--line-height-normal);
 }
 
+/* Charts Grid */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
 }
 
+/* Chart Container - consistent padding */
 .chart-container {
   background: var(--el-bg-color);
   border-radius: 12px;
-  padding: 20px;
+  padding: var(--spacing-5);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -890,14 +902,15 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-4);
 }
 
 .chart-header h3 {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
   color: var(--el-text-color-primary);
   margin: 0;
+  line-height: var(--line-height-snug);
 }
 
 .chart-content {
@@ -905,10 +918,11 @@ onUnmounted(() => {
   width: 100%;
 }
 
+/* Data Table - consistent padding and typography */
 .data-table {
   background: var(--el-bg-color);
   border-radius: 12px;
-  padding: 20px;
+  padding: var(--spacing-5);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -916,26 +930,47 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-4);
 }
 
 .table-header h3 {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
   color: var(--el-text-color-primary);
   margin: 0;
+  line-height: var(--line-height-snug);
 }
 
 .table-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-3);
 }
 
 .pagination-container {
-  margin-top: 16px;
+  margin-top: var(--spacing-4);
   display: flex;
   justify-content: flex-end;
+}
+
+/* Table styling - Requirements 7.1, 7.2, 7.3 */
+:deep(.el-table) {
+  font-size: var(--font-size-sm);
+}
+
+:deep(.el-table th) {
+  font-weight: var(--font-weight-semibold);
+  color: var(--el-text-color-primary);
+  background-color: var(--el-fill-color-light);
+}
+
+:deep(.el-table .cell) {
+  padding: var(--spacing-3) var(--spacing-4);
+  line-height: var(--line-height-normal);
+}
+
+:deep(.el-table td .cell) {
+  font-variant-numeric: tabular-nums;
 }
 
 /* 响应式设计 */
@@ -951,20 +986,20 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .history-statistics-page {
-    padding: 12px;
+    padding: var(--spacing-3);
   }
   
   .page-header {
-    margin-bottom: 16px;
+    margin-bottom: var(--spacing-4);
   }
   
   .page-header h1 {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
   }
   
   .filter-container {
     flex-direction: column;
-    padding: 14px;
+    padding: var(--spacing-4);
   }
   
   .filter-container .el-date-editor,
@@ -975,29 +1010,29 @@ onUnmounted(() => {
   
   .stats-card-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: var(--spacing-3);
   }
   
   .stats-card {
-    padding: 16px;
+    padding: var(--spacing-4);
   }
   
   .stats-card__value {
-    font-size: 24px;
+    font-size: var(--font-size-2xl);
   }
   
   .charts-grid {
-    gap: 12px;
+    gap: var(--spacing-3);
   }
   
   .chart-container {
-    padding: 14px;
+    padding: var(--spacing-4);
   }
   
   .chart-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--spacing-3);
   }
   
   .chart-content {
@@ -1005,13 +1040,13 @@ onUnmounted(() => {
   }
   
   .data-table {
-    padding: 14px;
+    padding: var(--spacing-4);
   }
   
   .table-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--spacing-3);
   }
   
   .table-actions {
@@ -1035,7 +1070,7 @@ onUnmounted(() => {
   :deep(.el-pagination) {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px;
+    gap: var(--spacing-2);
   }
   
   :deep(.el-pagination .el-pagination__sizes),
@@ -1046,7 +1081,7 @@ onUnmounted(() => {
 
 @media (max-width: 480px) {
   .history-statistics-page {
-    padding: 10px;
+    padding: var(--spacing-3);
   }
   
   .filter-container,
@@ -1057,7 +1092,7 @@ onUnmounted(() => {
   }
   
   .stats-card__value {
-    font-size: 22px;
+    font-size: var(--font-size-xl);
   }
   
   .chart-content {
@@ -1065,11 +1100,11 @@ onUnmounted(() => {
   }
   
   :deep(.el-table) {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
   
   :deep(.el-table .cell) {
-    padding: 8px 6px;
+    padding: var(--spacing-2) var(--spacing-2);
   }
 }
 </style>

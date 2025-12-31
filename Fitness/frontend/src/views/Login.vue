@@ -252,7 +252,6 @@ const validateForm = () => {
   return valid
 }
 
-// 登录处理
 const handleLogin = async () => {
   if (!validateForm()) return
   
@@ -293,22 +292,57 @@ const handleLogin = async () => {
   }
 }
 
-// 注册处理
-const handleRegister = async () => {
-  if (!registerForm.username || !registerForm.email || !registerForm.password) {
-    ElMessage.warning('请填写完整信息')
-    return
+const validateRegisterForm = () => {
+  if (!registerForm.username) {
+    ElMessage.warning('请输入用户名')
+    return false
+  }
+  if (registerForm.username.length < 3) {
+    ElMessage.warning('用户名长度至少为3位')
+    return false
+  }
+  if (!/^[a-zA-Z0-9_]+$/.test(registerForm.username)) {
+    ElMessage.warning('用户名只能包含字母、数字和下划线')
+    return false
   }
   
+  if (!registerForm.email) {
+    ElMessage.warning('请输入邮箱')
+    return false
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email)) {
+    ElMessage.warning('请输入正确的邮箱格式')
+    return false
+  }
+
+  if (!registerForm.password) {
+    ElMessage.warning('请输入密码')
+    return false
+  }
+  if (registerForm.password.length < 6) {
+    ElMessage.warning('密码长度至少为6位')
+    return false
+  }
+  if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(registerForm.password)) {
+    ElMessage.warning('密码必须包含大写字母、小写字母和数字')
+    return false
+  }
+
   if (registerForm.password !== registerForm.confirmPassword) {
     ElMessage.warning('两次密码输入不一致')
-    return
+    return false
   }
   
   if (!registerForm.agreement) {
     ElMessage.warning('请同意服务条款')
-    return
+    return false
   }
+
+  return true
+}
+
+const handleRegister = async () => {
+  if (!validateRegisterForm()) return
   
   try {
     registerLoading.value = true
@@ -327,13 +361,13 @@ const handleRegister = async () => {
       ElMessage.error(response.message || '注册失败')
     }
   } catch (error) {
-    ElMessage.error(error.response?.data?.message || '注册失败')
+    console.error('注册失败:', error)
+    ElMessage.error(error.response?.data?.message || '注册失败，请稍后重试')
   } finally {
     registerLoading.value = false
   }
 }
 
-// 忘记密码处理
 const handleForgotPassword = () => {
   if (!forgotEmail.value) {
     ElMessage.warning('请输入邮箱')

@@ -10,6 +10,7 @@ export const fitnessApi = {
   // 基础健身数据 (LoadRecoveryController)
   getFitnessData: (params) => get('/api/v1/load-recovery/my-data', { params }),
   saveFitnessData: (data) => post('/api/v1/load-recovery/training-data', data),
+  updateFitnessData: (id, data) => put(`/api/v1/load-recovery/data/${id}`, data),
   deleteFitnessData: (id) => del(`/api/v1/load-recovery/data/${id}`),
   
   // 训练计划管理 (TrainingPlanController)
@@ -19,6 +20,7 @@ export const fitnessApi = {
   updateFitnessPlan: (id, data) => put(`/api/v1/training-plans/${id}`, data),
   deleteFitnessPlan: (id) => del(`/api/v1/training-plans/${id}`),
   updateExercise: (id) => patch(`/api/v1/training-plans/exercises/${id}/toggle`),
+  toggleExerciseCompletion: (id) => patch(`/api/v1/training-plans/exercises/${id}/toggle`),
   getUserFitnessPlansByStatus: (status) => get(`/api/v1/training-plans/status/${status}`),
   getUserFitnessPlansByDateRange: (startDate, endDate) => get('/api/v1/training-plans/range', { params: { startDate, endDate } }),
   saveWeeklyPlan: (data) => post('/api/v1/training-plans/weekly', data),

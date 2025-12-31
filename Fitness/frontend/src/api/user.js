@@ -56,6 +56,9 @@ export const userApi = {
   // 导出用户数据
   exportUserData: (params) => get('/api/v1/user/export', params),
   
+  // 重置用户数据
+  resetUserData: (password) => post('/api/v1/user/reset-data', { password }),
+  
   // 删除用户账户
   deleteAccount: (password) => post('/api/v1/user/delete-account', { password }),
   

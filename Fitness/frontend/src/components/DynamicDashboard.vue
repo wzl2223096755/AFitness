@@ -1,13 +1,13 @@
 <template>
-  <div class="dynamic-dashboard">
+  <div class="dynamic-dashboard p-5">
     <!-- 粒子背景 -->
     <ParticleBackground />
     
-    <div class="dashboard-header">
-      <h1 class="dashboard-title">
+    <div class="dashboard-header mb-6 p-6">
+      <h1 class="dashboard-title responsive-h1 font-extrabold">
         <span class="title-gradient">健身数据仪表盘</span>
       </h1>
-      <div class="dashboard-controls">
+      <div class="dashboard-controls gap-4">
         <el-select v-model="currentLayout" @change="onLayoutChange" placeholder="选择布局" class="modern-select">
           <el-option
             v-for="layout in availableLayouts"
@@ -161,11 +161,13 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* DynamicDashboard - Using design tokens from typography and layout system */
+/* Requirements: 3.2, 6.1, 6.2 */
+
 .dynamic-dashboard {
   width: 100%;
   min-height: 100vh;
   position: relative;
-  padding: 20px;
 }
 
 .dashboard-header {
@@ -174,9 +176,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
   background: rgba(255, 255, 255, 0.95);
-  padding: 24px 32px;
   border-radius: 20px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -189,9 +189,8 @@ onUnmounted(() => {
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
 }
 
+/* Using responsive typography from _typography.scss */
 .dashboard-title {
-  font-size: 2.5rem;
-  font-weight: 800;
   margin: 0;
   background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
   -webkit-background-clip: text;
@@ -218,7 +217,6 @@ onUnmounted(() => {
 
 .dashboard-controls {
   display: flex;
-  gap: 16px;
   align-items: center;
 }
 
@@ -237,8 +235,8 @@ onUnmounted(() => {
 
 .modern-button {
   border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: 600;
+  padding: var(--spacing-3, 0.75rem) var(--spacing-6, 1.5rem);
+  font-weight: var(--font-weight-semibold, 600);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   position: relative;
@@ -268,16 +266,16 @@ onUnmounted(() => {
 .layout-option {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--spacing-1, 0.25rem);
 }
 
 .layout-description {
-  font-size: 12px;
-  color: #64748b;
-  font-weight: 400;
+  font-size: var(--font-size-xs, 0.8rem);
+  color: var(--text-secondary, #64748b);
+  font-weight: var(--font-weight-normal, 400);
 }
 
-/* 动画定义 */
+/* Animations */
 @keyframes gradient-shift {
   0%, 100% {
     background-position: 0% 50%;
@@ -298,17 +296,16 @@ onUnmounted(() => {
   }
 }
 
-/* 响应式设计 */
+/* Responsive design using design token breakpoints */
 @media (max-width: 1200px) {
   .dashboard-header {
     flex-direction: column;
-    gap: 20px;
+    gap: var(--spacing-5, 1.25rem);
     align-items: stretch;
-    padding: 20px 24px;
+    padding: var(--spacing-5, 1.25rem) var(--spacing-6, 1.5rem);
   }
   
   .dashboard-title {
-    font-size: 2rem;
     text-align: center;
   }
   
@@ -320,33 +317,25 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .dynamic-dashboard {
-    padding: 12px;
+    padding: var(--spacing-3, 0.75rem);
   }
   
   .dashboard-header {
-    padding: 16px 20px;
+    padding: var(--spacing-4, 1rem) var(--spacing-5, 1.25rem);
     border-radius: 16px;
   }
   
-  .dashboard-title {
-    font-size: 1.75rem;
-  }
-  
   .dashboard-controls {
-    gap: 12px;
+    gap: var(--spacing-3, 0.75rem);
   }
   
   .modern-button {
-    padding: 10px 20px;
-    font-size: 14px;
+    padding: var(--spacing-2, 0.5rem) var(--spacing-5, 1.25rem);
+    font-size: var(--font-size-sm, 0.875rem);
   }
 }
 
 @media (max-width: 480px) {
-  .dashboard-title {
-    font-size: 1.5rem;
-  }
-  
   .dashboard-controls {
     flex-direction: column;
     width: 100%;
@@ -358,7 +347,7 @@ onUnmounted(() => {
   }
 }
 
-/* 深色主题适配 */
+/* Dark theme adaptation */
 [data-theme="dark"] .dashboard-header {
   background: rgba(30, 30, 30, 0.95);
   border-color: rgba(255, 255, 255, 0.1);

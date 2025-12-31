@@ -132,14 +132,27 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="profileForm.email" placeholder="请输入邮箱" />
         </el-form-item>
-        <el-form-item label="当前密码" prop="currentPassword">
-          <el-input v-model="profileForm.currentPassword" type="password" placeholder="请输入当前密码" />
+        <el-form-item label="年龄" prop="age">
+          <el-input-number v-model="profileForm.age" :min="1" :max="150" placeholder="请输入年龄" />
         </el-form-item>
-        <el-form-item label="新密码" prop="newPassword">
-          <el-input v-model="profileForm.newPassword" type="password" placeholder="请输入新密码（可选）" />
+        <el-form-item label="身高(cm)" prop="height">
+          <el-input-number v-model="profileForm.height" :min="50" :max="250" :precision="1" placeholder="请输入身高" />
         </el-form-item>
-        <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input v-model="profileForm.confirmPassword" type="password" placeholder="请确认新密码" />
+        <el-form-item label="体重(kg)" prop="weight">
+          <el-input-number v-model="profileForm.weight" :min="20" :max="300" :precision="1" placeholder="请输入体重" />
+        </el-form-item>
+        <el-form-item label="性别" prop="gender">
+          <el-radio-group v-model="profileForm.gender">
+            <el-radio label="男">男</el-radio>
+            <el-radio label="女">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="训练经验" prop="experienceLevel">
+          <el-select v-model="profileForm.experienceLevel" placeholder="请选择训练经验">
+            <el-option label="初学者" value="beginner" />
+            <el-option label="中级" value="intermediate" />
+            <el-option label="高级" value="advanced" />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -154,25 +167,29 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from '../utils/message.js'
 import { useUserStore } from '../stores/user'
-import { fitnessApi } from '../api/fitness'
+import { userApi } from '../api/user'
 import dayjs from 'dayjs'
 
 const userStore = useUserStore()
 
 // 响应式数据
 const showProfileDialog = ref(false)
+const showResetDialog = ref(false)
 const profileFormRef = ref(null)
 const exporting = ref(false)
 const resetting = ref(false)
 const saving = ref(false)
+const resetPassword = ref('')
 
 // 个人资料表单
 const profileForm = ref({
   username: '',
   email: '',
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: ''
+  age: null,
+  height: null,
+  weight: null,
+  gender: '',
+  experienceLevel: ''
 })
 
 // 系统偏好设置
@@ -192,21 +209,6 @@ const profileRules = {
   email: [
     { required: true, message: '请输入邮箱地址', trigger: 'blur' },
     { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-  ],
-  currentPassword: [
-    { required: true, message: '请输入当前密码', trigger: 'blur' }
-  ],
-  newPassword: [
-    { min: 6, message: '密码长度至少6位', trigger: 'blur' }
-  ],
-  confirmPassword: [
-    { validator: (rule, value, callback) => {
-      if (value && value !== profileForm.value.newPassword) {
-        callback(new Error('两次输入密码不一致'))
-      } else {
-        callback()
-      }
-    }, trigger: 'blur' }
   ]
 }
 
@@ -217,12 +219,15 @@ const formatDate = (date) => {
 
 // 编辑个人资料
 const editProfile = () => {
+  const user = userStore.currentUser
   profileForm.value = {
-    username: userStore.currentUser?.username || '',
-    email: userStore.currentUser?.email || '',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    username: user?.username || '',
+    email: user?.email || '',
+    age: user?.age || null,
+    height: user?.height || null,
+    weight: user?.weight || null,
+    gender: user?.gender || '',
+    experienceLevel: user?.experienceLevel || ''
   }
   showProfileDialog.value = true
 }
@@ -233,8 +238,8 @@ const saveProfile = async () => {
     await profileFormRef.value.validate()
     saving.value = true
     
-    // 这里应该调用API更新用户信息
-    // await fitnessApi.updateUserProfile(profileForm.value)
+    // 调用API更新用户信息
+    await userApi.updateProfile(profileForm.value)
     
     ElMessage.success('个人资料更新成功')
     showProfileDialog.value = false
@@ -242,7 +247,7 @@ const saveProfile = async () => {
     // 重新获取用户信息
     await userStore.fetchCurrentUser()
   } catch (error) {
-    ElMessage.error('更新失败：' + error.message)
+    ElMessage.error('更新失败：' + (error.message || '未知错误'))
   } finally {
     saving.value = false
   }
@@ -260,21 +265,56 @@ const toggleDarkMode = (value) => {
 }
 
 // 更新偏好设置
-const updatePreferences = () => {
-  localStorage.setItem('preferences', JSON.stringify(preferences))
-  ElMessage.success('偏好设置已保存')
+const updatePreferences = async () => {
+  try {
+    // 保存到本地
+    localStorage.setItem('preferences', JSON.stringify(preferences))
+    
+    // 同步到服务器
+    await userApi.updateUserSettings({
+      theme: preferences.darkMode ? 'dark' : 'light',
+      notifications: preferences.notifications,
+      autoSave: preferences.autoSave
+    })
+    
+    ElMessage.success('偏好设置已保存')
+  } catch (error) {
+    // 本地保存成功即可
+    ElMessage.success('偏好设置已保存')
+  }
 }
 
 // 导出数据
 const exportData = async () => {
   try {
     exporting.value = true
-    // 这里应该调用API导出数据
-    // const response = await fitnessApi.exportUserData()
-    // 创建下载链接
-    ElMessage.success('数据导出成功')
+    
+    // 调用API导出数据
+    const response = await userApi.exportUserData()
+    
+    if (response.success && response.data) {
+      // 将数据转换为JSON字符串
+      const jsonData = JSON.stringify(response.data, null, 2)
+      
+      // 创建Blob对象
+      const blob = new Blob([jsonData], { type: 'application/json' })
+      
+      // 创建下载链接
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `fitness_data_${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.json`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+      
+      ElMessage.success('数据导出成功')
+    } else {
+      throw new Error(response.message || '导出失败')
+    }
   } catch (error) {
-    ElMessage.error('导出失败：' + error.message)
+    ElMessage.error('导出失败：' + (error.message || '未知错误'))
   } finally {
     exporting.value = false
   }
@@ -289,6 +329,10 @@ const clearCache = () => {
   }).then(() => {
     localStorage.clear()
     sessionStorage.clear()
+    
+    // 使API缓存失效
+    userApi.invalidateCache()
+    
     ElMessage.success('缓存已清除')
   }).catch(() => {
     // 用户取消
@@ -297,18 +341,39 @@ const clearCache = () => {
 
 // 重置数据
 const resetData = () => {
-  ElMessageBox.confirm('确定要重置所有个人数据吗？此操作不可恢复！', '警告', {
+  ElMessageBox.prompt('请输入密码确认重置操作', '警告', {
     confirmButtonText: '确定重置',
     cancelButtonText: '取消',
+    inputType: 'password',
+    inputPlaceholder: '请输入当前密码',
+    inputValidator: (value) => {
+      if (!value || value.length < 1) {
+        return '请输入密码'
+      }
+      return true
+    },
     type: 'error'
-  }).then(async () => {
+  }).then(async ({ value: password }) => {
     try {
       resetting.value = true
-      // 这里应该调用API重置数据
-      // await fitnessApi.resetUserData()
-      ElMessage.success('数据重置成功')
+      
+      // 调用API重置数据
+      const response = await userApi.resetUserData(password)
+      
+      if (response.success) {
+        ElMessage.success('数据重置成功，您的账户信息已保留')
+        
+        // 清除本地缓存
+        localStorage.removeItem('fitnessData')
+        sessionStorage.clear()
+        
+        // 使API缓存失效
+        userApi.invalidateCache()
+      } else {
+        throw new Error(response.message || '重置失败')
+      }
     } catch (error) {
-      ElMessage.error('重置失败：' + error.message)
+      ElMessage.error('重置失败：' + (error.message || '未知错误'))
     } finally {
       resetting.value = false
     }

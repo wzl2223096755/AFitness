@@ -367,4 +367,174 @@ public class UserProfileController extends BaseController {
         List<UserAchievement> achievements = userAchievementRepository.findByUserOrderByUnlockTimeDesc(user);
         return ResponseEntity.ok(ApiResponse.success(achievements));
     }
+
+    /**
+     * 导出用户数据
+     */
+    @GetMapping("/export")
+    @RequireUser
+    @Auditable(action = AuditAction.DATA_EXPORT, resourceType = "用户数据")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> exportUserData(HttpServletRequest request) {
+        try {
+            User user = getUser(request);
+            Long userId = user.getId();
+            
+            // 收集用户所有数据
+            Map<String, Object> exportData = new java.util.HashMap<>();
+            
+            // 用户基本信息（脱敏处理）
+            Map<String, Object> userInfo = new java.util.HashMap<>();
+            userInfo.put("username", user.getUsername());
+            userInfo.put("email", user.getEmail());
+            userInfo.put("age", user.getAge());
+            userInfo.put("gender", user.getGender());
+            userInfo.put("height", user.getHeight());
+            userInfo.put("weight", user.getWeight());
+            userInfo.put("experienceLevel", user.getExperienceLevel());
+            userInfo.put("createdAt", user.getCreatedAt());
+            exportData.put("userInfo", userInfo);
+            
+            // 用户设置
+            Optional<UserSetting> settings = userSettingRepository.findByUser(user);
+            settings.ifPresent(s -> {
+                Map<String, Object> settingsMap = new java.util.HashMap<>();
+                settingsMap.put("theme", s.getTheme());
+                settingsMap.put("language", s.getLanguage());
+                settingsMap.put("notifications", s.getNotifications());
+                settingsMap.put("autoSave", s.getAutoSave());
+                exportData.put("settings", settingsMap);
+            });
+            
+            // 身体数据记录
+            List<BodyRecord> bodyRecords = bodyRecordRepository.findByUserOrderByRecordTimeDesc(user);
+            exportData.put("bodyRecords", bodyRecords);
+            
+            // 训练历史
+            Page<TrainingRecord> trainingHistory = trainingRecordService.findByUserId(userId, 0, 1000);
+            exportData.put("trainingHistory", trainingHistory.getContent());
+            
+            // 用户成就
+            List<UserAchievement> achievements = userAchievementRepository.findByUserOrderByUnlockTimeDesc(user);
+            exportData.put("achievements", achievements);
+            
+            // 用户统计
+            exportData.put("stats", dashboardService.getUserStatsOverview(userId));
+            
+            // 导出时间戳
+            exportData.put("exportedAt", java.time.LocalDateTime.now().toString());
+            
+            return ResponseEntity.ok(ApiResponse.success("数据导出成功", exportData));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(ApiResponse.<Map<String, Object>>error(500, "数据导出失败: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 重置用户数据（删除所有训练数据，保留账户）
+     */
+    @PostMapping("/reset-data")
+    @RequireUser
+    @Auditable(action = AuditAction.DATA_DELETE, resourceType = "用户训练数据")
+    public ResponseEntity<ApiResponse<String>> resetUserData(
+            @RequestBody Map<String, String> requestBody,
+            HttpServletRequest request) {
+        try {
+            String password = requestBody.get("password");
+            if (password == null || password.isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(ApiResponse.<String>error(400, "请输入密码确认操作"));
+            }
+            
+            User user = getUser(request);
+            
+            // 验证密码
+            if (!userService.validatePassword(password, user.getPassword())) {
+                return ResponseEntity.badRequest()
+                    .body(ApiResponse.<String>error(400, "密码不正确"));
+            }
+            
+            Long userId = user.getId();
+            
+            // 删除身体数据记录
+            List<BodyRecord> bodyRecords = bodyRecordRepository.findByUserOrderByRecordTimeDesc(user);
+            bodyRecordRepository.deleteAll(bodyRecords);
+            
+            // 删除训练记录
+            trainingRecordService.deleteAllByUserId(userId);
+            
+            // 删除用户成就
+            List<UserAchievement> achievements = userAchievementRepository.findByUserOrderByUnlockTimeDesc(user);
+            userAchievementRepository.deleteAll(achievements);
+            
+            // 记录审计日志
+            auditLogService.logDataDelete(userId, user.getUsername(), "所有训练数据", null);
+            
+            return ResponseEntity.ok(ApiResponse.success("数据重置成功，您的账户信息已保留"));
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest()
+                .body(ApiResponse.<String>error(400, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(ApiResponse.<String>error(500, "数据重置失败: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 删除用户账户
+     */
+    @PostMapping("/delete-account")
+    @RequireUser
+    @Auditable(action = AuditAction.DATA_DELETE, resourceType = "用户账户")
+    public ResponseEntity<ApiResponse<String>> deleteAccount(
+            @RequestBody Map<String, String> requestBody,
+            HttpServletRequest request) {
+        try {
+            String password = requestBody.get("password");
+            if (password == null || password.isEmpty()) {
+                return ResponseEntity.badRequest()
+                    .body(ApiResponse.<String>error(400, "请输入密码确认操作"));
+            }
+            
+            User user = getUser(request);
+            
+            // 验证密码
+            if (!userService.validatePassword(password, user.getPassword())) {
+                return ResponseEntity.badRequest()
+                    .body(ApiResponse.<String>error(400, "密码不正确"));
+            }
+            
+            Long userId = user.getId();
+            String username = user.getUsername();
+            
+            // 删除用户所有关联数据
+            // 1. 删除身体数据记录
+            List<BodyRecord> bodyRecords = bodyRecordRepository.findByUserOrderByRecordTimeDesc(user);
+            bodyRecordRepository.deleteAll(bodyRecords);
+            
+            // 2. 删除训练记录
+            trainingRecordService.deleteAllByUserId(userId);
+            
+            // 3. 删除用户成就
+            List<UserAchievement> achievements = userAchievementRepository.findByUserOrderByUnlockTimeDesc(user);
+            userAchievementRepository.deleteAll(achievements);
+            
+            // 4. 删除用户设置
+            userSettingRepository.findByUser(user).ifPresent(userSettingRepository::delete);
+            
+            // 5. 删除用户账户
+            userService.deleteUser(userId);
+            
+            // 记录审计日志
+            auditLogService.logDataDelete(userId, username, "用户账户", userId);
+            
+            return ResponseEntity.ok(ApiResponse.success("账户已删除"));
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest()
+                .body(ApiResponse.<String>error(400, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                .body(ApiResponse.<String>error(500, "账户删除失败: " + e.getMessage()));
+        }
+    }
 }

@@ -207,7 +207,7 @@ class ResponseHandler {
     
     if (response && typeof response === 'object') {
       // 如果已经是标准格式，直接返回
-      if (response.hasOwnProperty('success')) {
+      if (Object.prototype.hasOwnProperty.call(response, 'success')) {
         return response
       }
       
