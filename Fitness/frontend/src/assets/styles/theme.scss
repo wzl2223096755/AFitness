@@ -1,0 +1,238 @@
+@use './variables.scss' as *;
+
+// 深色主题变量
+$dark-bg-primary: #1a1a1a;
+$dark-bg-secondary: #2d2d2d;
+$dark-bg-sidebar: #000000;
+$dark-bg-header: #2d2d2d;
+$dark-bg-card: #2d2d2d;
+
+$dark-text-primary: #ffffff;
+$dark-text-regular: #e0e0e0;
+$dark-text-secondary: #a0a0a0;
+$dark-text-placeholder: #666666;
+
+$dark-border-color: #404040;
+$dark-border-light: #333333;
+$dark-border-lighter: #292929;
+
+$dark-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 6px rgba(0, 0, 0, 0.1);
+$dark-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+
+// 主题切换混合器
+@mixin theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+// 主题基础类
+.theme-container {
+  @include theme-transition;
+}
+
+// 深色主题样式
+[data-theme="dark"] {
+  // 背景颜色
+  .app-container {
+    background-color: $dark-bg-primary;
+  }
+  
+  .sidebar {
+    background-color: $dark-bg-sidebar !important;
+  }
+  
+  .header {
+    background-color: $dark-bg-header !important;
+    border-bottom-color: $dark-border-color !important;
+  }
+  
+  .card {
+    background-color: $dark-bg-card;
+    border-color: $dark-border-color;
+    color: $dark-text-primary;
+  }
+  
+  .page-content {
+    background-color: $dark-bg-primary;
+  }
+  
+  // 文字颜色
+  .text-primary { color: $dark-text-primary; }
+  .text-regular { color: $dark-text-regular; }
+  .text-secondary { color: $dark-text-secondary; }
+  .text-placeholder { color: $dark-text-placeholder; }
+  
+  // 边框颜色
+  .el-table {
+    --el-table-border-color: #{$dark-border-color};
+    --el-table-header-bg-color: #{$dark-bg-secondary};
+    --el-table-row-hover-bg-color: #{mix(white, $dark-bg-secondary, 5%)};
+  }
+  
+  .el-menu {
+    --el-menu-bg-color: transparent;
+    --el-menu-text-color: #{$dark-text-secondary};
+    --el-menu-hover-bg-color: #{mix(white, $dark-bg-sidebar, 10%)};
+    --el-menu-active-color: #{$primary-color};
+  }
+  
+  .el-button {
+    &--default {
+      background-color: $dark-bg-secondary;
+      border-color: $dark-border-color;
+      color: $dark-text-primary;
+      
+      &:hover {
+        background-color: mix(white, $dark-bg-secondary, 5%);
+        border-color: mix(white, $dark-border-color, 10%);
+      }
+    }
+  }
+  
+  .el-input {
+    --el-input-bg-color: #{$dark-bg-secondary};
+    --el-input-border-color: #{$dark-border-color};
+    --el-input-text-color: #{$dark-text-primary};
+    --el-input-placeholder-color: #{$dark-text-placeholder};
+  }
+  
+  .el-select {
+    --el-select-input-focus-border-color: #{$primary-color};
+    --el-select-input-font-color: #{$dark-text-primary};
+  }
+  
+  .el-dialog {
+    --el-dialog-bg-color: #{$dark-bg-card};
+    --el-dialog-border-color: #{$dark-border-color};
+  }
+  
+  .el-card {
+    --el-card-bg-color: #{$dark-bg-card};
+    --el-card-border-color: #{$dark-border-color};
+  }
+  
+  // 图表背景
+  .chart-container {
+    background-color: $dark-bg-card;
+    border-color: $dark-border-color;
+  }
+  
+  // 滚动条
+  ::-webkit-scrollbar-track {
+    background: $dark-bg-secondary;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: $dark-border-color;
+    
+    &:hover {
+      background: $dark-border-light;
+    }
+  }
+  
+  // 面包屑
+  .el-breadcrumb {
+    --el-breadcrumb-text-color: #{$dark-text-secondary};
+    --el-breadcrumb-inner-color: #{$dark-text-regular};
+  }
+  
+  // 标签页
+  .el-tabs {
+    --el-tabs-header-bg-color: #{$dark-bg-card};
+    --el-tabs-item-color: #{$dark-text-secondary};
+    --el-tabs-item-hover-color: #{$dark-text-regular};
+    --el-tabs-item-active-color: #{$primary-color};
+  }
+  
+  // 分页
+  .el-pagination {
+    --el-pagination-button-bg-color: #{$dark-bg-secondary};
+    --el-pagination-hover-color: #{$primary-color};
+  }
+  
+  // 加载状态
+  .loading {
+    color: $dark-text-secondary;
+  }
+  
+  // 空状态
+  .empty-state {
+    color: $dark-text-secondary;
+    
+    &__description {
+      color: $dark-text-placeholder;
+    }
+  }
+}
+
+// 主题切换按钮样式
+.theme-toggle {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include theme-transition;
+  
+  &:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+  
+  .theme-icon {
+    font-size: 18px;
+  }
+}
+
+// 系统主题偏好支持
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    // 背景颜色
+    .app-container {
+      background-color: $dark-bg-primary;
+    }
+    
+    .sidebar {
+      background-color: $dark-bg-sidebar !important;
+    }
+    
+    .header {
+      background-color: $dark-bg-header !important;
+      border-bottom-color: $dark-border-color !important;
+    }
+    
+    .card {
+      background-color: $dark-bg-card;
+      border-color: $dark-border-color;
+      color: $dark-text-primary;
+    }
+    
+    .page-content {
+      background-color: $dark-bg-primary;
+    }
+    
+    // 文字颜色
+    .text-primary { color: $dark-text-primary; }
+    .text-regular { color: $dark-text-regular; }
+    .text-secondary { color: $dark-text-secondary; }
+    .text-placeholder { color: $dark-text-placeholder; }
+  }
+}
+
+// 高对比度深色主题
+@media (prefers-contrast: high) {
+  [data-theme="dark"] {
+    .card {
+      border: 2px solid $dark-border-color;
+    }
+    
+    .btn-primary {
+      border-width: 2px;
+    }
+  }
+}

@@ -1,0 +1,448 @@
+@use './variables.scss' as *;
+
+// 响应式断点变量
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1920px;
+
+// 媒体查询混合器
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (max-width: #{$breakpoint-xs}) {
+      @content;
+    }
+  }
+  @if $breakpoint == sm {
+    @media (max-width: #{$breakpoint-sm}) {
+      @content;
+    }
+  }
+  @if $breakpoint == md {
+    @media (max-width: #{$breakpoint-md}) {
+      @content;
+    }
+  }
+  @if $breakpoint == lg {
+    @media (max-width: #{$breakpoint-lg}) {
+      @content;
+    }
+  }
+  @if $breakpoint == xl {
+    @media (max-width: #{$breakpoint-xl}) {
+      @content;
+    }
+  }
+}
+
+@mixin respond-above($breakpoint) {
+  @if $breakpoint == xs {
+    @media (min-width: #{$breakpoint-xs + 1}) {
+      @content;
+    }
+  }
+  @if $breakpoint == sm {
+    @media (min-width: #{$breakpoint-sm + 1}) {
+      @content;
+    }
+  }
+  @if $breakpoint == md {
+    @media (min-width: #{$breakpoint-md + 1}) {
+      @content;
+    }
+  }
+  @if $breakpoint == lg {
+    @media (min-width: #{$breakpoint-lg + 1}) {
+      @content;
+    }
+  }
+  @if $breakpoint == xl {
+    @media (min-width: #{$breakpoint-xl + 1}) {
+      @content;
+    }
+  }
+}
+
+// 移动端优先的网格系统
+$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+@mixin make-row($gutter: $grid-gutter-width) {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(#{$gutter} / 2 * -1);
+  margin-left: calc(#{$gutter} / 2 * -1);
+}
+
+@mixin make-col($size, $columns: $grid-columns) {
+  flex: 0 0 calc(#{$size} / #{$columns} * 100%);
+  max-width: calc(#{$size} / #{$columns} * 100%);
+  padding-right: calc(#{$grid-gutter-width} / 2);
+  padding-left: calc(#{$grid-gutter-width} / 2);
+}
+
+// 响应式网格类
+@for $i from 1 through $grid-columns {
+  .col-#{$i} {
+    @include make-col($i);
+  }
+}
+
+// 移动端网格类
+@include respond-to(sm) {
+  @for $i from 1 through $grid-columns {
+    .col-sm-#{$i} {
+      @include make-col($i);
+    }
+  }
+}
+
+// 平板网格类
+@include respond-to(md) {
+  @for $i from 1 through $grid-columns {
+    .col-md-#{$i} {
+      @include make-col($i);
+    }
+  }
+}
+
+// 桌面网格类
+@include respond-to(lg) {
+  @for $i from 1 through $grid-columns {
+    .col-lg-#{$i} {
+      @include make-col($i);
+    }
+  }
+}
+
+// 大屏网格类
+@include respond-to(xl) {
+  @for $i from 1 through $grid-columns {
+    .col-xl-#{$i} {
+      @include make-col($i);
+    }
+  }
+}
+
+// 容器类
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  
+  @include respond-above(sm) {
+    max-width: 540px;
+  }
+  
+  @include respond-above(md) {
+    max-width: 720px;
+  }
+  
+  @include respond-above(lg) {
+    max-width: 960px;
+  }
+  
+  @include respond-above(xl) {
+    max-width: 1140px;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// 响应式显示类
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-inline { display: inline !important; }
+.d-inline-block { display: inline-block !important; }
+.d-flex { display: flex !important; }
+.d-inline-flex { display: inline-flex !important; }
+
+@include respond-to(sm) {
+  .d-sm-none { display: none !important; }
+  .d-sm-block { display: block !important; }
+  .d-sm-inline { display: inline !important; }
+  .d-sm-inline-block { display: inline-block !important; }
+  .d-sm-flex { display: flex !important; }
+  .d-sm-inline-flex { display: inline-flex !important; }
+}
+
+@include respond-to(md) {
+  .d-md-none { display: none !important; }
+  .d-md-block { display: block !important; }
+  .d-md-inline { display: inline !important; }
+  .d-md-inline-block { display: inline-block !important; }
+  .d-md-flex { display: flex !important; }
+  .d-md-inline-flex { display: inline-flex !important; }
+}
+
+@include respond-to(lg) {
+  .d-lg-none { display: none !important; }
+  .d-lg-block { display: block !important; }
+  .d-lg-inline { display: inline !important; }
+  .d-lg-inline-block { display: inline-block !important; }
+  .d-lg-flex { display: flex !important; }
+  .d-lg-inline-flex { display: inline-flex !important; }
+}
+
+@include respond-to(xl) {
+  .d-xl-none { display: none !important; }
+  .d-xl-block { display: block !important; }
+  .d-xl-inline { display: inline !important; }
+  .d-xl-inline-block { display: inline-block !important; }
+  .d-xl-flex { display: flex !important; }
+  .d-xl-inline-flex { display: inline-flex !important; }
+}
+
+// 响应式文本对齐
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.text-center { text-align: center !important; }
+
+@include respond-to(sm) {
+  .text-sm-left { text-align: left !important; }
+  .text-sm-right { text-align: right !important; }
+  .text-sm-center { text-align: center !important; }
+}
+
+@include respond-to(md) {
+  .text-md-left { text-align: left !important; }
+  .text-md-right { text-align: right !important; }
+  .text-md-center { text-align: center !important; }
+}
+
+@include respond-to(lg) {
+  .text-lg-left { text-align: left !important; }
+  .text-lg-right { text-align: right !important; }
+  .text-lg-center { text-align: center !important; }
+}
+
+@include respond-to(xl) {
+  .text-xl-left { text-align: left !important; }
+  .text-xl-right { text-align: right !important; }
+  .text-xl-center { text-align: center !important; }
+}
+
+// 触摸设备优化
+@media (hover: none) and (pointer: coarse) {
+  .btn, button, .el-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .clickable {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+// 高对比度模式支持
+@media (prefers-contrast: high) {
+  .card {
+    border: 2px solid $border-color;
+  }
+  
+  .btn-primary {
+    border-width: 2px;
+  }
+}
+
+// 减少动画偏好支持
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// =====================================================
+// 移动端表单布局工具类
+// =====================================================
+
+// 强制垂直布局
+.form-vertical {
+  .el-form-item__label {
+    text-align: left !important;
+    float: none !important;
+    display: block !important;
+    width: 100% !important;
+    padding-bottom: 8px;
+  }
+  
+  .el-form-item__content {
+    margin-left: 0 !important;
+  }
+}
+
+// 移动端自动垂直布局
+@include respond-to(sm) {
+  .form-responsive {
+    .el-form-item__label {
+      text-align: left !important;
+      float: none !important;
+      display: block !important;
+      width: 100% !important;
+      padding-bottom: 8px;
+    }
+    
+    .el-form-item__content {
+      margin-left: 0 !important;
+    }
+  }
+}
+
+// =====================================================
+// 移动端Flex工具类
+// =====================================================
+
+.flex-col-mobile {
+  @include respond-to(sm) {
+    flex-direction: column !important;
+  }
+}
+
+.gap-mobile-sm {
+  @include respond-to(sm) {
+    gap: 8px !important;
+  }
+}
+
+.gap-mobile-md {
+  @include respond-to(sm) {
+    gap: 12px !important;
+  }
+}
+
+.gap-mobile-lg {
+  @include respond-to(sm) {
+    gap: 16px !important;
+  }
+}
+
+// =====================================================
+// 移动端宽度工具类
+// =====================================================
+
+.w-full-mobile {
+  @include respond-to(sm) {
+    width: 100% !important;
+  }
+}
+
+.max-w-full-mobile {
+  @include respond-to(sm) {
+    max-width: 100% !important;
+  }
+}
+
+// =====================================================
+// 移动端间距工具类
+// =====================================================
+
+.p-mobile-sm {
+  @include respond-to(sm) {
+    padding: 8px !important;
+  }
+}
+
+.p-mobile-md {
+  @include respond-to(sm) {
+    padding: 12px !important;
+  }
+}
+
+.p-mobile-lg {
+  @include respond-to(sm) {
+    padding: 16px !important;
+  }
+}
+
+.m-mobile-0 {
+  @include respond-to(sm) {
+    margin: 0 !important;
+  }
+}
+
+.mb-mobile-sm {
+  @include respond-to(sm) {
+    margin-bottom: 8px !important;
+  }
+}
+
+.mb-mobile-md {
+  @include respond-to(sm) {
+    margin-bottom: 12px !important;
+  }
+}
+
+.mb-mobile-lg {
+  @include respond-to(sm) {
+    margin-bottom: 16px !important;
+  }
+}
+
+// =====================================================
+// 移动端字体工具类
+// =====================================================
+
+.text-mobile-sm {
+  @include respond-to(sm) {
+    font-size: 12px !important;
+  }
+}
+
+.text-mobile-base {
+  @include respond-to(sm) {
+    font-size: 14px !important;
+  }
+}
+
+.text-mobile-lg {
+  @include respond-to(sm) {
+    font-size: 16px !important;
+  }
+}
+
+// =====================================================
+// 安全区域适配
+// =====================================================
+
+.safe-area-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: constant(safe-area-inset-left);
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: constant(safe-area-inset-right);
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-all {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: constant(safe-area-inset-left);
+  padding-left: env(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
+  padding-right: env(safe-area-inset-right);
+}

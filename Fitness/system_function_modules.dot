@@ -1,0 +1,385 @@
+digraph 力量训练专业计算器系统功能模块图 {
+    graph [
+        rankdir=TB,
+        splines=ortho,
+        nodesep=0.8,
+        ranksep=0.8,
+        fontname="Microsoft YaHei",
+        fontsize=16
+    ];
+    
+    node [
+        shape=box,
+        style=filled,
+        fontname="Microsoft YaHei",
+        fontsize=12
+    ];
+    
+    edge [
+        fontname="Microsoft YaHei",
+        fontsize=10
+    ];
+    
+    // 主系统
+    system [label="力量训练专业计算器系统", fillcolor="#E8EAF6", color="#3F51B5", penwidth=2];
+    
+    // 功能模块
+    subgraph cluster_modules {
+        label="功能模块";
+        style=filled;
+        color="#E8EAF6";
+        
+        user_mgmt [label="用户管理模块", fillcolor="#E3F2FD", color="#1976D2", penwidth=2];
+        train_mgmt [label="训练管理模块", fillcolor="#E3F2FD", color="#1976D2", penwidth=2];
+        load_calc [label="负荷计算模块", fillcolor="#E3F2FD", color="#1976D2", penwidth=2];
+        data_analysis [label="数据分析模块", fillcolor="#E3F2FD", color="#1976D2", penwidth=2];
+        sys_mgmt [label="系统管理模块", fillcolor="#E3F2FD", color="#1976D2", penwidth=2];
+        api_mgmt [label="接口管理模块", fillcolor="#E3F2FD", color="#1976D2", penwidth=2];
+    }
+    
+    // 用户管理模块子模块
+    subgraph cluster_user_mgmt {
+        label="用户管理模块";
+        style=filled;
+        color="#E3F2FD";
+        
+        user_auth [label="用户认证", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        user_info [label="用户信息管理", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        user_perm [label="权限管理", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+    }
+    
+    // 用户认证功能
+    subgraph cluster_user_auth {
+        label="用户认证";
+        style=filled;
+        color="#E1F5FE";
+        
+        user_reg [label="用户注册", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        user_login [label="用户登录", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 用户信息管理功能
+    subgraph cluster_user_info {
+        label="用户信息管理";
+        style=filled;
+        color="#E1F5FE";
+        
+        info_update [label="个人信息修改", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        pwd_update [label="密码修改", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 权限管理功能
+    subgraph cluster_user_perm {
+        label="权限管理";
+        style=filled;
+        color="#E1F5FE";
+        
+        role_assign [label="角色分配", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        perm_set [label="权限设置", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 训练管理模块子模块
+    subgraph cluster_train_mgmt {
+        label="训练管理模块";
+        style=filled;
+        color="#E3F2FD";
+        
+        plan_mgmt [label="训练计划管理", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        record_mgmt [label="训练记录管理", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        action_lib [label="训练动作库", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+    }
+    
+    // 训练计划管理功能
+    subgraph cluster_plan_mgmt {
+        label="训练计划管理";
+        style=filled;
+        color="#E1F5FE";
+        
+        plan_create [label="计划创建", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        plan_update [label="计划修改", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 训练记录管理功能
+    subgraph cluster_record_mgmt {
+        label="训练记录管理";
+        style=filled;
+        color="#E1F5FE";
+        
+        record_add [label="记录添加", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        record_query [label="记录查询", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 训练动作库功能
+    subgraph cluster_action_lib {
+        label="训练动作库";
+        style=filled;
+        color="#E1F5FE";
+        
+        action_browse [label="动作浏览", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        action_search [label="动作搜索", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 负荷计算模块子模块
+    subgraph cluster_load_calc {
+        label="负荷计算模块";
+        style=filled;
+        color="#E3F2FD";
+        
+        onerm_calc [label="1RM计算", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        volume_calc [label="训练量计算", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        intensity_analysis [label="训练强度分析", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+    }
+    
+    // 1RM计算功能
+    subgraph cluster_onerm_calc {
+        label="1RM计算";
+        style=filled;
+        color="#E1F5FE";
+        
+        epley [label="Epley公式", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        brzycki [label="Brzycki公式", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        lombardi [label="Lombardi公式", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        mayhew [label="Mayhew公式", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        oconner [label="O'Conner公式", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 训练量计算功能
+    subgraph cluster_volume_calc {
+        label="训练量计算";
+        style=filled;
+        color="#E1F5FE";
+        
+        single_volume [label="单动作训练量", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        total_volume [label="总训练量", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        relative_volume [label="相对训练量", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        density [label="训练密度", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 训练强度分析功能
+    subgraph cluster_intensity_analysis {
+        label="训练强度分析";
+        style=filled;
+        color="#E1F5FE";
+        
+        intensity_calc [label="强度计算", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        intensity_suggest [label="强度建议", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 数据分析模块子模块
+    subgraph cluster_data_analysis {
+        label="数据分析模块";
+        style=filled;
+        color="#E3F2FD";
+        
+        data_stats [label="数据统计", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        data_visual [label="数据可视化", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        data_export [label="数据导出", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+    }
+    
+    // 数据统计功能
+    subgraph cluster_data_stats {
+        label="数据统计";
+        style=filled;
+        color="#E1F5FE";
+        
+        volume_stats [label="训练量统计", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        intensity_stats [label="强度统计", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        frequency_stats [label="频率统计", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 数据可视化功能
+    subgraph cluster_data_visual {
+        label="数据可视化";
+        style=filled;
+        color="#E1F5FE";
+        
+        chart_display [label="图表展示", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        trend_analysis [label="趋势分析", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        compare_analysis [label="对比分析", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 数据导出功能
+    subgraph cluster_data_export {
+        label="数据导出";
+        style=filled;
+        color="#E1F5FE";
+        
+        report_gen [label="报表生成", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        data_export [label="数据导出", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 系统管理模块子模块
+    subgraph cluster_sys_mgmt {
+        label="系统管理模块";
+        style=filled;
+        color="#E3F2FD";
+        
+        sys_config [label="系统配置", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        log_mgmt [label="日志管理", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        data_backup [label="数据备份", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+    }
+    
+    // 系统配置功能
+    subgraph cluster_sys_config {
+        label="系统配置";
+        style=filled;
+        color="#E1F5FE";
+        
+        param_set [label="参数设置", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        sys_maintain [label="系统维护", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 日志管理功能
+    subgraph cluster_log_mgmt {
+        label="日志管理";
+        style=filled;
+        color="#E1F5FE";
+        
+        log_query [label="日志查询", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        log_analysis [label="日志分析", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 数据备份功能
+    subgraph cluster_data_backup {
+        label="数据备份";
+        style=filled;
+        color="#E1F5FE";
+        
+        auto_backup [label="自动备份", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        manual_backup [label="手动备份", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 接口管理模块子模块
+    subgraph cluster_api_mgmt {
+        label="接口管理模块";
+        style=filled;
+        color="#E3F2FD";
+        
+        api_interface [label="API接口", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        third_party [label="第三方集成", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+        data_sync [label="数据同步", fillcolor="#E1F5FE", color="#0288D1", penwidth=1.5];
+    }
+    
+    // API接口功能
+    subgraph cluster_api_interface {
+        label="API接口";
+        style=filled;
+        color="#E1F5FE";
+        
+        api_doc [label="接口文档", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        api_test [label="接口测试", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 第三方集成功能
+    subgraph cluster_third_party {
+        label="第三方集成";
+        style=filled;
+        color="#E1F5FE";
+        
+        social_platform [label="社交平台", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        health_device [label="健康设备", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 数据同步功能
+    subgraph cluster_data_sync {
+        label="数据同步";
+        style=filled;
+        color="#E1F5FE";
+        
+        cloud_sync [label="云端同步", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+        local_backup [label="本地备份", fillcolor="#F1F8E9", color="#689F38", penwidth=1];
+    }
+    
+    // 连接关系
+    system -> user_mgmt;
+    system -> train_mgmt;
+    system -> load_calc;
+    system -> data_analysis;
+    system -> sys_mgmt;
+    system -> api_mgmt;
+    
+    user_mgmt -> user_auth;
+    user_mgmt -> user_info;
+    user_mgmt -> user_perm;
+    
+    user_auth -> user_reg;
+    user_auth -> user_login;
+    
+    user_info -> info_update;
+    user_info -> pwd_update;
+    
+    user_perm -> role_assign;
+    user_perm -> perm_set;
+    
+    train_mgmt -> plan_mgmt;
+    train_mgmt -> record_mgmt;
+    train_mgmt -> action_lib;
+    
+    plan_mgmt -> plan_create;
+    plan_mgmt -> plan_update;
+    
+    record_mgmt -> record_add;
+    record_mgmt -> record_query;
+    
+    action_lib -> action_browse;
+    action_lib -> action_search;
+    
+    load_calc -> onerm_calc;
+    load_calc -> volume_calc;
+    load_calc -> intensity_analysis;
+    
+    onerm_calc -> epley;
+    onerm_calc -> brzycki;
+    onerm_calc -> lombardi;
+    onerm_calc -> mayhew;
+    onerm_calc -> oconner;
+    
+    volume_calc -> single_volume;
+    volume_calc -> total_volume;
+    volume_calc -> relative_volume;
+    volume_calc -> density;
+    
+    intensity_analysis -> intensity_calc;
+    intensity_analysis -> intensity_suggest;
+    
+    data_analysis -> data_stats;
+    data_analysis -> data_visual;
+    data_analysis -> data_export;
+    
+    data_stats -> volume_stats;
+    data_stats -> intensity_stats;
+    data_stats -> frequency_stats;
+    
+    data_visual -> chart_display;
+    data_visual -> trend_analysis;
+    data_visual -> compare_analysis;
+    
+    data_export -> report_gen;
+    data_export -> data_export;
+    
+    sys_mgmt -> sys_config;
+    sys_mgmt -> log_mgmt;
+    sys_mgmt -> data_backup;
+    
+    sys_config -> param_set;
+    sys_config -> sys_maintain;
+    
+    log_mgmt -> log_query;
+    log_mgmt -> log_analysis;
+    
+    data_backup -> auto_backup;
+    data_backup -> manual_backup;
+    
+    api_mgmt -> api_interface;
+    api_mgmt -> third_party;
+    api_mgmt -> data_sync;
+    
+    api_interface -> api_doc;
+    api_interface -> api_test;
+    
+    third_party -> social_platform;
+    third_party -> health_device;
+    
+    data_sync -> cloud_sync;
+    data_sync -> local_backup;
+}

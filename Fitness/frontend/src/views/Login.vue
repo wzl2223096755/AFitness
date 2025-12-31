@@ -1,0 +1,1034 @@
+<template>
+  <div class="login-page">
+    <!-- 科技感背景 -->
+    <div class="cyber-background">
+      <div class="grid-lines"></div>
+      <div class="glow-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+      </div>
+      <div class="scan-line"></div>
+    </div>
+
+    <!-- 登录卡片 -->
+    <div class="login-container">
+      <div class="login-card" :class="{ 'shake': hasError }">
+        <!-- Logo 区域 -->
+        <div class="logo-section">
+          <div class="logo-icon">
+            <span class="icon-glow">🏋️</span>
+          </div>
+          <h1 class="logo-text">AFitness</h1>
+          <p class="logo-subtitle">智能健身数据管理系统</p>
+        </div>
+
+        <!-- 登录表单 -->
+        <form @submit.prevent="handleLogin" class="login-form">
+          <!-- 用户名输入 -->
+          <div class="input-group">
+            <div class="input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <input 
+              type="text" 
+              v-model="loginForm.username"
+              placeholder="用户名"
+              class="cyber-input"
+              :class="{ 'has-error': errors.username }"
+              @focus="clearError('username')"
+              autocomplete="username"
+            />
+            <div class="input-border"></div>
+          </div>
+          <p v-if="errors.username" class="error-text">{{ errors.username }}</p>
+
+          <!-- 密码输入 -->
+          <div class="input-group">
+            <div class="input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <input 
+              :type="showPassword ? 'text' : 'password'"
+              v-model="loginForm.password"
+              placeholder="密码"
+              class="cyber-input"
+              :class="{ 'has-error': errors.password }"
+              @focus="clearError('password')"
+              @keyup.enter="handleLogin"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-password" @click="showPassword = !showPassword">
+              <svg v-if="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+            <div class="input-border"></div>
+          </div>
+          <p v-if="errors.password" class="error-text">{{ errors.password }}</p>
+
+          <!-- 记住我 -->
+          <div class="options-row">
+            <label class="cyber-checkbox">
+              <input type="checkbox" v-model="loginForm.rememberMe" />
+              <span class="checkmark"></span>
+              <span class="label-text">记住我</span>
+            </label>
+            <a href="#" class="forgot-link" @click.prevent="showForgotPassword = true">忘记密码?</a>
+          </div>
+
+          <!-- 登录按钮 -->
+          <button type="submit" class="cyber-button" :disabled="loading">
+            <span class="button-content">
+              <span v-if="loading" class="loading-spinner"></span>
+              <span v-else>{{ loading ? '登录中...' : '登 录' }}</span>
+            </span>
+            <div class="button-glow"></div>
+          </button>
+        </form>
+
+        <!-- 注册链接 -->
+        <div class="register-section">
+          <span class="divider-text">还没有账号?</span>
+          <a href="#" class="register-link" @click.prevent="showRegister = true">立即注册</a>
+        </div>
+
+        <!-- 装饰角标 -->
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+
+      <!-- 版本信息 -->
+      <div class="version-info">
+        <span>v2.0.0</span>
+        <span class="separator">|</span>
+        <span>© 2025 AFitness</span>
+      </div>
+    </div>
+
+    <!-- 注册弹窗 -->
+    <Teleport to="body">
+      <div v-if="showRegister" class="modal-overlay" @click.self="showRegister = false">
+        <div class="modal-card register-modal">
+          <button class="modal-close" @click="showRegister = false">×</button>
+          <h2 class="modal-title">创建账号</h2>
+          
+          <form @submit.prevent="handleRegister" class="register-form">
+            <div class="input-group">
+              <input type="text" v-model="registerForm.username" placeholder="用户名" class="cyber-input" />
+              <div class="input-border"></div>
+            </div>
+            
+            <div class="input-group">
+              <input type="email" v-model="registerForm.email" placeholder="邮箱" class="cyber-input" />
+              <div class="input-border"></div>
+            </div>
+            
+            <div class="input-group">
+              <input type="password" v-model="registerForm.password" placeholder="密码" class="cyber-input" />
+              <div class="input-border"></div>
+            </div>
+            
+            <div class="input-group">
+              <input type="password" v-model="registerForm.confirmPassword" placeholder="确认密码" class="cyber-input" />
+              <div class="input-border"></div>
+            </div>
+
+            <label class="cyber-checkbox agreement">
+              <input type="checkbox" v-model="registerForm.agreement" />
+              <span class="checkmark"></span>
+              <span class="label-text">我已阅读并同意 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a></span>
+            </label>
+            
+            <button type="submit" class="cyber-button" :disabled="registerLoading">
+              <span class="button-content">{{ registerLoading ? '注册中...' : '注 册' }}</span>
+              <div class="button-glow"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- 忘记密码弹窗 -->
+    <Teleport to="body">
+      <div v-if="showForgotPassword" class="modal-overlay" @click.self="showForgotPassword = false">
+        <div class="modal-card">
+          <button class="modal-close" @click="showForgotPassword = false">×</button>
+          <h2 class="modal-title">找回密码</h2>
+          <p class="modal-desc">请输入您的注册邮箱，我们将发送重置链接</p>
+          
+          <form @submit.prevent="handleForgotPassword" class="forgot-form">
+            <div class="input-group">
+              <input type="email" v-model="forgotEmail" placeholder="注册邮箱" class="cyber-input" />
+              <div class="input-border"></div>
+            </div>
+            
+            <button type="submit" class="cyber-button">
+              <span class="button-content">发送重置链接</span>
+              <div class="button-glow"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+    </Teleport>
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from '../utils/message.js'
+import { authApi } from '../api/auth'
+
+const router = useRouter()
+
+// 状态
+const loading = ref(false)
+const registerLoading = ref(false)
+const showPassword = ref(false)
+const showRegister = ref(false)
+const showForgotPassword = ref(false)
+const hasError = ref(false)
+const forgotEmail = ref('')
+
+// 表单数据
+const loginForm = reactive({
+  username: '',
+  password: '',
+  rememberMe: false
+})
+
+const registerForm = reactive({
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  agreement: false
+})
+
+const errors = reactive({
+  username: '',
+  password: ''
+})
+
+// 清除错误
+const clearError = (field) => {
+  errors[field] = ''
+  hasError.value = false
+}
+
+// 验证表单
+const validateForm = () => {
+  let valid = true
+  
+  if (!loginForm.username) {
+    errors.username = '请输入用户名'
+    valid = false
+  }
+  
+  if (!loginForm.password) {
+    errors.password = '请输入密码'
+    valid = false
+  }
+  
+  if (!valid) {
+    hasError.value = true
+    setTimeout(() => hasError.value = false, 500)
+  }
+  
+  return valid
+}
+
+// 登录处理
+const handleLogin = async () => {
+  if (!validateForm()) return
+  
+  try {
+    loading.value = true
+    
+    const response = await authApi.login({
+      username: loginForm.username,
+      password: loginForm.password
+    })
+    
+    if (response.code === 200 && response.data?.accessToken) {
+      localStorage.setItem('token', response.data.accessToken)
+      localStorage.setItem('isLoggedIn', 'true')
+      localStorage.setItem('username', loginForm.username)
+      
+      if (loginForm.rememberMe) {
+        localStorage.setItem('rememberedUsername', loginForm.username)
+      }
+      
+      ElMessage.success('登录成功！')
+      
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 500)
+    } else {
+      ElMessage.error(response.message || '登录失败')
+      hasError.value = true
+      setTimeout(() => hasError.value = false, 500)
+    }
+  } catch (error) {
+    console.error('登录失败:', error)
+    ElMessage.error(error.response?.data?.message || '登录失败，请稍后重试')
+    hasError.value = true
+    setTimeout(() => hasError.value = false, 500)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 注册处理
+const handleRegister = async () => {
+  if (!registerForm.username || !registerForm.email || !registerForm.password) {
+    ElMessage.warning('请填写完整信息')
+    return
+  }
+  
+  if (registerForm.password !== registerForm.confirmPassword) {
+    ElMessage.warning('两次密码输入不一致')
+    return
+  }
+  
+  if (!registerForm.agreement) {
+    ElMessage.warning('请同意服务条款')
+    return
+  }
+  
+  try {
+    registerLoading.value = true
+    
+    const response = await authApi.register({
+      username: registerForm.username,
+      email: registerForm.email,
+      password: registerForm.password
+    })
+    
+    if (response.code === 200) {
+      ElMessage.success('注册成功！请登录')
+      showRegister.value = false
+      loginForm.username = registerForm.username
+    } else {
+      ElMessage.error(response.message || '注册失败')
+    }
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || '注册失败')
+  } finally {
+    registerLoading.value = false
+  }
+}
+
+// 忘记密码处理
+const handleForgotPassword = () => {
+  if (!forgotEmail.value) {
+    ElMessage.warning('请输入邮箱')
+    return
+  }
+  ElMessage.success('重置链接已发送到您的邮箱')
+  showForgotPassword.value = false
+}
+</script>
+
+
+<style scoped>
+/* =====================================================
+   登录页面 - 赛博朋克科技风格
+   ===================================================== */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #0a0a1a;
+}
+
+/* 科技感背景 */
+.cyber-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* 网格线 */
+.grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+  100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+}
+
+/* 发光球体 */
+.glow-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: orbFloat 15s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #6366f1, transparent 70%);
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+  bottom: -50px;
+  right: -50px;
+  animation-delay: -5s;
+}
+
+.orb-3 {
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, #06b6d4, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: -10s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -30px) scale(1.1); }
+  50% { transform: translate(-20px, 20px) scale(0.9); }
+  75% { transform: translate(20px, 30px) scale(1.05); }
+}
+
+/* 扫描线 */
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  animation: scanMove 4s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes scanMove {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+/* 登录容器 */
+.login-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 440px;
+}
+
+/* 登录卡片 */
+.login-card {
+  width: 100%;
+  background: rgba(15, 15, 35, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 24px;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 0 40px rgba(99, 102, 241, 0.2),
+    0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* 卡片顶部发光边框 */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    #00d4ff, 
+    #8b5cf6, 
+    #00d4ff, 
+    transparent);
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* 角落装饰 */
+.corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #6366f1;
+}
+
+.corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+.corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+.corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+/* 抖动动画 */
+.login-card.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+/* Logo 区域 */
+.logo-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  position: relative;
+}
+
+.icon-glow {
+  font-size: 40px;
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.logo-text {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.logo-subtitle {
+  color: #94a3b8;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+
+/* 表单样式 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 输入框组 */
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #64748b;
+  z-index: 2;
+  transition: color 0.3s;
+}
+
+.input-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cyber-input {
+  width: 100%;
+  padding: 16px 48px;
+  font-size: 15px;
+  color: #f8fafc;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+}
+
+.cyber-input::placeholder {
+  color: #64748b;
+}
+
+.cyber-input:focus {
+  border-color: #6366f1;
+  box-shadow: 
+    0 0 0 3px rgba(99, 102, 241, 0.1),
+    0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+.cyber-input:focus + .input-border {
+  opacity: 1;
+}
+
+.cyber-input.has-error {
+  border-color: #ff006e;
+  box-shadow: 0 0 20px rgba(255, 0, 110, 0.2);
+}
+
+.input-group:focus-within .input-icon {
+  color: #6366f1;
+}
+
+/* 输入框底部发光边框 */
+.input-border {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  transition: width 0.3s;
+  border-radius: 1px;
+  opacity: 0;
+}
+
+.cyber-input:focus ~ .input-border {
+  width: 80%;
+  opacity: 1;
+}
+
+/* 密码显示切换 */
+.toggle-password {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s;
+  z-index: 2;
+}
+
+.toggle-password:hover {
+  color: #6366f1;
+}
+
+.toggle-password svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* 错误文本 */
+.error-text {
+  color: #ff006e;
+  font-size: 12px;
+  margin-top: 6px;
+  padding-left: 16px;
+}
+
+/* 选项行 */
+.options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0;
+}
+
+/* 复选框样式 */
+.cyber-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cyber-checkbox input {
+  display: none;
+}
+
+.checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(99, 102, 241, 0.4);
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.cyber-checkbox input:checked + .checkmark {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: transparent;
+}
+
+.cyber-checkbox input:checked + .checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.label-text {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* 忘记密码链接 */
+.forgot-link {
+  color: #6366f1;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.forgot-link:hover {
+  color: #818cf8;
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+/* 登录按钮 */
+.cyber-button {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 8px;
+}
+
+.cyber-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 30px rgba(99, 102, 241, 0.4),
+    0 0 40px rgba(99, 102, 241, 0.2);
+}
+
+.cyber-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cyber-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.button-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* 按钮发光效果 */
+.button-glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.cyber-button:hover .button-glow {
+  left: 100%;
+}
+
+/* 加载动画 */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 注册区域 */
+.register-section {
+  text-align: center;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.divider-text {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.register-link {
+  color: #6366f1;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 8px;
+  transition: all 0.3s;
+}
+
+.register-link:hover {
+  color: #818cf8;
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+/* 版本信息 */
+.version-info {
+  margin-top: 24px;
+  color: #475569;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.separator {
+  opacity: 0.5;
+}
+
+/* =====================================================
+   弹窗样式
+   ===================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(15, 15, 35, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.modal-close:hover {
+  background: rgba(255, 0, 110, 0.2);
+  color: #ff006e;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.modal-desc {
+  color: #94a3b8;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.register-form,
+.forgot-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.agreement {
+  margin: 8px 0;
+}
+
+.agreement .label-text {
+  font-size: 13px;
+}
+
+.agreement a {
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.agreement a:hover {
+  text-decoration: underline;
+}
+
+/* =====================================================
+   响应式设计
+   ===================================================== */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 36px 24px;
+    border-radius: 20px;
+  }
+  
+  .logo-icon {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .icon-glow {
+    font-size: 32px;
+  }
+  
+  .logo-text {
+    font-size: 26px;
+  }
+  
+  .cyber-input {
+    padding: 14px 44px;
+    font-size: 14px;
+  }
+  
+  .cyber-button {
+    padding: 14px;
+    font-size: 15px;
+  }
+  
+  .modal-card {
+    padding: 32px 24px;
+  }
+  
+  .orb-1 { width: 250px; height: 250px; }
+  .orb-2 { width: 200px; height: 200px; }
+  .orb-3 { width: 150px; height: 150px; }
+}
+
+@media (max-width: 360px) {
+  .login-container {
+    padding: 16px;
+  }
+  
+  .login-card {
+    padding: 28px 20px;
+  }
+  
+  .options-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+</style>

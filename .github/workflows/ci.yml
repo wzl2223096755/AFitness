@@ -1,0 +1,250 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop, master]
+  pull_request:
+    branches: [main, master]
+
+env:
+  JAVA_VERSION: '17'
+  NODE_VERSION: '18'
+
+jobs:
+  # 前端测试任务
+  test-frontend:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Fitness/frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: Fitness/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit -- --run
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage -- --run
+        continue-on-error: true
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-coverage
+          path: Fitness/frontend/coverage/
+          retention-days: 7
+
+  # 前端E2E测试任务
+  test-e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: test-frontend
+    defaults:
+      run:
+        working-directory: Fitness/frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: Fitness/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        continue-on-error: true
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: |
+            Fitness/frontend/playwright-report/
+            Fitness/frontend/test-results/
+          retention-days: 7
+
+  # 后端测试任务
+  test-backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Fitness
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run tests
+        run: mvn test -B
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-test-results
+          path: Fitness/target/surefire-reports/
+          retention-days: 7
+
+  # 构建任务
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: [test-frontend, test-backend]
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: Fitness/frontend/package-lock.json
+
+      - name: Build frontend
+        working-directory: Fitness/frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build backend
+        working-directory: Fitness
+        run: mvn package -DskipTests -B
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            Fitness/target/*.jar
+            Fitness/frontend/dist/
+          retention-days: 7
+
+  # 代码质量检查
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: Fitness/frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: Fitness/frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: Fitness/frontend
+        run: npm run lint
+        continue-on-error: true
+
+  # 测试结果通知
+  notify-results:
+    name: Notify Test Results
+    runs-on: ubuntu-latest
+    needs: [test-frontend, test-backend, test-e2e]
+    if: always()
+
+    steps:
+      - name: Check test results
+        id: check-results
+        run: |
+          if [[ "${{ needs.test-frontend.result }}" == "failure" ]] || \
+             [[ "${{ needs.test-backend.result }}" == "failure" ]]; then
+            echo "tests_failed=true" >> $GITHUB_OUTPUT
+          else
+            echo "tests_failed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create failure comment on PR
+        if: github.event_name == 'pull_request' && steps.check-results.outputs.tests_failed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = {
+              frontend: '${{ needs.test-frontend.result }}',
+              backend: '${{ needs.test-backend.result }}',
+              e2e: '${{ needs.test-e2e.result }}'
+            };
+            
+            let message = '## ❌ CI Tests Failed\n\n';
+            message += '| Test Suite | Status |\n';
+            message += '|------------|--------|\n';
+            
+            for (const [suite, result] of Object.entries(results)) {
+              const icon = result === 'success' ? '✅' : result === 'failure' ? '❌' : '⚠️';
+              message += `| ${suite} | ${icon} ${result} |\n`;
+            }
+            
+            message += '\n**Please fix the failing tests before merging.**\n';
+            message += `\n[View Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: message
+            });
+
+      - name: Fail if tests failed
+        if: steps.check-results.outputs.tests_failed == 'true'
+        run: |
+          echo "Tests failed! Blocking merge."
+          exit 1
+
+      - name: Success notification
+        if: steps.check-results.outputs.tests_failed == 'false'
+        run: |
+          echo "✅ All tests passed!"

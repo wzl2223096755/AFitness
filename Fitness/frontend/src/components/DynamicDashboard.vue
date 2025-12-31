@@ -1,0 +1,376 @@
+<template>
+  <div class="dynamic-dashboard">
+    <!-- 粒子背景 -->
+    <ParticleBackground />
+    
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">
+        <span class="title-gradient">健身数据仪表盘</span>
+      </h1>
+      <div class="dashboard-controls">
+        <el-select v-model="currentLayout" @change="onLayoutChange" placeholder="选择布局" class="modern-select">
+          <el-option
+            v-for="layout in availableLayouts"
+            :key="layout.id"
+            :label="layout.name"
+            :value="layout.id"
+          >
+            <div class="layout-option">
+              <span>{{ layout.name }}</span>
+              <span class="layout-description">{{ layout.description }}</span>
+            </div>
+          </el-option>
+        </el-select>
+        <el-button @click="toggleEditMode" :type="editMode ? 'primary' : 'default'" class="modern-button">
+          <el-icon><Edit /></el-icon>
+          {{ editMode ? '完成编辑' : '编辑布局' }}
+        </el-button>
+        <el-button @click="resetLayout" type="warning" class="modern-button">
+          <el-icon><Refresh /></el-icon>
+          重置布局
+        </el-button>
+      </div>
+    </div>
+
+    <DynamicLayout
+      :layout="currentLayoutData"
+      :edit-mode="editMode"
+      @layout-change="onLayoutChange"
+      @item-resize="onItemResize"
+      @item-move="onItemMove"
+      @item-add="onItemAdd"
+      @item-remove="onItemRemove"
+    >
+      <template #welcome="{ item }">
+        <WelcomeSection :data="item.data" />
+      </template>
+      
+      <template #metrics="{ item }">
+        <MetricsOverview :data="item.data" />
+      </template>
+      
+      <template #analytics="{ item }">
+        <AnalyticsSection :data="item.data" />
+      </template>
+      
+      <template #activity="{ item }">
+        <RecentActivity :data="item.data" />
+      </template>
+    </DynamicLayout>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ElMessage } from 'element-plus'
+import { Edit, Refresh } from '@element-plus/icons-vue'
+import DynamicLayout from './DynamicLayout.vue'
+import WelcomeSection from './WelcomeSection.vue'
+import MetricsOverview from './MetricsOverview.vue'
+import AnalyticsSection from './AnalyticsSection.vue'
+import RecentActivity from './RecentActivity.vue'
+import ParticleBackground from './ParticleBackground.vue'
+import { useLayoutStore } from '@/stores/layout'
+import { PerformanceUtils } from '@/utils/performance'
+
+// 响应式数据
+const layoutStore = useLayoutStore()
+const editMode = ref(false)
+const currentLayout = ref('default')
+
+// 性能优化：防抖布局变化
+const debouncedLayoutChange = PerformanceUtils.debounce((layoutId) => {
+  if (layoutId !== currentLayout.value) {
+    currentLayout.value = layoutId
+    layoutStore.applyLayout(layoutId)
+    ElMessage.success(`已切换到 ${layoutStore.getLayoutName(layoutId)} 布局`)
+  }
+}, 300)
+
+// 计算属性
+const currentLayoutData = computed(() => {
+  return layoutStore.currentLayout
+})
+
+const availableLayouts = computed(() => {
+  return layoutStore.availableLayouts
+})
+
+// 方法
+const onLayoutChange = debouncedLayoutChange
+
+const onItemResize = PerformanceUtils.throttle((itemId, newSize) => {
+  layoutStore.updateItem(itemId, { size: newSize })
+}, 100)
+
+const onItemMove = PerformanceUtils.throttle((itemId, newPosition) => {
+  layoutStore.updateItem(itemId, { position: newPosition })
+}, 50)
+
+const onItemAdd = (itemType, position) => {
+  layoutStore.addItem(itemType, position)
+  ElMessage.success(`已添加 ${itemType} 组件`)
+}
+
+const onItemRemove = (itemId) => {
+  layoutStore.removeItem(itemId)
+  ElMessage.success('已移除组件')
+}
+
+const toggleEditMode = () => {
+  editMode.value = !editMode.value
+  if (editMode.value) {
+    ElMessage.info('已进入布局编辑模式，您可以拖拽调整组件位置和大小')
+  }
+}
+
+const resetLayout = () => {
+  layoutStore.resetLayout()
+  currentLayout.value = 'default'
+  ElMessage.success('布局已重置为默认状态')
+}
+
+// 监听布局变化
+watch(currentLayoutData, (newLayout) => {
+  if (newLayout && newLayout.id !== currentLayout.value) {
+    currentLayout.value = newLayout.id
+  }
+}, { deep: true })
+
+// 生命周期
+onMounted(() => {
+  // 初始化布局
+  layoutStore.initializeLayout()
+  
+  // 设置初始布局
+  if (layoutStore.currentLayout) {
+    currentLayout.value = layoutStore.currentLayout.id
+  }
+  
+  // 启动性能监控
+  PerformanceUtils.monitorPerformance()
+  
+  // 清理过期缓存
+  PerformanceUtils.clearExpiredCache()
+})
+
+onUnmounted(() => {
+  // 清理缓存
+  PerformanceUtils.cache.clear()
+})
+</script>
+
+<style scoped>
+.dynamic-dashboard {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  padding: 20px;
+}
+
+.dashboard-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 24px 32px;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+.title-gradient {
+  position: relative;
+}
+
+.title-gradient::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+  border-radius: 2px;
+  animation: slide-in 0.6s ease-out;
+}
+
+.dashboard-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.modern-select {
+  border-radius: 12px;
+  border: 2px solid rgba(103, 126, 234, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.modern-select:hover {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.modern-button {
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.modern-button:hover::before {
+  left: 100%;
+}
+
+.modern-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.layout-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.layout-description {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+/* 动画定义 */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+    padding: 20px 24px;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .dashboard-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .dynamic-dashboard {
+    padding: 12px;
+  }
+  
+  .dashboard-header {
+    padding: 16px 20px;
+    border-radius: 16px;
+  }
+  
+  .dashboard-title {
+    font-size: 1.75rem;
+  }
+  
+  .dashboard-controls {
+    gap: 12px;
+  }
+  
+  .modern-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+  
+  .dashboard-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .modern-select,
+  .modern-button {
+    width: 100%;
+  }
+}
+
+/* 深色主题适配 */
+[data-theme="dark"] .dashboard-header {
+  background: rgba(30, 30, 30, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modern-select {
+  background: rgba(30, 30, 30, 0.9);
+  border-color: rgba(102, 126, 234, 0.3);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .layout-description {
+  color: #a0a0a0;
+}
+</style>

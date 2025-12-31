@@ -1,0 +1,386 @@
+@use './variables.scss' as *;
+
+// 统计卡片组件
+.stats-card {
+  background: $bg-card;
+  border-radius: $border-radius-base;
+  padding: $spacing-lg;
+  box-shadow: $shadow-base;
+  transition: all $transition-time;
+  border-top: 3px solid $primary-color;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-light;
+  }
+  
+  &--success {
+    border-top-color: $success-color;
+  }
+  
+  &--warning {
+    border-top-color: $warning-color;
+  }
+  
+  &--danger {
+    border-top-color: $danger-color;
+  }
+  
+  .stats-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-md;
+    
+    .stats-card__title {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      font-weight: 500;
+    }
+    
+    .stats-card__icon {
+      font-size: 24px;
+      color: $primary-color;
+    }
+  }
+  
+  .stats-card__value {
+    font-size: $font-size-2xl;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .stats-card__change {
+    font-size: $font-size-xs;
+    display: flex;
+    align-items: center;
+    
+    &.positive {
+      color: $success-color;
+    }
+    
+    &.negative {
+      color: $danger-color;
+    }
+    
+    .el-icon {
+      margin-right: 2px;
+      font-size: $font-size-xs;
+    }
+  }
+}
+
+// 图表容器
+.chart-container {
+  background: $bg-card;
+  border-radius: $border-radius-base;
+  padding: $spacing-lg;
+  box-shadow: $shadow-base;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  
+  .chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-md;
+    
+    h3 {
+      font-size: $font-size-lg;
+      font-weight: 600;
+      color: $text-primary;
+      margin: 0;
+    }
+    
+    .chart-actions {
+      display: flex;
+      gap: $spacing-sm;
+    }
+  }
+  
+  .chart-content {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+}
+
+// 数据表单
+.data-form {
+  background: $bg-card;
+  border-radius: $border-radius-base;
+  padding: $spacing-lg;
+  box-shadow: $shadow-base;
+  margin-bottom: $spacing-lg;
+  
+  .form-title {
+    font-size: $font-size-lg;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-md;
+  }
+  
+  .form-actions {
+    margin-top: $spacing-lg;
+    display: flex;
+    gap: $spacing-md;
+    justify-content: flex-end;
+  }
+}
+
+// 数据表格
+.data-table {
+  background: $bg-card;
+  border-radius: $border-radius-base;
+  padding: $spacing-lg;
+  box-shadow: $shadow-base;
+  
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-lg;
+    
+    h3 {
+      font-size: $font-size-lg;
+      font-weight: 600;
+      color: $text-primary;
+      margin: 0;
+    }
+    
+    .table-actions {
+      display: flex;
+      gap: $spacing-sm;
+    }
+  }
+  
+  .el-table {
+    .el-table__header-wrapper {
+      th {
+        background-color: $bg-secondary;
+        font-weight: 600;
+        color: $text-primary;
+        border-bottom: 1px solid $border-color;
+      }
+    }
+    
+    .el-table__body-wrapper {
+      .el-table__row {
+        &:hover {
+          background-color: $border-lighter;
+        }
+      }
+      
+      .el-table__cell {
+        border-bottom: 1px solid $border-light;
+      }
+    }
+  }
+}
+
+// 筛选器组件
+.filter-bar {
+  background: $bg-card;
+  border-radius: $border-radius-base;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: $shadow-base;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+  }
+  
+  .filter-actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+}
+
+// 卡片网格
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+// 统计卡片网格
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+// 图表网格
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+// =====================================================
+// 响应式组件优化
+// =====================================================
+
+// 移动端统计卡片网格
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+  
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}
+
+// 移动端统计卡片
+@media (max-width: 768px) {
+  .stats-card {
+    padding: $spacing-md;
+    
+    .stats-card__header {
+      margin-bottom: $spacing-sm;
+      
+      .stats-card__title {
+        font-size: $font-size-xs;
+      }
+      
+      .stats-card__icon {
+        font-size: 20px;
+      }
+    }
+    
+    .stats-card__value {
+      font-size: $font-size-xl;
+    }
+  }
+}
+
+// 移动端图表容器
+@media (max-width: 768px) {
+  .chart-container {
+    height: 300px;
+    padding: $spacing-md;
+    
+    .chart-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-sm;
+      margin-bottom: $spacing-sm;
+      
+      h3 {
+        font-size: $font-size-base;
+      }
+      
+      .chart-actions {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+    }
+  }
+}
+
+// 移动端数据表单
+@media (max-width: 768px) {
+  .data-form {
+    padding: $spacing-md;
+    
+    .form-title {
+      font-size: $font-size-base;
+      margin-bottom: $spacing-md;
+    }
+    
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: $spacing-md;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+      gap: $spacing-sm;
+      
+      .el-button {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// 移动端数据表格
+@media (max-width: 768px) {
+  .data-table {
+    padding: $spacing-md;
+    
+    .table-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-sm;
+      margin-bottom: $spacing-md;
+      
+      h3 {
+        font-size: $font-size-base;
+      }
+      
+      .table-actions {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+    }
+  }
+}
+
+// 移动端筛选器
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: $spacing-md;
+    
+    .filter-group {
+      width: 100%;
+      flex-direction: column;
+      
+      .el-select,
+      .el-input,
+      .el-date-editor {
+        width: 100%;
+      }
+    }
+    
+    .filter-actions {
+      width: 100%;
+      justify-content: stretch;
+      
+      .el-button {
+        flex: 1;
+      }
+    }
+  }
+}

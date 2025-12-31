@@ -1,0 +1,61 @@
+// 离子化主题颜色变量 (Neon Ionized Palette)
+$primary-color: #7000ff;
+$secondary-color: #ff00ff;
+$accent-color: #00f2fe;
+$success-color: #00ff88;
+$warning-color: #ffaa00;
+$danger-color: #ff0055;
+$info-color: #8888ff;
+
+// 背景颜色 (Dark Space)
+$bg-primary: #0a0a14;
+$bg-secondary: #121225;
+$bg-sidebar: #05050a;
+$bg-header: rgba(10, 10, 20, 0.8);
+$bg-card: rgba(255, 255, 255, 0.03);
+
+// 文字颜色
+$text-primary: #ffffff;
+$text-regular: #e0e0ff;
+$text-secondary: #8888aa;
+$text-placeholder: #555577;
+$text-white: #ffffff;
+
+// 边框颜色
+$border-color: rgba(112, 0, 255, 0.2);
+$border-light: rgba(112, 0, 255, 0.1);
+$border-lighter: rgba(112, 0, 255, 0.05);
+
+// 阴影 (Neon Glow)
+$shadow-base: 0 0 15px rgba(112, 0, 255, 0.3);
+$shadow-light: 0 0 10px rgba(112, 0, 255, 0.2);
+
+// 圆角
+$border-radius-base: 4px;
+$border-radius-small: 2px;
+$border-radius-medium: 6px;
+$border-radius-large: 12px;
+
+// 间距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// 字体大小
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+
+// 侧边栏宽度
+$sidebar-width: 240px;
+
+// 头部高度
+$header-height: 60px;
+
+// 动画时间
+$transition-time: 0.3s;

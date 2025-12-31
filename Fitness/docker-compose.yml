@@ -1,0 +1,85 @@
+# 健身管理系统 Docker Compose 配置
+# 用于本地开发和测试环境
+
+version: '3.8'
+
+services:
+  # 后端服务
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fitness-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/fitness?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+      - SPRING_DATASOURCE_USERNAME=fitness
+      - SPRING_DATASOURCE_PASSWORD=fitness123
+      - JWT_SECRET=fitness-jwt-secret-key-for-development-only
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - fitness-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fitness-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - fitness-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: fitness-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=fitness
+      - MYSQL_USER=fitness
+      - MYSQL_PASSWORD=fitness123
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./scripts/sql/mysql_database_init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - fitness-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+networks:
+  fitness-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

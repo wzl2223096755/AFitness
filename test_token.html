@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Token Test</title>
+    <script>
+        async function testToken() {
+            try {
+                // 测试登录
+                const loginResponse = await fetch('http://localhost:8080/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: '123456'
+                    })
+                });
+                
+                const loginData = await loginResponse.json();
+                console.log('登录响应:', loginData);
+                
+                if (loginData.success && loginData.data && loginData.data.accessToken) {
+                    const token = loginData.data.accessToken;
+                    console.log('获取到token:', token);
+                    
+                    // 测试用户API
+                    const usersResponse = await fetch('http://localhost:8080/api/users', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    const usersData = await usersResponse.json();
+                    console.log('用户API响应:', usersData);
+                    
+                    // 测试设备API
+                    const devicesResponse = await fetch('http://localhost:8080/api/devices', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    const devicesData = await devicesResponse.json();
+                    console.log('设备API响应:', devicesData);
+                    
+                    // 测试健身数据API
+                    const fitnessResponse = await fetch('http://localhost:8080/api/fitness-data/my', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    const fitnessData = await fitnessResponse.json();
+                    console.log('健身数据API响应:', fitnessData);
+                    
+                } else {
+                    console.error('登录失败:', loginData);
+                }
+            } catch (error) {
+                console.error('测试失败:', error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Token Test</h1>
+    <button onclick="testToken()">测试Token</button>
+    <div id="results"></div>
+</body>
+</html>

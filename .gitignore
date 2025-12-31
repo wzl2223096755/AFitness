@@ -1,0 +1,56 @@
+# Root .gitignore for AFitness project
+
+# --- Java / Maven ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# --- Frontend (Vue / Node) ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.lock-wbp
+
+# --- IDEs / Editors ---
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.settings/
+.classpath
+.factorypath
+.springBeans
+.sts4-cache
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Database / Temp ---
+*.db
+*.trace.db
+fitness_db/
+temp/
+logs/
+
+# --- Reports ---
+*_REPORT.md
+mvn_test.log
+mvn_test_full.log
+mvn_single_test.log
+
+# --- Playwright E2E Testing ---
+playwright-report/
+test-results/
+playwright/.cache/

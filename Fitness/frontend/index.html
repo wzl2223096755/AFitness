@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏋️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0a0a1a" />
+    <meta name="description" content="AFitness - 智能健身数据管理系统" />
+    
+    <!-- 预连接优化 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    
+    <!-- 预加载关键字体 -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Inter 字体 - 现代科技感，使用font-display: swap优化 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    </noscript>
+    
+    <title>AFitness | 智能健身管理</title>
+    
+    <style>
+      /* 关键CSS - 首屏渲染所需的最小样式 */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      
+      html, body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: #0a0a1a;
+        color: #f8fafc;
+        min-height: 100vh;
+      }
+      
+      #app {
+        min-height: 100vh;
+      }
+      
+      /* 加载动画 */
+      #app-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+      }
+      
+      #app-loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+      
+      .loader-logo {
+        font-size: 64px;
+        margin-bottom: 24px;
+        animation: float 2s ease-in-out infinite;
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      
+      .loader-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 32px;
+      }
+      
+      .loader-bar {
+        width: 200px;
+        height: 4px;
+        background: rgba(99, 102, 241, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      
+      .loader-progress {
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+        border-radius: 2px;
+        animation: loading 1.5s ease-in-out infinite;
+      }
+      
+      @keyframes loading {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(350%); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 加载动画 -->
+    <div id="app-loader">
+      <div class="loader-logo">🏋️</div>
+      <div class="loader-text">AFitness</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+    </div>
+    
+    <div id="app"></div>
+    
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      // 更快地隐藏加载动画
+      const hideLoader = () => {
+        const loader = document.getElementById('app-loader');
+        if (loader) {
+          loader.classList.add('hidden');
+          setTimeout(() => loader.remove(), 500);
+        }
+      };
+      
+      // 当Vue应用挂载后立即隐藏
+      window.addEventListener('DOMContentLoaded', () => {
+        // 最多等待2秒
+        setTimeout(hideLoader, 2000);
+      });
+      
+      // 或者当load事件触发时
+      window.addEventListener('load', () => {
+        setTimeout(hideLoader, 300);
+      });
+    </script>
+  </body>
+</html>

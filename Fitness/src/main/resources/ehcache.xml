@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd"
+         updateCheck="false">
+    
+    <!-- 磁盘存储路径 -->
+    <diskStore path="java.io.tmpdir/fitness-cache"/>
+    
+    <!-- 默认缓存配置 -->
+    <defaultCache
+        maxElementsInMemory="1000"
+        eternal="false"
+        timeToIdleSeconds="300"
+        timeToLiveSeconds="600"
+        overflowToDisk="true"
+        diskPersistent="false"
+        diskExpiryThreadIntervalSeconds="120"/>
+    
+    <!-- 用户缓存 -->
+    <cache name="users"
+           maxElementsInMemory="500"
+           eternal="false"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="1800"
+           overflowToDisk="true"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="600"
+           memoryStoreEvictionPolicy="LRU"/>
+    
+    <!-- 训练记录缓存 -->
+    <cache name="trainingRecords"
+           maxElementsInMemory="200"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="900"
+           overflowToDisk="true"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="300"
+           memoryStoreEvictionPolicy="LRU"/>
+    
+    <!-- 营养记录缓存 -->
+    <cache name="nutritionRecords"
+           maxElementsInMemory="200"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="900"
+           overflowToDisk="true"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="300"
+           memoryStoreEvictionPolicy="LRU"/>
+    
+    <!-- 统计数据缓存 -->
+    <cache name="statistics"
+           maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="1800"
+           overflowToDisk="true"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="600"
+           memoryStoreEvictionPolicy="LRU"/>
+    
+    <!-- 登录响应缓存 -->
+    <cache name="loginResponses"
+           maxElementsInMemory="300"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="900"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+    
+</ehcache>

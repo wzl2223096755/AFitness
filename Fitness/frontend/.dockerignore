@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output (will be created during build)
+dist/
+
+# Test files
+coverage/
+test-results/
+playwright-report/
+e2e/
+
+# IDE
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Lighthouse reports
+*.report.html
+*.report.json
+
+# Documentation
+*.md

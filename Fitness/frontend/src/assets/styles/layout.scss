@@ -1,0 +1,205 @@
+@use './variables.scss' as *;
+
+// 侧边栏样式
+.sidebar {
+  width: $sidebar-width;
+  background-color: $bg-sidebar;
+  color: $text-white;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: width $transition-time;
+  
+  &.collapsed {
+    width: 64px;
+    
+    .logo h2 {
+      display: none;
+    }
+    
+    .el-menu-item span {
+      display: none;
+    }
+  }
+  
+  .logo {
+    padding: $spacing-lg $spacing-md;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    h2 {
+      font-size: $font-size-xl;
+      font-weight: 600;
+      color: $text-white;
+      margin: 0;
+    }
+  }
+  
+  .el-menu {
+    background-color: transparent;
+    border-right: none;
+    
+    &-item {
+      height: 60px;
+      line-height: 60px;
+      color: rgba(255, 255, 255, 0.65);
+      transition: all $transition-time;
+      
+      &:hover {
+        color: $text-white;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      &.is-active {
+        color: $primary-color;
+        background-color: rgba(64, 158, 255, 0.2);
+      }
+      
+      .el-icon {
+        margin-right: $spacing-md;
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+// 主内容区域样式
+.main-container {
+  margin-left: $sidebar-width;
+  transition: margin-left $transition-time;
+  min-height: 100vh;
+  
+  &.sidebar-collapsed {
+    margin-left: 64px;
+  }
+}
+
+// 头部样式
+.header {
+  height: $header-height;
+  background-color: $bg-header;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $spacing-lg;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: $sidebar-width;
+  z-index: 99;
+  transition: left $transition-time;
+  
+  &.sidebar-collapsed {
+    left: 64px;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    
+    .toggle-sidebar {
+      cursor: pointer;
+      margin-right: $spacing-lg;
+      font-size: 20px;
+      color: $text-regular;
+      
+      &:hover {
+        color: $primary-color;
+      }
+    }
+    
+    .breadcrumb {
+      font-size: $font-size-sm;
+    }
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    
+    .header-action {
+      cursor: pointer;
+      padding: $spacing-sm;
+      border-radius: $border-radius-small;
+      color: $text-regular;
+      
+      &:hover {
+        color: $primary-color;
+        background-color: $border-light;
+      }
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      cursor: pointer;
+      padding: $spacing-sm;
+      border-radius: $border-radius-small;
+      
+      &:hover {
+        background-color: $border-light;
+      }
+      
+      .el-avatar {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  }
+}
+
+// 页面内容区域
+.page-content {
+  padding: $header-height $spacing-lg $spacing-lg;
+  min-height: 100vh;
+  
+  .page-header {
+    margin-bottom: $spacing-lg;
+    
+    h1 {
+      font-size: $font-size-2xl;
+      font-weight: 600;
+      color: $text-primary;
+      margin-bottom: $spacing-sm;
+    }
+    
+    .page-description {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+    }
+  }
+  
+  .page-body {
+    // 页面主体内容样式
+  }
+}
+
+// 响应式布局
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    
+    &.expanded {
+      transform: translateX(0);
+    }
+  }
+  
+  .main-container {
+    margin-left: 0;
+  }
+  
+  .header {
+    left: 0;
+    padding: 0 $spacing-md;
+    
+    .header-left .toggle-sidebar {
+      display: block;
+    }
+  }
+}
