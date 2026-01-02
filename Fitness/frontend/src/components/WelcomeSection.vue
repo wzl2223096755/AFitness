@@ -389,14 +389,14 @@ watch(currentUser, (newUser) => {
 
 <style scoped>
 .welcome-section {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(128, 32, 255, 0.15) 0%, rgba(0, 242, 254, 0.1) 100%);
   border-radius: 20px;
   padding: 40px;
   display: flex;
   align-items: stretch;
   justify-content: space-between;
   gap: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   backdrop-filter: blur(10px);
   position: relative;
   overflow: hidden;
@@ -444,7 +444,7 @@ watch(currentUser, (newUser) => {
 .welcome-title {
   font-size: 2.8rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary, #ffffff);
   margin: 0 0 16px 0;
   line-height: 1.2;
   display: flex;
@@ -454,14 +454,14 @@ watch(currentUser, (newUser) => {
 }
 
 .greeting {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(135deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .username {
-  color: #1e293b;
+  color: var(--text-primary, #ffffff);
   position: relative;
 }
 
@@ -472,7 +472,7 @@ watch(currentUser, (newUser) => {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
   border-radius: 2px;
   animation: underlineGlow 2s ease-in-out infinite;
 }
@@ -494,7 +494,7 @@ watch(currentUser, (newUser) => {
 
 .welcome-subtitle {
   font-size: 1.2rem;
-  color: #64748b;
+  color: var(--text-secondary, #8888aa);
   margin: 0;
   font-weight: 400;
   line-height: 1.6;
@@ -506,38 +506,38 @@ watch(currentUser, (newUser) => {
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 20px;
   padding: 24px;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(18, 18, 37, 0.5);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
   backdrop-filter: blur(5px);
 }
 
 .stat-item {
   text-align: center;
   padding: 16px 12px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(18, 18, 37, 0.8);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .stat-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow-light, 0 0 10px rgba(112, 0, 255, 0.2));
+  background: rgba(18, 18, 37, 0.95);
 }
 
 .stat-value {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 4px;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-secondary, #8888aa);
   margin-bottom: 8px;
   font-weight: 500;
 }
@@ -596,15 +596,15 @@ watch(currentUser, (newUser) => {
 }
 
 .primary-action {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(135deg, var(--color-primary, #8020ff), var(--color-secondary, #ff00ff));
   border: none;
   color: white;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 15px rgba(128, 32, 255, 0.4);
 }
 
 .primary-action:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 25px rgba(128, 32, 255, 0.6);
 }
 
 .welcome-visual {
@@ -616,11 +616,11 @@ watch(currentUser, (newUser) => {
 }
 
 .daily-motivation {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(18, 18, 37, 0.9);
   border-radius: 16px;
   padding: 30px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   backdrop-filter: blur(10px);
   position: relative;
   transition: all 0.3s ease;
@@ -653,7 +653,7 @@ watch(currentUser, (newUser) => {
 .motivation-quote {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 12px;
   font-style: italic;
   line-height: 1.5;
@@ -661,14 +661,14 @@ watch(currentUser, (newUser) => {
 
 .motivation-author {
   font-size: 0.95rem;
-  color: #64748b;
+  color: var(--text-secondary, #8888aa);
   font-weight: 500;
   font-style: normal;
 }
 
 .motivation-date {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-secondary, #8888aa);
   font-weight: 500;
   margin-bottom: 16px;
 }
@@ -686,20 +686,20 @@ watch(currentUser, (newUser) => {
 }
 
 .weather-widget {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(18, 18, 37, 0.8);
   border-radius: 16px;
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
 
 .weather-widget:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-light, 0 0 10px rgba(112, 0, 255, 0.2));
 }
 
 .weather-icon {
@@ -719,13 +719,13 @@ watch(currentUser, (newUser) => {
 .temperature {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 4px;
 }
 
 .weather-desc {
   font-size: 0.95rem;
-  color: #64748b;
+  color: var(--text-secondary, #8888aa);
   font-weight: 500;
 }
 
@@ -820,57 +820,6 @@ watch(currentUser, (newUser) => {
   
   .action-button {
     width: 100%;
-  }
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-  .welcome-section {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .welcome-title .username {
-    color: #f1f5f9;
-  }
-  
-  .welcome-subtitle {
-    color: #94a3b8;
-  }
-  
-  .stat-value {
-    color: #f1f5f9;
-  }
-  
-  .stat-label {
-    color: #94a3b8;
-  }
-  
-  .daily-motivation {
-    background: rgba(30, 41, 59, 0.9);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .motivation-quote {
-    color: #f1f5f9;
-  }
-  
-  .motivation-author,
-  .motivation-date {
-    color: #94a3b8;
-  }
-  
-  .weather-widget {
-    background: rgba(30, 41, 59, 0.9);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .temperature {
-    color: #f1f5f9;
-  }
-  
-  .weather-desc {
-    color: #94a3b8;
   }
 }
 </style>

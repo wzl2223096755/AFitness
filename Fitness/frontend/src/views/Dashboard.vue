@@ -1,857 +1,712 @@
 <template>
-  <div class="dashboard-container">
-    <DynamicDashboard />
+  <div class="dashboard-page">
+    <!-- 欢迎区域 -->
+    <section class="welcome-section">
+      <div class="welcome-content">
+        <h1 class="welcome-title">
+          <span class="greeting">{{ greeting }}</span>，
+          <span class="username">{{ currentUser?.username || '运动员' }}</span>
+          <span class="emoji">{{ timeEmoji }}</span>
+        </h1>
+        <p class="welcome-subtitle">{{ motivationalText }}</p>
+      </div>
+      <div class="welcome-visual">
+        <div class="daily-quote">
+          <div class="quote-icon">💪</div>
+          <div class="quote-text">{{ currentQuote }}</div>
+          <div class="quote-date">{{ formattedDate }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 快速统计卡片 -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card primary" @click="navigateTo('/training-data')">
+          <div class="stat-icon">🏋️</div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.weeklyTrainingCount }}</div>
+            <div class="stat-label">本周训练</div>
+            <div class="stat-change" :class="stats.weeklyChange >= 0 ? 'positive' : 'negative'">
+              {{ stats.weeklyChange >= 0 ? '+' : '' }}{{ stats.weeklyChange }} vs上周
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card success" @click="navigateTo('/load-analysis')">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <div class="stat-value">{{ formatNumber(stats.totalVolume) }}</div>
+            <div class="stat-label">总训练量(kg)</div>
+            <div class="stat-change positive">持续增长</div>
+          </div>
+        </div>
+
+        <div class="stat-card warning" @click="navigateTo('/recovery-status')">
+          <div class="stat-icon">💚</div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.recoveryScore }}</div>
+            <div class="stat-label">恢复评分</div>
+            <div class="stat-change" :class="getRecoveryClass(stats.recoveryScore)">
+              {{ getRecoveryText(stats.recoveryScore) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card danger" @click="navigateTo('/fitness-planner')">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.goalCompletionRate }}%</div>
+            <div class="stat-label">目标完成</div>
+            <div class="stat-change" :class="stats.goalCompletionRate >= 80 ? 'positive' : 'negative'">
+              {{ stats.goalCompletionRate >= 80 ? '表现优秀' : '继续努力' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 快捷操作 -->
+    <section class="quick-actions-section">
+      <h2 class="section-title">
+        <span class="title-icon">⚡</span>
+        快捷操作
+      </h2>
+      <div class="actions-grid">
+        <div class="action-card" @click="navigateTo('/training-data')">
+          <div class="action-icon">📝</div>
+          <div class="action-text">记录训练</div>
+        </div>
+        <div class="action-card" @click="navigateTo('/fitness-planner')">
+          <div class="action-icon">📋</div>
+          <div class="action-text">训练计划</div>
+        </div>
+        <div class="action-card" @click="navigateTo('/nutrition-tracking')">
+          <div class="action-icon">🥗</div>
+          <div class="action-text">营养记录</div>
+        </div>
+        <div class="action-card" @click="navigateTo('/training-suggestions')">
+          <div class="action-icon">💡</div>
+          <div class="action-text">训练建议</div>
+        </div>
+        <div class="action-card" @click="navigateTo('/history-stats')">
+          <div class="action-icon">📈</div>
+          <div class="action-text">历史统计</div>
+        </div>
+        <div class="action-card" @click="navigateTo('/data-visualization')">
+          <div class="action-icon">📊</div>
+          <div class="action-text">数据可视化</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 最近训练记录 -->
+    <section class="recent-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-icon">🕒</span>
+          最近训练
+        </h2>
+        <el-button type="primary" size="small" @click="navigateTo('/training-records')">
+          查看全部
+        </el-button>
+      </div>
+      
+      <div class="records-list" v-loading="loading">
+        <div v-if="recentRecords.length === 0 && !loading" class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>还没有训练记录</p>
+          <el-button type="primary" @click="navigateTo('/training-data')">
+            开始记录
+          </el-button>
+        </div>
+        
+        <div v-else class="record-cards">
+          <div 
+            v-for="record in recentRecords" 
+            :key="record.id" 
+            class="record-card"
+            @click="navigateTo('/training-records')"
+          >
+            <div class="record-date">{{ formatDate(record.trainingDate) }}</div>
+            <div class="record-name">{{ record.exerciseName }}</div>
+            <div class="record-details">
+              <span class="detail-item">{{ record.weight }}kg</span>
+              <span class="detail-item">{{ record.sets }}组</span>
+              <span class="detail-item">{{ record.reps }}次</span>
+            </div>
+            <div class="record-volume">
+              训练量: {{ formatNumber(record.totalVolume) }}kg
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 今日目标 -->
+    <section class="goals-section" v-if="todayGoals.length > 0">
+      <h2 class="section-title">
+        <span class="title-icon">🎯</span>
+        今日目标
+      </h2>
+      <div class="goals-list">
+        <div v-for="goal in todayGoals" :key="goal.id" class="goal-item">
+          <div class="goal-info">
+            <span class="goal-name">{{ goal.name }}</span>
+            <span class="goal-progress">{{ goal.progress }}/{{ goal.target }}</span>
+          </div>
+          <el-progress 
+            :percentage="Math.min((goal.progress / goal.target) * 100, 100)" 
+            :color="goal.progress >= goal.target ? '#10b981' : '#8020ff'"
+            :show-text="false"
+          />
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-import DynamicDashboard from '../components/DynamicDashboard.vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '../stores/user'
+import { fitnessApi } from '../api/fitness'
+import { ElMessage } from 'element-plus'
+
+const router = useRouter()
+const userStore = useUserStore()
+
+// 响应式数据
+const loading = ref(false)
+const currentUser = computed(() => userStore.user)
+
+const stats = ref({
+  weeklyTrainingCount: 0,
+  weeklyChange: 0,
+  totalVolume: 0,
+  recoveryScore: 0,
+  goalCompletionRate: 0
+})
+
+const recentRecords = ref([])
+const todayGoals = ref([])
+
+// 励志语录
+const quotes = [
+  "今天的努力是明天更强的基础",
+  "坚持不是一时的热情，而是永恒的信念",
+  "每一次训练都是对更好自己的投资",
+  "汗水是最好的化妆品",
+  "没有天生的强者，只有不懈的努力",
+  "生命在于运动，健康在于坚持"
+]
+
+const currentQuote = ref(quotes[Math.floor(Math.random() * quotes.length)])
+
+// 计算属性
+const greeting = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 6) return "夜深了"
+  if (hour < 12) return "早上好"
+  if (hour < 14) return "中午好"
+  if (hour < 18) return "下午好"
+  if (hour < 22) return "晚上好"
+  return "夜深了"
+})
+
+const timeEmoji = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 6) return "🌙"
+  if (hour < 12) return "☀️"
+  if (hour < 18) return "🌤️"
+  return "🌙"
+})
+
+const motivationalText = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 12) return "新的一天，让我们用充满活力的训练开启美好的一天！"
+  if (hour < 18) return "下午时光正好，继续保持训练的节奏！"
+  return "晚上训练有助于放松身心，查看今天的训练状态吧！"
+})
+
+const formattedDate = computed(() => {
+  return new Date().toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long'
+  })
+})
+
+// 方法
+const navigateTo = (path) => {
+  router.push(path)
+}
+
+const formatNumber = (num) => {
+  return new Intl.NumberFormat('zh-CN').format(num || 0)
+}
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  try {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+  } catch {
+    return dateStr
+  }
+}
+
+const getRecoveryClass = (score) => {
+  if (score >= 80) return 'positive'
+  if (score >= 60) return 'neutral'
+  return 'negative'
+}
+
+const getRecoveryText = (score) => {
+  if (score >= 80) return '恢复良好'
+  if (score >= 60) return '需要休息'
+  return '过度疲劳'
+}
+
+// 加载数据
+const loadDashboardData = async () => {
+  loading.value = true
+  try {
+    // 获取指标概览
+    const metricsRes = await fitnessApi.getMetricsOverview('week')
+    if (metricsRes.data) {
+      stats.value = {
+        weeklyTrainingCount: metricsRes.data.weeklyTrainingCount || 0,
+        weeklyChange: metricsRes.data.weeklyChange || 0,
+        totalVolume: metricsRes.data.totalVolume || 0,
+        recoveryScore: metricsRes.data.recoveryScore || 0,
+        goalCompletionRate: metricsRes.data.goalCompletionRate || 0
+      }
+      
+      // 设置今日目标
+      if (metricsRes.data.goals && Array.isArray(metricsRes.data.goals)) {
+        todayGoals.value = metricsRes.data.goals
+      } else {
+        todayGoals.value = [
+          { id: 1, name: '训练次数', progress: stats.value.weeklyTrainingCount, target: 7 },
+          { id: 2, name: '训练量', progress: Math.min(stats.value.totalVolume, 15000), target: 15000 }
+        ]
+      }
+    }
+
+    // 获取最近训练记录
+    const recordsRes = await fitnessApi.getRecentTrainingRecords()
+    if (recordsRes.data && Array.isArray(recordsRes.data)) {
+      recentRecords.value = recordsRes.data.slice(0, 6)
+    }
+  } catch (error) {
+    console.error('加载仪表盘数据失败:', error)
+    ElMessage.error('加载数据失败，请刷新重试')
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  loadDashboardData()
+})
 </script>
 
 <style scoped>
-/* ===================================
-   全局布局和容器样式
-   =================================== */
 .dashboard-page {
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-  min-height: calc(100vh - 60px);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 0;
-  overflow-x: visible;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* ===================================
-   欢迎区域样式
-   =================================== */
+/* 欢迎区域 */
 .welcome-section {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 40px;
-  margin: 20px 20px 30px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.welcome-section::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(103,126,234,0.1) 0%, transparent 70%);
-  border-radius: 50%;
+  align-items: center;
+  gap: 30px;
+  padding: 30px;
+  background: linear-gradient(135deg, rgba(128, 32, 255, 0.15), rgba(0, 242, 254, 0.1));
+  border-radius: 20px;
+  border: 1px solid rgba(128, 32, 255, 0.2);
+  margin-bottom: 24px;
 }
 
 .welcome-content {
   flex: 1;
-  z-index: 2;
 }
 
 .welcome-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
   margin: 0 0 12px 0;
-  line-height: 1.2;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.greeting {
+  background: linear-gradient(135deg, #8020ff, #00f2fe);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+.emoji {
+  font-size: 1.8rem;
+}
+
 .welcome-subtitle {
-  font-size: 1.1rem;
-  color: #64748b;
-  margin: 0 0 24px 0;
-  font-weight: 400;
-}
-
-.welcome-actions {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.welcome-actions .el-button {
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.welcome-actions .el-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  color: #8888aa;
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.6;
 }
 
 .welcome-visual {
-  flex: 0 0 auto;
-  z-index: 2;
-}
-
-.daily-motivation {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 24px;
-  border-radius: 16px;
-  text-align: center;
-  border: 1px solid rgba(148,163,184,0.2);
-  min-width: 200px;
-}
-
-.motivation-quote {
-  font-size: 0.95rem;
-  color: #475569;
-  font-style: italic;
-  margin-bottom: 12px;
-  line-height: 1.4;
-}
-
-.motivation-date {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  font-weight: 500;
-}
-
-/* ===================================
-   区域标题样式
-   =================================== */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  padding: 0 4px;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.title-icon {
-  font-size: 1.8rem;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-
-.section-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.time-range-selector {
-  display: flex;
-  align-items: center;
-}
-
-/* ===================================
-   核心指标概览样式
-   =================================== */
-.metrics-overview {
-  margin: 0 20px 30px 20px;
-}
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 0 4px;
-  overflow: visible;
-}
-
-.metric-card {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 28px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255,255,255,0.2);
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.metric-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--metric-color) 0%, var(--metric-color-light) 100%);
-}
-
-.metric-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-}
-
-.primary-metric {
-  --metric-color: #3b82f6;
-  --metric-color-light: #60a5fa;
-}
-
-.success-metric {
-  --metric-color: #10b981;
-  --metric-color-light: #34d399;
-}
-
-.warning-metric {
-  --metric-color: #f59e0b;
-  --metric-color-light: #fbbf24;
-}
-
-.danger-metric {
-  --metric-color: #ef4444;
-  --metric-color-light: #f87171;
-}
-
-.metric-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.metric-info {
-  flex: 1;
-}
-
-.metric-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 4px 0;
-}
-
-.metric-subtitle {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin: 0;
-  font-weight: 400;
-}
-
-.metric-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: white;
   flex-shrink: 0;
 }
 
-.metric-icon.primary {
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
-}
-
-.metric-icon.success {
-  background: linear-gradient(135deg, #10b981, #34d399);
-}
-
-.metric-icon.warning {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
-}
-
-.metric-icon.danger {
-  background: linear-gradient(135deg, #ef4444, #f87171);
-}
-
-.metric-value {
-  margin-bottom: 16px;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.value-number {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #1e293b;
-  line-height: 1;
-}
-
-.value-unit {
-  font-size: 1rem;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.metric-trend {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 8px;
-  width: fit-content;
-}
-
-.metric-trend.positive {
-  color: #10b981;
-  background: rgba(16,185,129,0.1);
-}
-
-.metric-trend.negative {
-  color: #ef4444;
-  background: rgba(239,68,68,0.1);
-}
-
-.metric-trend.neutral {
-  color: #f59e0b;
-  background: rgba(245,158,11,0.1);
-}
-
-/* ===================================
-   数据分析区域样式
-   =================================== */
-.analytics-section {
-  margin: 0 20px 30px 20px;
-}
-
-.analytics-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: auto auto;
-  gap: 20px;
-  padding: 0 4px;
-  overflow: visible;
-}
-
-.chart-card {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
+.daily-quote {
+  background: rgba(18, 18, 37, 0.8);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255,255,255,0.2);
-  transition: all 0.3s ease;
-  overflow: visible;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.chart-card:hover {
-  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-}
-
-.main-chart {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-}
-
-.chart-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.chart-header h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0;
-}
-
-.chart-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.chart-content {
-  width: 100%;
-  height: 300px;
-  overflow: visible;
-}
-
-.large-chart {
-  height: 600px;
-}
-
-/* ===================================
-   最近活动区域样式
-   =================================== */
-.recent-activity {
-  margin: 0 20px 30px 20px;
-}
-
-.activity-content {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 24px;
-  border: 1px solid rgba(255,255,255,0.2);
-  overflow: visible;
-}
-
-.empty-activity {
   text-align: center;
-  padding: 60px 20px;
+  border: 1px solid rgba(128, 32, 255, 0.2);
+  min-width: 280px;
 }
 
-.empty-visual {
+.quote-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.quote-text {
+  color: #ffffff;
+  font-size: 1rem;
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.quote-date {
+  color: #8888aa;
+  font-size: 0.85rem;
+}
+
+/* 统计卡片 */
+.stats-section {
   margin-bottom: 24px;
 }
 
-.empty-icon {
-  font-size: 4rem;
-  color: #cbd5e1;
-  opacity: 0.6;
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
 }
 
-.empty-content h3 {
-  font-size: 1.3rem;
+.stat-card {
+  background: rgba(18, 18, 37, 0.9);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid rgba(128, 32, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(128, 32, 255, 0.3);
+}
+
+.stat-card.primary { border-top: 3px solid #3b82f6; }
+.stat-card.success { border-top: 3px solid #10b981; }
+.stat-card.warning { border-top: 3px solid #f59e0b; }
+.stat-card.danger { border-top: 3px solid #ef4444; }
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #475569;
-  margin: 0 0 8px 0;
+  color: #ffffff;
+  line-height: 1.2;
 }
 
-.empty-content p {
+.stat-label {
+  color: #8888aa;
+  font-size: 0.9rem;
+  margin: 4px 0;
+}
+
+.stat-change {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.stat-change.positive {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.stat-change.negative {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.stat-change.neutral {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+}
+
+/* 快捷操作 */
+.quick-actions-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-icon {
+  font-size: 1.2rem;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.action-card {
+  background: rgba(18, 18, 37, 0.8);
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+  border: 1px solid rgba(128, 32, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-card:hover {
+  background: rgba(128, 32, 255, 0.2);
+  border-color: #8020ff;
+  transform: translateY(-2px);
+}
+
+.action-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.action-text {
+  color: #e0e0ff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* 最近训练 */
+.recent-section {
+  margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.records-list {
+  background: rgba(18, 18, 37, 0.8);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(128, 32, 255, 0.2);
+  min-height: 150px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8888aa;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.record-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.record-card {
+  background: rgba(18, 18, 37, 0.9);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(128, 32, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.record-card:hover {
+  border-color: #8020ff;
+  background: rgba(128, 32, 255, 0.1);
+}
+
+.record-date {
+  color: #8888aa;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.record-name {
+  color: #ffffff;
   font-size: 1rem;
-  color: #94a3b8;
-  margin: 0 0 24px 0;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
-.training-records {
-  overflow: visible;
+.record-details {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-/* ===================================
-   响应式设计
-   =================================== */
-@media (max-width: 1200px) {
-  .analytics-grid {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
-  }
-  
-  .main-chart {
-    grid-column: 1 / span 2;
-    grid-row: 1;
-  }
+.detail-item {
+  color: #00f2fe;
+  font-size: 0.85rem;
+  background: rgba(0, 242, 254, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
 }
 
+.record-volume {
+  color: #8888aa;
+  font-size: 0.8rem;
+}
+
+/* 今日目标 */
+.goals-section {
+  margin-bottom: 24px;
+}
+
+.goals-list {
+  background: rgba(18, 18, 37, 0.8);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(128, 32, 255, 0.2);
+}
+
+.goal-item {
+  margin-bottom: 16px;
+}
+
+.goal-item:last-child {
+  margin-bottom: 0;
+}
+
+.goal-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.goal-name {
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.goal-progress {
+  color: #8888aa;
+  font-size: 0.85rem;
+}
+
+/* 响应式 */
 @media (max-width: 768px) {
   .dashboard-page {
-    padding: 0;
-    margin: 0;
-  }
-  
-  .welcome-section,
-  .metrics-overview,
-  .analytics-section,
-  .recent-activity {
-    margin-left: 12px;
-    margin-right: 12px;
+    padding: 16px;
   }
   
   .welcome-section {
     flex-direction: column;
     text-align: center;
-    padding: 30px 20px;
-  }
-  
-  .welcome-title {
-    font-size: 2rem;
-  }
-  
-  .welcome-content {
-    margin-bottom: 24px;
-  }
-  
-  .welcome-visual {
-    width: 100%;
-  }
-  
-  .daily-motivation {
-    max-width: 300px;
-    margin: 0 auto;
-  }
-  
-  .metrics-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 0 2px;
-  }
-  
-  .metric-card {
-    padding: 20px;
-  }
-  
-  .value-number {
-    font-size: 2rem;
-  }
-  
-  .analytics-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 0 2px;
-  }
-  
-  .main-chart {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  
-  .chart-card {
-    padding: 20px;
-  }
-  
-  .chart-content {
-    height: 250px;
-  }
-  
-  .large-chart {
-    height: 400px;
-  }
-  
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  
-  .section-actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-}
-
-@media (max-width: 480px) {
-  .welcome-section,
-  .metrics-overview,
-  .analytics-section,
-  .recent-activity {
-    margin-left: 8px;
-    margin-right: 8px;
-  }
-  
-  .welcome-section {
-    padding: 20px 16px;
+    padding: 24px 20px;
   }
   
   .welcome-title {
     font-size: 1.6rem;
-  }
-  
-  .welcome-subtitle {
-    font-size: 1rem;
-  }
-  
-  .welcome-actions {
     justify-content: center;
   }
   
-  .welcome-actions .el-button {
-    flex: 1;
-    min-width: 120px;
-  }
-  
-  .daily-motivation {
-    padding: 16px;
+  .daily-quote {
     min-width: auto;
+    width: 100%;
   }
   
-  .metric-card {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stat-card {
     padding: 16px;
   }
   
-  .metric-header {
-    margin-bottom: 16px;
+  .stat-value {
+    font-size: 1.4rem;
   }
   
-  .value-number {
-    font-size: 1.8rem;
+  .actions-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
   
-  .chart-card {
-    padding: 16px;
+  .action-card {
+    padding: 16px 12px;
   }
   
-  .chart-content {
-    height: 200px;
+  .action-icon {
+    font-size: 1.6rem;
   }
   
-  .large-chart {
-    height: 300px;
-  }
-  
-  .activity-content {
-    padding: 16px;
-  }
-  
-  .empty-activity {
-    padding: 40px 16px;
-  }
-  
-  .empty-icon {
-    font-size: 3rem;
-  }
-  
-  .section-title {
-    font-size: 1.3rem;
+  .action-text {
+    font-size: 0.8rem;
   }
 }
 
-/* ===================================
-   加载和动画状态
-   =================================== */
-.loading-placeholder {
-  display: inline-block;
-  width: 60px;
-  height: 1.2em;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading-shimmer 1.5s infinite;
-  border-radius: 4px;
-}
-
-@keyframes loading-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* ===================================
-   深色主题适配
-   =================================== */
-@media (prefers-color-scheme: dark) {
-  .dashboard-page {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
   
-  .welcome-section,
-  .metric-card,
-  .chart-card,
-  .activity-content {
-    background: rgba(30,41,59,0.95);
-    border-color: rgba(71,85,105,0.3);
+  .actions-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  .welcome-title {
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .welcome-subtitle {
-    color: #94a3b8;
-  }
-  
-  .metric-title,
-  .chart-header h3,
-  .section-title {
-    color: #f1f5f9;
-  }
-  
-  .metric-subtitle {
-    color: #94a3b8;
-  }
-  
-  .value-number {
-    color: #f1f5f9;
-  }
-  
-  .value-unit {
-    color: #94a3b8;
-  }
-  
-  .daily-motivation {
-    background: linear-gradient(135deg, #334155 0%, #475569 100%);
-    border-color: rgba(71,85,105,0.3);
-  }
-  
-  .motivation-quote {
-    color: #cbd5e1;
-  }
-  
-  .motivation-date {
-    color: #94a3b8;
-  }
-  
-  .empty-content h3 {
-    color: #cbd5e1;
-  }
-  
-  .empty-content p {
-    color: #94a3b8;
-  }
-  
-  .empty-icon {
-    color: #475569;
-  }
-}
-
-/* ===================================
-   表格样式优化
-   =================================== */
-:deep(.el-table) {
-  background: transparent;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-:deep(.el-table__header-wrapper) {
-  background: rgba(248,250,252,0.8);
-  backdrop-filter: blur(10px);
-}
-
-:deep(.el-table th) {
-  background: transparent;
-  color: #475569;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(226,232,240,0.6);
-}
-
-:deep(.el-table td) {
-  border-bottom: 1px solid rgba(226,232,240,0.3);
-  padding: 16px 12px;
-}
-
-:deep(.el-table tr:hover > td) {
-  background: rgba(241,245,249,0.5);
-}
-
-:deep(.training-record-row) {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-:deep(.training-record-row:hover) {
-  background: rgba(59,130,246,0.05);
-}
-
-@media (prefers-color-scheme: dark) {
-  :deep(.el-table__header-wrapper) {
-    background: rgba(30,41,59,0.8);
-  }
-  
-  :deep(.el-table th) {
-    color: #cbd5e1;
-    border-bottom-color: rgba(71,85,105,0.6);
-  }
-  
-  :deep(.el-table td) {
-    border-bottom-color: rgba(71,85,105,0.3);
-    color: #e2e8f0;
-  }
-  
-  :deep(.el-table tr:hover > td) {
-    background: rgba(59,130,246,0.1);
-  }
-}
-
-/* 对话框样式 */
-.recovery-details,
-.goal-details {
-  text-align: center;
-  padding: 20px;
-}
-
-.recovery-score {
-  margin-bottom: 24px;
-}
-
-.score-value {
-  font-size: 48px;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 8px;
-}
-
-.score-label {
-  font-size: 18px;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.recovery-recommendations {
-  text-align: left;
-}
-
-.recovery-recommendations h4 {
-  color: #1e293b;
-  margin-bottom: 16px;
-}
-
-.recovery-recommendations ul {
-  list-style: none;
-  padding: 0;
-}
-
-.recovery-recommendations li {
-  padding: 8px 0;
-  color: #64748b;
-  position: relative;
-  padding-left: 24px;
-}
-
-.recovery-recommendations li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #10b981;
-  font-weight: bold;
-}
-
-.goal-progress {
-  margin-bottom: 24px;
-}
-
-.goal-info h4 {
-  color: #1e293b;
-  margin-bottom: 12px;
-}
-
-.goal-info p {
-  color: #64748b;
-  margin: 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  .score-value {
-    color: #f1f5f9;
-  }
-  
-  .score-label {
-    color: #94a3b8;
-  }
-  
-  .recovery-recommendations h4,
-  .goal-info h4 {
-    color: #f1f5f9;
-  }
-  
-  .recovery-recommendations li,
-  .goal-info p {
-    color: #94a3b8;
+  .record-cards {
+    grid-template-columns: 1fr;
   }
 }
 </style>

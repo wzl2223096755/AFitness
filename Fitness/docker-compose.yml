@@ -62,9 +62,11 @@ services:
       - MYSQL_DATABASE=fitness
       - MYSQL_USER=fitness
       - MYSQL_PASSWORD=fitness123
+      - LANG=C.UTF-8
     volumes:
       - mysql-data:/var/lib/mysql
       - ./scripts/sql/mysql_database_init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     networks:
       - fitness-network
     restart: unless-stopped
@@ -74,7 +76,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --init-connect='SET NAMES utf8mb4'
+      --skip-character-set-client-handshake
 
 networks:
   fitness-network:

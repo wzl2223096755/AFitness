@@ -1,0 +1,38 @@
+# =====================================================
+# MySQL 字符集配置 - 解决中文乱码
+# 将以下内容添加到你的 my.ini 或 my.cnf 文件中
+# =====================================================
+
+# 在 [mysqld] 部分添加：
+[mysqld]
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+init_connect='SET NAMES utf8mb4'
+skip-character-set-client-handshake
+
+# 在 [client] 部分添加：
+[client]
+default-character-set=utf8mb4
+
+# 在 [mysql] 部分添加：
+[mysql]
+default-character-set=utf8mb4
+
+# =====================================================
+# 配置步骤：
+# 1. 找到 MySQL 配置文件：
+#    - Windows: C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
+#    - Linux: /etc/mysql/my.cnf 或 /etc/my.cnf
+#    - Mac: /usr/local/mysql/my.cnf
+#
+# 2. 用管理员权限编辑该文件，添加上述配置
+#
+# 3. 重启 MySQL 服务：
+#    - Windows: 在服务管理器中重启 MySQL 服务
+#      或运行: net stop mysql && net start mysql
+#    - Linux: sudo systemctl restart mysql
+#    - Mac: sudo mysql.server restart
+#
+# 4. 验证配置：
+#    mysql -u root -p -e "SHOW VARIABLES LIKE 'character%';"
+# =====================================================

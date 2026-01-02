@@ -5,8 +5,8 @@ import com.wzl.fitness.entity.AuditLog.AuditAction;
 import com.wzl.fitness.entity.AuditLog.AuditResult;
 import com.wzl.fitness.repository.AuditLogRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
@@ -18,14 +18,16 @@ import java.time.LocalDateTime;
 
 /**
  * 审计日志服务
- * 提供敏感操作的审计日志记录功能
  */
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class AuditLogService {
     
+    private static final Logger log = LoggerFactory.getLogger(AuditLogService.class);
     private final AuditLogRepository auditLogRepository;
+    
+    public AuditLogService(AuditLogRepository auditLogRepository) {
+        this.auditLogRepository = auditLogRepository;
+    }
     
     /**
      * 记录登录成功

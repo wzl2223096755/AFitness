@@ -482,38 +482,42 @@ onMounted(() => {
 <style scoped>
 /* NutritionTracking - Using design tokens from typography and layout system */
 /* Requirements: 7.1, 7.2, 7.3 - Table and list typography */
+/* 深色主题适配 - Neon Ionized Palette */
 
 .nutrition-page {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--bg-primary, #0a0a14) 0%, var(--bg-secondary, #121225) 100%);
   min-height: calc(100vh - 60px);
 }
 
 .page-header {
   text-align: center;
-  color: white;
+  color: var(--text-primary, #ffffff);
 }
 
 .page-header h1 {
   margin-bottom: var(--spacing-3, 0.75rem);
+  color: var(--text-primary, #ffffff);
 }
 
 .page-description {
   opacity: 0.9;
+  color: var(--text-regular, #e0e0ff);
 }
 
 .overview-card {
   display: flex;
   align-items: center;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(18, 18, 37, 0.95);
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   transition: all 0.3s ease;
 }
 
 .overview-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3)), 0 0 25px rgba(128, 32, 255, 0.2);
 }
 
 .card-icon {
@@ -550,7 +554,7 @@ onMounted(() => {
 }
 
 .card-title {
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary, #8888aa);
   margin-bottom: var(--spacing-1, 0.25rem);
 }
 
@@ -558,19 +562,20 @@ onMounted(() => {
 .card-value {
   font-variant-numeric: tabular-nums;
   line-height: var(--line-height-tight, 1.25);
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
 }
 
 .card-unit {
   margin-top: var(--spacing-1, 0.25rem);
+  color: var(--text-secondary, #8888aa);
 }
 
 .chart-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(18, 18, 37, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 16px;
-  border: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .chart-header {
@@ -580,7 +585,7 @@ onMounted(() => {
 }
 
 .chart-header h3 {
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
   margin: 0;
 }
 
@@ -594,11 +599,11 @@ onMounted(() => {
 }
 
 .form-card, .records-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(18, 18, 37, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 16px;
-  border: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .card-header {
@@ -608,7 +613,7 @@ onMounted(() => {
 }
 
 .card-header h3 {
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
   margin: 0;
 }
 
@@ -621,9 +626,10 @@ onMounted(() => {
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: var(--bg-secondary, #121225);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
   z-index: 1000;
   max-height: 200px;
   overflow-y: auto;
@@ -633,7 +639,8 @@ onMounted(() => {
   padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
   cursor: pointer;
   transition: background-color 0.2s;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
+  color: var(--text-primary, #ffffff);
 }
 
 .suggestion-item:last-child {
@@ -642,17 +649,17 @@ onMounted(() => {
 
 .suggestion-item:hover,
 .suggestion-item-active {
-  background-color: #f5f7fa;
+  background-color: rgba(128, 32, 255, 0.15);
 }
 
 .food-name {
   font-weight: var(--font-weight-medium, 500);
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
 }
 
 .food-calories {
   font-size: var(--font-size-sm, 0.875rem);
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary, #8888aa);
 }
 
 /* Table styling - Requirements: 7.1, 7.2, 7.3 */

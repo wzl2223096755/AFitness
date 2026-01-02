@@ -464,10 +464,10 @@ const updateTrendChart = () => {
   trendChartInstance.value.setOption({
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      borderColor: 'transparent',
+      backgroundColor: 'rgba(18, 18, 37, 0.95)',
+      borderColor: 'rgba(112, 0, 255, 0.3)',
       textStyle: {
-        color: '#fff'
+        color: '#ffffff'
       },
       formatter: function(params) {
         const data = params[0]
@@ -485,11 +485,11 @@ const updateTrendChart = () => {
       data: formattedDates,
       axisLine: {
         lineStyle: {
-          color: '#e0e0e0'
+          color: 'rgba(112, 0, 255, 0.3)'
         }
       },
       axisLabel: {
-        color: '#666',
+        color: '#8888aa',
         rotate: 45,
         interval: 0
       }
@@ -498,19 +498,19 @@ const updateTrendChart = () => {
       type: 'value',
       name: '训练量',
       nameTextStyle: {
-        color: '#666'
+        color: '#8888aa'
       },
       axisLine: {
         lineStyle: {
-          color: '#e0e0e0'
+          color: 'rgba(112, 0, 255, 0.3)'
         }
       },
       axisLabel: {
-        color: '#666'
+        color: '#8888aa'
       },
       splitLine: {
         lineStyle: {
-          color: '#f0f0f0',
+          color: 'rgba(112, 0, 255, 0.1)',
           type: 'dashed'
         }
       }
@@ -523,13 +523,13 @@ const updateTrendChart = () => {
       symbolSize: seriesType === 'line' ? 6 : undefined,
       lineStyle: seriesType === 'line' ? {
         width: 3,
-        color: '#409eff'
+        color: '#8020ff'
       } : undefined,
       itemStyle: {
-        color: '#409eff',
+        color: '#8020ff',
         ...(seriesType === 'line' && {
           borderWidth: 2,
-          borderColor: '#fff'
+          borderColor: '#121225'
         })
       },
       areaStyle: seriesType === 'line' ? {
@@ -541,10 +541,10 @@ const updateTrendChart = () => {
           y2: 1,
           colorStops: [{
             offset: 0,
-            color: 'rgba(64, 158, 255, 0.3)'
+            color: 'rgba(128, 32, 255, 0.4)'
           }, {
             offset: 1,
-            color: 'rgba(64, 158, 255, 0.05)'
+            color: 'rgba(128, 32, 255, 0.05)'
           }]
         }
       } : undefined
@@ -573,10 +573,10 @@ const updateDistributionChart = () => {
   distributionChartInstance.value.setOption({
     tooltip: {
       trigger: 'item',
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      borderColor: 'transparent',
+      backgroundColor: 'rgba(18, 18, 37, 0.95)',
+      borderColor: 'rgba(112, 0, 255, 0.3)',
       textStyle: {
-        color: '#fff'
+        color: '#ffffff'
       },
       formatter: '{b}: {c}次 ({d}%)'
     },
@@ -585,7 +585,7 @@ const updateDistributionChart = () => {
       right: '5%',
       top: 'center',
       textStyle: {
-        color: '#666',
+        color: '#8888aa',
         fontSize: 12
       },
       formatter: function(name) {
@@ -601,7 +601,7 @@ const updateDistributionChart = () => {
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 8,
-        borderColor: '#fff',
+        borderColor: '#121225',
         borderWidth: 2
       },
       label: {
@@ -611,18 +611,20 @@ const updateDistributionChart = () => {
         label: {
           show: true,
           fontSize: 14,
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          color: '#ffffff'
         },
         itemStyle: {
           shadowBlur: 10,
           shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.3)'
+          shadowColor: 'rgba(128, 32, 255, 0.5)'
         }
       },
       labelLine: {
         show: false
       },
-      data: data
+      data: data,
+      color: ['#8020ff', '#00f2fe', '#ff00ff', '#00ff88', '#ffaa00', '#8888ff', '#ff0055', '#00d4ff']
     }]
   })
 }
@@ -664,10 +666,10 @@ const updateIntensityChart = () => {
   intensityChartInstance.value.setOption({
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      borderColor: 'transparent',
+      backgroundColor: 'rgba(18, 18, 37, 0.95)',
+      borderColor: 'rgba(112, 0, 255, 0.3)',
       textStyle: {
-        color: '#fff'
+        color: '#ffffff'
       },
       formatter: function(params) {
         const data = params[0]
@@ -685,11 +687,11 @@ const updateIntensityChart = () => {
       data: categories,
       axisLine: {
         lineStyle: {
-          color: '#e0e0e0'
+          color: 'rgba(112, 0, 255, 0.3)'
         }
       },
       axisLabel: {
-        color: '#666',
+        color: '#8888aa',
         rotate: 45,
         fontSize: 11
       }
@@ -698,19 +700,19 @@ const updateIntensityChart = () => {
       type: 'value',
       name: '训练次数',
       nameTextStyle: {
-        color: '#666'
+        color: '#8888aa'
       },
       axisLine: {
         lineStyle: {
-          color: '#e0e0e0'
+          color: 'rgba(112, 0, 255, 0.3)'
         }
       },
       axisLabel: {
-        color: '#666'
+        color: '#8888aa'
       },
       splitLine: {
         lineStyle: {
-          color: '#f0f0f0',
+          color: 'rgba(112, 0, 255, 0.1)',
           type: 'dashed'
         }
       }
@@ -720,7 +722,7 @@ const updateIntensityChart = () => {
       type: 'bar',
       itemStyle: {
         color: function(params) {
-          const colors = ['#909399', '#67c23a', '#e6a23c', '#f56c6c', '#409eff']
+          const colors = ['#8888aa', '#00ff88', '#ffaa00', '#ff00ff', '#8020ff']
           return colors[params.dataIndex % colors.length]
         },
         borderRadius: [4, 4, 0, 0]
@@ -775,123 +777,158 @@ onUnmounted(() => {
 
 
 <style scoped>
-/* Page Layout - using design tokens */
+/* =====================================================
+   历史统计页面 - Neon Ionized 深色主题
+   ===================================================== */
+
+/* 页面容器 */
 .history-statistics-page {
-  padding: var(--spacing-5);
+  min-height: calc(100vh - 60px);
+  background: linear-gradient(135deg, #0a0a14 0%, #121225 100%);
+  padding: 24px;
 }
 
+/* 页面头部 */
 .page-header {
-  margin-bottom: var(--spacing-6);
+  text-align: center;
+  margin-bottom: 32px;
 }
 
 .page-header h1 {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-2);
-  color: var(--el-text-color-primary);
-  line-height: var(--line-height-tight);
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #8020ff, #00f2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .page-description {
-  font-size: var(--font-size-sm);
-  color: var(--el-text-color-secondary);
-  line-height: var(--line-height-relaxed);
+  font-size: 1rem;
+  color: #8888aa;
 }
 
-/* Filter Container */
+/* 筛选器容器 */
 .filter-container {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-6);
-  padding: var(--spacing-4);
-  background: var(--el-bg-color);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(18, 18, 37, 0.95);
+  border-radius: 16px;
+  border: 1px solid rgba(112, 0, 255, 0.2);
+  box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);
 }
 
-/* Stats Card Grid - using auto-grid pattern */
+/* 统计卡片网格 */
 .stats-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
-/* Stats Card - consistent internal padding (20-28px per Req 6.1, 6.2) */
+/* 统计卡片 */
 .stats-card {
-  background: var(--el-bg-color);
-  border-radius: 12px;
-  padding: var(--spacing-5);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #409eff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: rgba(18, 18, 37, 0.95);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(112, 0, 255, 0.2);
+  box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.stats-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8020ff, #00f2fe);
 }
 
 .stats-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(128, 32, 255, 0.4);
 }
 
-.stats-card--success {
-  border-top-color: #67c23a;
+.stats-card--success::before {
+  background: linear-gradient(90deg, #00ff88, #00f2fe);
 }
 
-.stats-card--info {
-  border-top-color: #909399;
+.stats-card--info::before {
+  background: linear-gradient(90deg, #8888ff, #00f2fe);
 }
 
-.stats-card--warning {
-  border-top-color: #e6a23c;
+.stats-card--warning::before {
+  background: linear-gradient(90deg, #ffaa00, #ff00ff);
 }
 
 .stats-card__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-3);
+  margin-bottom: 16px;
 }
 
 .stats-card__title {
-  font-size: var(--font-size-sm);
-  color: var(--el-text-color-secondary);
-  line-height: var(--line-height-normal);
+  font-size: 0.875rem;
+  color: #8888aa;
+  font-weight: 500;
 }
 
 .stats-card__icon {
-  font-size: var(--font-size-2xl);
-  color: #409eff;
+  font-size: 1.5rem;
+  color: #8020ff;
+}
+
+.stats-card--success .stats-card__icon {
+  color: #00ff88;
+}
+
+.stats-card--info .stats-card__icon {
+  color: #8888ff;
+}
+
+.stats-card--warning .stats-card__icon {
+  color: #ffaa00;
 }
 
 .stats-card__value {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--el-text-color-primary);
-  margin-bottom: var(--spacing-2);
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
   font-variant-numeric: tabular-nums;
-  line-height: var(--line-height-tight);
 }
 
 .stats-card__description {
-  font-size: var(--font-size-xs);
-  color: var(--el-text-color-secondary);
-  line-height: var(--line-height-normal);
+  font-size: 0.75rem;
+  color: #8888aa;
 }
 
-/* Charts Grid */
+/* 图表网格 */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
-/* Chart Container - consistent padding */
+/* 图表容器 */
 .chart-container {
-  background: var(--el-bg-color);
-  border-radius: 12px;
-  padding: var(--spacing-5);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(18, 18, 37, 0.95);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(112, 0, 255, 0.2);
+  box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);
 }
 
 .chart-container--large {
@@ -902,15 +939,19 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 20px;
 }
 
 .chart-header h3 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--el-text-color-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
   margin: 0;
-  line-height: var(--line-height-snug);
+}
+
+.chart-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .chart-content {
@@ -918,62 +959,170 @@ onUnmounted(() => {
   width: 100%;
 }
 
-/* Data Table - consistent padding and typography */
+/* 数据表格容器 */
 .data-table {
-  background: var(--el-bg-color);
-  border-radius: 12px;
-  padding: var(--spacing-5);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(18, 18, 37, 0.95);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(112, 0, 255, 0.2);
+  box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);
 }
 
 .table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 20px;
 }
 
 .table-header h3 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--el-text-color-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
   margin: 0;
-  line-height: var(--line-height-snug);
 }
 
 .table-actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
+  gap: 12px;
 }
 
 .pagination-container {
-  margin-top: var(--spacing-4);
+  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
 }
 
-/* Table styling - Requirements 7.1, 7.2, 7.3 */
+/* Element Plus 组件深色主题覆盖 */
+:deep(.el-date-editor) {
+  --el-input-bg-color: rgba(18, 18, 37, 0.8);
+  --el-input-border-color: rgba(112, 0, 255, 0.3);
+  --el-input-text-color: #ffffff;
+}
+
+:deep(.el-select) {
+  --el-select-input-focus-border-color: #8020ff;
+}
+
+:deep(.el-input__wrapper) {
+  background-color: rgba(18, 18, 37, 0.8) !important;
+  border-color: rgba(112, 0, 255, 0.3) !important;
+  box-shadow: none !important;
+}
+
+:deep(.el-input__inner) {
+  color: #ffffff !important;
+}
+
+:deep(.el-input__inner::placeholder) {
+  color: #8888aa !important;
+}
+
+:deep(.el-radio-button__inner) {
+  background: rgba(18, 18, 37, 0.8);
+  border-color: rgba(112, 0, 255, 0.3);
+  color: #8888aa;
+}
+
+:deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  background: linear-gradient(135deg, #8020ff, #00f2fe);
+  border-color: #8020ff;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(128, 32, 255, 0.5);
+}
+
+/* 表格深色主题 */
 :deep(.el-table) {
-  font-size: var(--font-size-sm);
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(128, 32, 255, 0.15);
+  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15);
+  --el-table-border-color: rgba(112, 0, 255, 0.2);
+  --el-table-text-color: #e0e0ff;
+  --el-table-header-text-color: #ffffff;
+  background-color: transparent;
 }
 
 :deep(.el-table th) {
-  font-weight: var(--font-weight-semibold);
-  color: var(--el-text-color-primary);
-  background-color: var(--el-fill-color-light);
+  background: rgba(128, 32, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid rgba(112, 0, 255, 0.3) !important;
 }
 
-:deep(.el-table .cell) {
-  padding: var(--spacing-3) var(--spacing-4);
-  line-height: var(--line-height-normal);
+:deep(.el-table th .cell) {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+:deep(.el-table td) {
+  background: transparent !important;
+  color: #e0e0ff !important;
+  border-bottom: 1px solid rgba(112, 0, 255, 0.1) !important;
 }
 
 :deep(.el-table td .cell) {
-  font-variant-numeric: tabular-nums;
+  color: #e0e0ff !important;
+}
+
+:deep(.el-table__body tr:hover > td) {
+  background-color: rgba(128, 32, 255, 0.15) !important;
+}
+
+:deep(.el-table__empty-text) {
+  color: #8888aa !important;
+}
+
+/* 分页器深色主题 */
+:deep(.el-pagination) {
+  --el-pagination-bg-color: transparent;
+  --el-pagination-text-color: #8888aa;
+  --el-pagination-button-bg-color: rgba(18, 18, 37, 0.8);
+}
+
+:deep(.el-pagination .el-pager li) {
+  background: rgba(18, 18, 37, 0.8);
+  color: #8888aa;
+  border: 1px solid rgba(112, 0, 255, 0.2);
+}
+
+:deep(.el-pagination .el-pager li:hover) {
+  color: #8020ff;
+  border-color: #8020ff;
+}
+
+:deep(.el-pagination .el-pager li.is-active) {
+  background: linear-gradient(135deg, #8020ff, #00f2fe);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+:deep(.el-pagination button) {
+  background: rgba(18, 18, 37, 0.8) !important;
+  color: #8888aa !important;
+  border: 1px solid rgba(112, 0, 255, 0.2) !important;
+}
+
+:deep(.el-pagination button:hover) {
+  color: #8020ff !important;
+}
+
+/* 评分组件 */
+:deep(.el-rate__icon) {
+  color: #8888aa;
+}
+
+:deep(.el-rate__icon.is-active) {
+  color: #ffaa00;
 }
 
 /* 响应式设计 */
+@media (max-width: 1200px) {
+  .stats-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 992px) {
   .charts-grid {
     grid-template-columns: 1fr;
@@ -986,53 +1135,47 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .history-statistics-page {
-    padding: var(--spacing-3);
-  }
-  
-  .page-header {
-    margin-bottom: var(--spacing-4);
+    padding: 16px;
   }
   
   .page-header h1 {
-    font-size: var(--font-size-xl);
+    font-size: 1.5rem;
   }
   
   .filter-container {
     flex-direction: column;
-    padding: var(--spacing-4);
+    padding: 16px;
   }
   
-  .filter-container .el-date-editor,
-  .filter-container .el-select,
-  .filter-container .el-button {
+  .filter-container > * {
     width: 100%;
   }
   
   .stats-card-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-3);
+    gap: 16px;
   }
   
   .stats-card {
-    padding: var(--spacing-4);
+    padding: 20px;
   }
   
   .stats-card__value {
-    font-size: var(--font-size-2xl);
+    font-size: 1.5rem;
   }
   
   .charts-grid {
-    gap: var(--spacing-3);
+    gap: 16px;
   }
   
   .chart-container {
-    padding: var(--spacing-4);
+    padding: 16px;
   }
   
   .chart-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-3);
+    gap: 12px;
   }
   
   .chart-content {
@@ -1040,13 +1183,13 @@ onUnmounted(() => {
   }
   
   .data-table {
-    padding: var(--spacing-4);
+    padding: 16px;
   }
   
   .table-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-3);
+    gap: 12px;
   }
   
   .table-actions {
@@ -1066,45 +1209,27 @@ onUnmounted(() => {
   .pagination-container {
     justify-content: center;
   }
-  
-  :deep(.el-pagination) {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--spacing-2);
-  }
-  
-  :deep(.el-pagination .el-pagination__sizes),
-  :deep(.el-pagination .el-pagination__jump) {
-    display: none;
-  }
 }
 
 @media (max-width: 480px) {
   .history-statistics-page {
-    padding: var(--spacing-3);
+    padding: 12px;
   }
   
-  .filter-container,
-  .stats-card,
-  .chart-container,
-  .data-table {
-    border-radius: 10px;
+  .page-header h1 {
+    font-size: 1.25rem;
   }
   
   .stats-card__value {
-    font-size: var(--font-size-xl);
+    font-size: 1.25rem;
   }
   
   .chart-content {
-    height: 220px;
+    height: 200px;
   }
   
   :deep(.el-table) {
-    font-size: var(--font-size-xs);
-  }
-  
-  :deep(.el-table .cell) {
-    padding: var(--spacing-2) var(--spacing-2);
+    font-size: 12px;
   }
 }
 </style>

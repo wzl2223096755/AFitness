@@ -236,3 +236,382 @@ $dark-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
     }
   }
 }
+
+// =============================================================================
+// 全局深色主题覆盖 - 修复浅色主题硬编码颜色问题
+// =============================================================================
+// 使用 Neon Ionized Palette 深色主题变量覆盖所有页面组件
+
+// 页面容器深色主题
+.nutrition-page,
+.training-data-page,
+.training-suggestions-container,
+.user-profile-container,
+.dashboard-page,
+.dashboard-container {
+  background: linear-gradient(135deg, $bg-primary 0%, $bg-secondary 100%) !important;
+  color: $text-primary !important;
+}
+
+// 卡片组件深色主题
+.overview-card,
+.chart-card,
+.form-card,
+.records-card,
+.profile-card,
+.body-stats,
+.suggestion-card,
+.training-plan,
+.metric-card,
+.activity-content,
+.welcome-section,
+.daily-motivation,
+.weather-widget,
+.summary-card,
+.analytics-section {
+  background: rgba($bg-secondary, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid $border-color !important;
+  color: $text-primary !important;
+  box-shadow: $shadow-base !important;
+}
+
+// 卡片悬停效果
+.overview-card:hover,
+.metric-card:hover,
+.summary-card:hover {
+  box-shadow: $shadow-base, 0 0 20px rgba($primary-color, 0.2) !important;
+}
+
+// 标题文字深色主题
+.page-header h1,
+.page-header .page-description,
+.section-title,
+.chart-header h3,
+.card-header h3,
+.welcome-title,
+.welcome-subtitle,
+.metric-title,
+.metric-subtitle,
+.card-title,
+.card-value,
+.stat-value,
+.stat-label,
+.stat-desc,
+.value-number,
+.value-unit,
+.motivation-quote,
+.motivation-author,
+.motivation-date,
+.temperature,
+.weather-desc,
+.food-name,
+.food-calories,
+.exercise-name,
+.exercise-type,
+.day-header,
+.day-content,
+.recovery-score,
+.main-suggestion h3,
+.main-suggestion p,
+.empty-content h3,
+.empty-content p,
+.empty-title,
+.empty-description {
+  color: $text-primary !important;
+}
+
+// 次要文字颜色
+.metric-subtitle,
+.card-unit,
+.stat-desc,
+.motivation-author,
+.motivation-date,
+.weather-desc,
+.food-calories,
+.exercise-type,
+.empty-content p,
+.empty-description {
+  color: $text-secondary !important;
+}
+
+// 统计项深色主题
+.stat-item,
+.quick-stats {
+  background: rgba($bg-secondary, 0.8) !important;
+  border: 1px solid $border-color !important;
+  color: $text-primary !important;
+}
+
+.stat-item:hover {
+  background: rgba($bg-secondary, 0.95) !important;
+  box-shadow: $shadow-light !important;
+}
+
+// 训练建议页面特定样式
+.exercise-item,
+.day-plan {
+  background: rgba($bg-secondary, 0.8) !important;
+  border: 1px solid $border-color !important;
+  color: $text-primary !important;
+}
+
+.recovery-indicator {
+  background: rgba($success-color, 0.1) !important;
+  border: 1px solid rgba($success-color, 0.3) !important;
+}
+
+.main-suggestion {
+  background: rgba($primary-color, 0.1) !important;
+  border-left: 4px solid $primary-color !important;
+}
+
+// 食物建议列表深色主题
+.food-suggestions {
+  background: $bg-secondary !important;
+  border: 1px solid $border-color !important;
+  box-shadow: $shadow-base !important;
+}
+
+.suggestion-item {
+  border-bottom-color: $border-color !important;
+  color: $text-primary !important;
+}
+
+.suggestion-item:hover,
+.suggestion-item-active {
+  background: rgba($primary-color, 0.1) !important;
+}
+
+// 表格深色主题覆盖
+.el-table {
+  --el-table-bg-color: transparent !important;
+  --el-table-tr-bg-color: transparent !important;
+  --el-table-header-bg-color: rgba(128, 32, 255, 0.15) !important;
+  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15) !important;
+  --el-table-border-color: rgba(112, 0, 255, 0.2) !important;
+  --el-table-text-color: #e0e0ff !important;
+  --el-table-header-text-color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.el-table__header-wrapper {
+  background: rgba(128, 32, 255, 0.15) !important;
+}
+
+.el-table th {
+  background: transparent !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid rgba(112, 0, 255, 0.2) !important;
+}
+
+.el-table th .cell {
+  color: #ffffff !important;
+}
+
+.el-table td {
+  background: transparent !important;
+  color: #e0e0ff !important;
+  border-bottom: 1px solid rgba(112, 0, 255, 0.1) !important;
+}
+
+.el-table td .cell {
+  color: #e0e0ff !important;
+}
+
+.el-table__body tr:hover > td {
+  background-color: rgba(128, 32, 255, 0.15) !important;
+}
+
+.el-table__body tr.el-table__row--striped td {
+  background: rgba(18, 18, 37, 0.3) !important;
+}
+
+.el-table__empty-text {
+  color: #8888aa !important;
+}
+
+:deep(.el-table) {
+  background-color: transparent !important;
+  
+  th {
+    background: rgba(128, 32, 255, 0.15) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid rgba(112, 0, 255, 0.2) !important;
+    
+    .cell {
+      color: #ffffff !important;
+    }
+  }
+  
+  td {
+    background: transparent !important;
+    color: #e0e0ff !important;
+    border-bottom: 1px solid rgba(112, 0, 255, 0.1) !important;
+    
+    .cell {
+      color: #e0e0ff !important;
+    }
+  }
+  
+  tr:hover > td {
+    background: rgba(128, 32, 255, 0.15) !important;
+  }
+}
+
+// 表单组件深色主题
+.el-form-item__label {
+  color: $text-primary !important;
+}
+
+// 空状态图标
+.empty-icon {
+  color: $text-secondary !important;
+  opacity: 0.6 !important;
+}
+
+// 加载占位符深色主题
+.loading-placeholder {
+  background: linear-gradient(90deg, $bg-secondary 25%, rgba($primary-color, 0.2) 50%, $bg-secondary 75%) !important;
+}
+
+// 进度条和指示器
+.metric-progress .progress-bar {
+  background: rgba($text-secondary, 0.2) !important;
+}
+
+.metric-progress .progress-fill {
+  background: linear-gradient(90deg, $primary-color, $accent-color) !important;
+}
+
+// 模态框深色主题
+.modal-content,
+.el-dialog {
+  background: $bg-secondary !important;
+  border: 1px solid $border-color !important;
+  color: $text-primary !important;
+}
+
+.modal-header,
+.el-dialog__header {
+  border-bottom: 1px solid $border-color !important;
+}
+
+.modal-title,
+.el-dialog__title {
+  color: $text-primary !important;
+}
+
+// 图表容器深色主题
+.chart-container,
+.chart-content {
+  background: transparent !important;
+}
+
+// 按钮深色主题增强
+.action-button,
+.primary-action {
+  box-shadow: 0 0 10px rgba($primary-color, 0.3) !important;
+}
+
+.action-button:hover,
+.primary-action:hover {
+  box-shadow: 0 0 20px rgba($primary-color, 0.5) !important;
+}
+
+// 时间选择器深色主题
+.time-range-btn {
+  background: $bg-secondary !important;
+  border-color: $border-color !important;
+  color: $text-primary !important;
+}
+
+.time-range-btn:hover {
+  border-color: $primary-color !important;
+  color: $primary-color !important;
+}
+
+.time-range-btn.active {
+  background: $primary-color !important;
+  border-color: $primary-color !important;
+  color: $text-white !important;
+}
+
+// 恢复状态和目标详情
+.recovery-details,
+.goal-details {
+  color: $text-primary !important;
+}
+
+.score-value,
+.score-label {
+  color: $text-primary !important;
+}
+
+.recovery-recommendations,
+.goal-info {
+  background: rgba($bg-secondary, 0.5) !important;
+}
+
+.recovery-recommendations h4,
+.goal-info h4 {
+  color: $text-primary !important;
+}
+
+.recovery-recommendations li,
+.goal-info p {
+  color: $text-secondary !important;
+}
+
+// 性能详情
+.performance-details {
+  color: $text-primary !important;
+}
+
+.performance-label {
+  color: $text-primary !important;
+}
+
+.performance-desc {
+  color: $text-secondary !important;
+}
+
+// 因子项
+.factor-item {
+  background: rgba($bg-secondary, 0.5) !important;
+  color: $text-primary !important;
+}
+
+.factor-label {
+  color: $text-secondary !important;
+}
+
+// 目标项
+.goal-item {
+  border-bottom-color: $border-color !important;
+}
+
+.goal-name {
+  color: $text-primary !important;
+}
+
+.goal-progress {
+  color: $text-secondary !important;
+}
+
+.goal-bar {
+  background: rgba($text-secondary, 0.2) !important;
+}
+
+// 推荐项
+.recommendations {
+  background: rgba($bg-secondary, 0.5) !important;
+}
+
+.recommendations-title {
+  color: $text-primary !important;
+}
+
+.recommendation-item {
+  color: $text-secondary !important;
+}

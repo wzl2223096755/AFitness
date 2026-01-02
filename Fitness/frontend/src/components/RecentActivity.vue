@@ -185,7 +185,7 @@ onMounted(() => {
 .section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary, #ffffff);
   margin: 0;
   display: flex;
   align-items: center;
@@ -202,11 +202,12 @@ onMounted(() => {
 }
 
 .activity-content {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(18, 18, 37, 0.95);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .empty-activity {
@@ -220,20 +221,20 @@ onMounted(() => {
 
 .empty-icon {
   font-size: 4rem;
-  color: #cbd5e1;
+  color: var(--text-secondary, #8888aa);
   opacity: 0.6;
 }
 
 .empty-content h3 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #475569;
+  color: var(--text-primary, #ffffff);
   margin: 0 0 8px 0;
 }
 
 .empty-content p {
   font-size: 1rem;
-  color: #94a3b8;
+  color: var(--text-secondary, #8888aa);
   margin: 0 0 24px 0;
   max-width: 400px;
   margin-left: auto;
@@ -244,13 +245,13 @@ onMounted(() => {
   overflow: visible;
 }
 
-/* 表格样式优化 */
+/* 表格样式优化 - 深色主题 */
 :deep(.el-table) {
   background: transparent;
 }
 
 :deep(.el-table__header) {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(18, 18, 37, 0.8);
 }
 
 :deep(.el-table__body) {
@@ -258,20 +259,20 @@ onMounted(() => {
 }
 
 :deep(.el-table__row) {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(18, 18, 37, 0.6);
   transition: all 0.2s ease;
 }
 
 :deep(.el-table__row:hover) {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(128, 32, 255, 0.15);
 }
 
 :deep(.el-table__row.striped) {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(18, 18, 37, 0.4);
 }
 
 :deep(.el-table__row.striped:hover) {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(128, 32, 255, 0.15);
 }
 
 :deep(.training-record-row) {
@@ -279,15 +280,16 @@ onMounted(() => {
 }
 
 :deep(.el-table th) {
-  background: rgba(59, 130, 246, 0.1);
-  color: #1e293b;
+  background: rgba(18, 18, 37, 0.8);
+  color: var(--text-primary, #ffffff);
   font-weight: 600;
-  border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+  border-bottom: 2px solid var(--border-color, rgba(112, 0, 255, 0.2));
 }
 
 :deep(.el-table td) {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
   padding: 12px 16px;
+  color: var(--text-primary, #ffffff);
 }
 
 @media (max-width: 768px) {

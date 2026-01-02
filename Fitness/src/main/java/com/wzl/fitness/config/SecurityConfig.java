@@ -118,7 +118,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/public/**").permitAll()
                 .requestMatchers("/api/debug/**").permitAll()  // 调试接口
                 .requestMatchers("/api/dev/**").permitAll()  // 开发端点
-                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/api/v1/health").permitAll()
@@ -133,8 +132,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             
-            // 禁用frame options以支持H2控制台
-            .headers(headers -> headers.frameOptions().disable());
+            // 安全头配置
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
     }

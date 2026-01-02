@@ -6,12 +6,12 @@ import com.wzl.fitness.entity.AuditLog.AuditAction;
 import com.wzl.fitness.entity.AuditLog.AuditResult;
 import com.wzl.fitness.service.AuditLogService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,15 +22,17 @@ import java.lang.reflect.Method;
 
 /**
  * 审计切面
- * 拦截标记了@Auditable注解的方法，自动记录审计日志
  */
 @Aspect
 @Component
-@RequiredArgsConstructor
-@Slf4j
 public class AuditAspect {
     
+    private static final Logger log = LoggerFactory.getLogger(AuditAspect.class);
     private final AuditLogService auditLogService;
+    
+    public AuditAspect(AuditLogService auditLogService) {
+        this.auditLogService = auditLogService;
+    }
     
     /**
      * 环绕通知：拦截所有标记了@Auditable注解的方法
@@ -148,6 +150,7 @@ public class AuditAspect {
             case DATA_UPDATE -> "更新数据";
             case DATA_RESTORE -> "恢复数据";
             case ADMIN_ACTION -> "管理员操作";
+            case DATA_EXPORT -> "数据导出";
         };
     }
 }

@@ -1,24 +1,14 @@
 package com.wzl.fitness.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 
 /**
  * 用户营养目标实体类
- * 存储用户的个性化营养目标设置
  */
-@Data
 @Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "user_nutrition_goals")
 public class UserNutritionGoal {
     
@@ -30,49 +20,25 @@ public class UserNutritionGoal {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
     
-    /**
-     * 训练目标: fat_loss, muscle_gain, maintenance
-     */
     @Column(name = "training_goal", length = 50)
-    @Builder.Default
     private String trainingGoal = "maintenance";
     
-    /**
-     * 活动水平: sedentary, light, moderate, active, very_active
-     */
     @Column(name = "activity_level", length = 20)
-    @Builder.Default
     private String activityLevel = "moderate";
     
-    /**
-     * 目标每日卡路里摄入
-     */
     @Column(name = "target_calories")
     private Double targetCalories;
     
-    /**
-     * 目标每日蛋白质摄入(g)
-     */
     @Column(name = "target_protein")
     private Double targetProtein;
     
-    /**
-     * 目标每日碳水化合物摄入(g)
-     */
     @Column(name = "target_carbs")
     private Double targetCarbs;
     
-    /**
-     * 目标每日脂肪摄入(g)
-     */
     @Column(name = "target_fat")
     private Double targetFat;
     
-    /**
-     * 是否使用自定义目标（否则使用计算值）
-     */
     @Column(name = "use_custom_targets")
-    @Builder.Default
     private Boolean useCustomTargets = false;
     
     @CreationTimestamp
@@ -82,4 +48,80 @@ public class UserNutritionGoal {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+    public UserNutritionGoal() {}
+    
+    public UserNutritionGoal(Long id, User user, String trainingGoal, String activityLevel, Double targetCalories,
+                             Double targetProtein, Double targetCarbs, Double targetFat, Boolean useCustomTargets,
+                             LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.user = user;
+        this.trainingGoal = trainingGoal;
+        this.activityLevel = activityLevel;
+        this.targetCalories = targetCalories;
+        this.targetProtein = targetProtein;
+        this.targetCarbs = targetCarbs;
+        this.targetFat = targetFat;
+        this.useCustomTargets = useCustomTargets;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+    
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public String getTrainingGoal() { return trainingGoal; }
+    public void setTrainingGoal(String trainingGoal) { this.trainingGoal = trainingGoal; }
+    public String getActivityLevel() { return activityLevel; }
+    public void setActivityLevel(String activityLevel) { this.activityLevel = activityLevel; }
+    public Double getTargetCalories() { return targetCalories; }
+    public void setTargetCalories(Double targetCalories) { this.targetCalories = targetCalories; }
+    public Double getTargetProtein() { return targetProtein; }
+    public void setTargetProtein(Double targetProtein) { this.targetProtein = targetProtein; }
+    public Double getTargetCarbs() { return targetCarbs; }
+    public void setTargetCarbs(Double targetCarbs) { this.targetCarbs = targetCarbs; }
+    public Double getTargetFat() { return targetFat; }
+    public void setTargetFat(Double targetFat) { this.targetFat = targetFat; }
+    public Boolean getUseCustomTargets() { return useCustomTargets; }
+    public void setUseCustomTargets(Boolean useCustomTargets) { this.useCustomTargets = useCustomTargets; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    
+    // Builder
+    public static UserNutritionGoalBuilder builder() { return new UserNutritionGoalBuilder(); }
+    
+    public static class UserNutritionGoalBuilder {
+        private Long id;
+        private User user;
+        private String trainingGoal = "maintenance";
+        private String activityLevel = "moderate";
+        private Double targetCalories;
+        private Double targetProtein;
+        private Double targetCarbs;
+        private Double targetFat;
+        private Boolean useCustomTargets = false;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        
+        public UserNutritionGoalBuilder id(Long v) { this.id = v; return this; }
+        public UserNutritionGoalBuilder user(User v) { this.user = v; return this; }
+        public UserNutritionGoalBuilder trainingGoal(String v) { this.trainingGoal = v; return this; }
+        public UserNutritionGoalBuilder activityLevel(String v) { this.activityLevel = v; return this; }
+        public UserNutritionGoalBuilder targetCalories(Double v) { this.targetCalories = v; return this; }
+        public UserNutritionGoalBuilder targetProtein(Double v) { this.targetProtein = v; return this; }
+        public UserNutritionGoalBuilder targetCarbs(Double v) { this.targetCarbs = v; return this; }
+        public UserNutritionGoalBuilder targetFat(Double v) { this.targetFat = v; return this; }
+        public UserNutritionGoalBuilder useCustomTargets(Boolean v) { this.useCustomTargets = v; return this; }
+        public UserNutritionGoalBuilder createdAt(LocalDateTime v) { this.createdAt = v; return this; }
+        public UserNutritionGoalBuilder updatedAt(LocalDateTime v) { this.updatedAt = v; return this; }
+        
+        public UserNutritionGoal build() {
+            return new UserNutritionGoal(id, user, trainingGoal, activityLevel, targetCalories, targetProtein,
+                    targetCarbs, targetFat, useCustomTargets, createdAt, updatedAt);
+        }
+    }
 }

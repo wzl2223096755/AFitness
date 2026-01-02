@@ -194,14 +194,17 @@ export default {
 <style scoped>
 .training-suggestions-container {
   padding: 20px;
+  background: linear-gradient(135deg, var(--bg-primary, #0a0a14) 0%, var(--bg-secondary, #121225) 100%);
+  min-height: calc(100vh - 60px);
 }
 
 .suggestion-card {
-  background: #fff;
+  background: rgba(18, 18, 37, 0.95);
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .refresh-btn {
@@ -283,7 +286,8 @@ export default {
 }
 
 .exercise-item {
-  background: #f5f7fa;
+  background: rgba(18, 18, 37, 0.8);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   padding: 15px;
   border-radius: 8px;
   text-align: center;
@@ -292,18 +296,24 @@ export default {
 .exercise-name {
   font-weight: bold;
   margin-bottom: 5px;
+  color: var(--text-primary, #ffffff);
 }
 
 .exercise-type {
-  color: #909399;
+  color: var(--text-secondary, #8888aa);
   font-size: 14px;
 }
 
 .training-plan {
-  background: #fff;
+  background: rgba(18, 18, 37, 0.95);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+}
+
+.training-plan h3 {
+  color: var(--text-primary, #ffffff);
 }
 
 .week-plan {
@@ -314,7 +324,8 @@ export default {
 }
 
 .day-plan {
-  background: #f5f7fa;
+  background: rgba(18, 18, 37, 0.8);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   padding: 15px;
   border-radius: 8px;
   text-align: center;
@@ -323,7 +334,11 @@ export default {
 .day-header {
   font-weight: bold;
   margin-bottom: 10px;
-  color: #409eff;
+  color: var(--color-primary, #8020ff);
+}
+
+.day-content {
+  color: var(--text-primary, #ffffff);
 }
 
 .no-data {

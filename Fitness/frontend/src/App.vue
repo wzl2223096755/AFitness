@@ -15,11 +15,11 @@
         @click="closeSidebarDrawer"
       ></div>
       
-      <!-- 顶部导航栏抽屉遮罩层 -->
+      <!-- 用户菜单遮罩层 -->
       <div 
-        v-if="headerDrawerOpen" 
-        class="drawer-overlay" 
-        @click="closeHeaderDrawer"
+        v-if="showUserMenu" 
+        class="user-menu-overlay" 
+        @click="showUserMenu = false"
       ></div>
       
       <!-- 侧边栏抽屉 -->
@@ -36,10 +36,6 @@
           <router-link to="/users" class="menu-item" :class="{ active: activeMenu === '/users' }" @click="closeSidebarDrawer">
             <span class="icon">👥</span>
             <span>用户管理</span>
-          </router-link>
-          <router-link to="/data-cleanup" class="menu-item" :class="{ active: activeMenu === '/data-cleanup' }" @click="closeSidebarDrawer">
-            <span class="icon">🗑️</span>
-            <span>数据清理</span>
           </router-link>
           <router-link to="/training-data" class="menu-item" :class="{ active: activeMenu === '/training-data' }" @click="closeSidebarDrawer">
             <span class="icon">📈</span>
@@ -88,49 +84,43 @@
         </nav>
       </aside>
 
-      <!-- 顶部导航栏抽屉 -->
-      <header class="header-drawer" :class="{ 'drawer-open': headerDrawerOpen }">
-        <div class="drawer-header">
-          <h3>导航栏</h3>
-          <button class="drawer-close" @click="closeHeaderDrawer">×</button>
-        </div>
-        <div class="header-content">
-          <div class="breadcrumb">
-            <span>首页 / {{ currentPageTitle }}</span>
-          </div>
-          <div class="header-actions">
-            <!-- 主题切换按钮 -->
-            <div class="theme-toggle header-action" @click="toggleTheme" :title="`当前主题: ${currentTheme}`">
-              <span class="icon">{{ themeIcon }}</span>
-            </div>
-            
-            <div class="user-dropdown">
-              <div class="user-info" @click="toggleUserMenu">
-                <div class="avatar">👤</div>
-                <span>{{ currentUser?.username || '用户' }}</span>
-                <span class="arrow">▼</span>
-              </div>
-              <div class="dropdown-menu" v-if="showUserMenu">
-                <a href="/user-profile" class="dropdown-item">用户资料</a>
-                <a href="#" class="dropdown-item" @click="handleLogout">退出登录</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <!-- 主内容区 -->
       <div class="main-container">
         <!-- 浮动操作按钮区域 -->
         <div class="floating-actions">
+          <!-- 用户按钮 -->
+          <div class="user-fab">
+            <button class="fab-button user-btn" @click="toggleUserMenu" title="用户">
+              <span class="icon">👤</span>
+            </button>
+            <div class="user-dropdown-menu" v-if="showUserMenu">
+              <div class="dropdown-user-info">
+                <div class="dropdown-avatar">👤</div>
+                <span class="dropdown-username">{{ currentUser?.username || '用户' }}</span>
+              </div>
+              <div class="dropdown-divider"></div>
+              <router-link to="/user-profile-manage" class="dropdown-item" @click="showUserMenu = false">
+                <span class="dropdown-icon">👤</span>
+                个人资料
+              </router-link>
+              <router-link to="/settings" class="dropdown-item" @click="showUserMenu = false">
+                <span class="dropdown-icon">⚙️</span>
+                设置
+              </router-link>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item logout" @click="handleLogout">
+                <span class="dropdown-icon">🚪</span>
+                退出登录
+              </a>
+            </div>
+          </div>
+          
+          <!-- 主题切换按钮 -->
+          <ThemeSwitcher />
+          
           <!-- 侧边栏切换按钮 -->
           <button class="fab-button" @click="toggleSidebarDrawer" :class="{ 'active': sidebarDrawerOpen }" title="菜单">
             <span class="icon">☰</span>
-          </button>
-          
-          <!-- 顶部导航切换按钮 -->
-          <button class="fab-button" @click="toggleHeaderDrawer" :class="{ 'active': headerDrawerOpen }" title="导航">
-            <span class="icon">⋮</span>
           </button>
         </div>
 
@@ -173,6 +163,9 @@ const ParticleBackground = defineAsyncComponent(() =>
 const RouteLoadingIndicator = defineAsyncComponent(() => 
   import('./components/RouteLoadingIndicator.vue')
 )
+const ThemeSwitcher = defineAsyncComponent(() => 
+  import('./components/ThemeSwitcher.vue')
+)
 // import ErrorMonitor from './components/ErrorMonitor.vue'
 
 // 路由和状态管理
@@ -189,7 +182,6 @@ const { isMobile, isTablet } = useResponsive()
 const currentUser = ref(null)
 const showUserMenu = ref(false)
 const sidebarDrawerOpen = ref(false)
-const headerDrawerOpen = ref(false)
 
 // 计算属性
 const activeMenu = computed(() => route.path)
@@ -202,7 +194,6 @@ const currentPageTitle = computed(() => {
     '/dashboard': '仪表盘',
     '/users': '用户管理',
     '/devices': '设备管理',
-    '/data-cleanup': '数据清理',
     '/training-data': '训练数据',
     '/load-analysis': '负荷分析',
     '/recovery-status': '恢复状态',
@@ -229,24 +220,10 @@ const themeIcon = computed(() => {
 // 抽屉控制方法
 const toggleSidebarDrawer = () => {
   sidebarDrawerOpen.value = !sidebarDrawerOpen.value
-  if (sidebarDrawerOpen.value) {
-    headerDrawerOpen.value = false
-  }
 }
 
 const closeSidebarDrawer = () => {
   sidebarDrawerOpen.value = false
-}
-
-const toggleHeaderDrawer = () => {
-  headerDrawerOpen.value = !headerDrawerOpen.value
-  if (headerDrawerOpen.value) {
-    sidebarDrawerOpen.value = false
-  }
-}
-
-const closeHeaderDrawer = () => {
-  headerDrawerOpen.value = false
 }
 
 const toggleUserMenu = () => {
@@ -272,9 +249,8 @@ watch(
   () => route.path,
   () => {
     showUserMenu.value = false
-    // 路由变化时关闭所有抽屉
+    // 路由变化时关闭侧边栏
     sidebarDrawerOpen.value = false
-    headerDrawerOpen.value = false
   }
 )
 
@@ -288,7 +264,7 @@ onUnmounted(() => {
 })
 
 const handleClickOutside = (event) => {
-  if (!event.target.closest('.user-dropdown')) {
+  if (!event.target.closest('.user-fab')) {
     showUserMenu.value = false
   }
 }
@@ -331,6 +307,129 @@ onMounted(async () => {
   z-index: 999;
   opacity: 1;
   transition: opacity 0.3s ease;
+}
+
+/* 用户菜单遮罩层 */
+.user-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 899;
+}
+
+/* 用户浮动按钮 */
+.user-fab {
+  position: relative;
+}
+
+.user-btn {
+  background: rgba(15, 15, 35, 0.9);
+  border: 1px solid rgba(128, 32, 255, 0.4);
+}
+
+.user-btn:hover {
+  border-color: #8020ff;
+  box-shadow: 
+    0 8px 30px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(128, 32, 255, 0.4);
+}
+
+/* 用户下拉菜单 - 从按钮上方弹出 */
+.user-dropdown-menu {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: 0;
+  background: rgba(15, 15, 35, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(128, 32, 255, 0.3);
+  border-radius: 14px;
+  box-shadow: 
+    0 -10px 40px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(128, 32, 255, 0.2);
+  min-width: 180px;
+  overflow: hidden;
+  animation: dropdownSlideUp 0.25s ease;
+  z-index: 1001;
+}
+
+@keyframes dropdownSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(128, 32, 255, 0.1), transparent);
+  border-bottom: 1px solid rgba(128, 32, 255, 0.2);
+}
+
+.dropdown-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #8020ff, #00f2fe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+  box-shadow: 0 0 12px rgba(128, 32, 255, 0.4);
+}
+
+.dropdown-username {
+  color: #f8fafc;
+  font-size: 14px;
+  font-weight: 600;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: rgba(128, 32, 255, 0.2);
+  margin: 4px 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  color: #e0e0ff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: rgba(128, 32, 255, 0.15);
+  color: #ffffff;
+}
+
+.dropdown-item.logout {
+  color: #ff6b6b;
+}
+
+.dropdown-item.logout:hover {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff4444;
+}
+
+.dropdown-icon {
+  font-size: 16px;
 }
 
 /* 侧边栏抽屉 - 科技感 */
@@ -510,167 +609,6 @@ onMounted(async () => {
   margin-top: auto;
 }
 
-/* 顶部导航栏抽屉 - 玻璃态 */
-.header-drawer {
-  position: fixed;
-  top: -120px;
-  left: 0;
-  right: 0;
-  height: 120px;
-  background: rgba(15, 15, 35, 0.9);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
-  transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1000;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-}
-
-.header-drawer::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    #00d4ff, 
-    #8b5cf6, 
-    transparent);
-  opacity: 0.5;
-}
-
-.header-drawer.drawer-open {
-  top: 0;
-}
-
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
-  height: calc(100% - 60px);
-}
-
-.breadcrumb {
-  color: #94a3b8;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.theme-toggle {
-  font-size: 1.2rem;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-}
-
-.theme-toggle:hover {
-  background: rgba(99, 102, 241, 0.2);
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-  transform: scale(1.05);
-}
-
-.user-dropdown {
-  position: relative;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  padding: 8px 14px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  background: rgba(99, 102, 241, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  color: #f8fafc;
-  font-size: 14px;
-}
-
-.user-info:hover {
-  background: rgba(99, 102, 241, 0.2);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-  transform: translateY(-1px);
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: white;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
-}
-
-.arrow {
-  font-size: 10px;
-  transition: transform 0.3s ease;
-  color: #94a3b8;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background: rgba(15, 15, 35, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: 12px;
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(99, 102, 241, 0.2);
-  min-width: 160px;
-  z-index: 1001;
-  overflow: hidden;
-}
-
-.dropdown-item {
-  display: block;
-  padding: 12px 16px;
-  color: #94a3b8;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-  font-size: 14px;
-}
-
-.dropdown-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 3px;
-  background: linear-gradient(180deg, #6366f1, #8b5cf6);
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
-}
-
-.dropdown-item:hover {
-  background: rgba(99, 102, 241, 0.15);
-  color: #f8fafc;
-  transform: translateX(4px);
-}
-
-.dropdown-item:hover::before {
-  transform: scaleY(1);
-}
-
 /* 主内容区 */
 .main-container {
   flex: 1;
@@ -828,18 +766,6 @@ onMounted(async () => {
     left: -260px;
   }
   
-  .header-drawer {
-    height: 100px;
-    top: -100px;
-  }
-  
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 16px;
-  }
-  
   .floating-actions {
     bottom: 16px;
     right: 16px;
@@ -850,6 +776,25 @@ onMounted(async () => {
     width: 50px;
     height: 50px;
     border-radius: 14px;
+  }
+  
+  .user-dropdown-menu {
+    min-width: 160px;
+  }
+  
+  .dropdown-user-info {
+    padding: 12px 14px;
+  }
+  
+  .dropdown-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .dropdown-item {
+    padding: 12px 14px;
+    font-size: 13px;
   }
   
   .page-content {
@@ -870,11 +815,6 @@ onMounted(async () => {
   .sidebar-drawer {
     width: 240px;
     left: -240px;
-  }
-  
-  .header-drawer {
-    height: 90px;
-    top: -90px;
   }
   
   .drawer-header {
@@ -911,36 +851,32 @@ onMounted(async () => {
     font-size: 18px;
   }
   
-  .page-content {
-    padding: 12px;
+  .user-dropdown-menu {
+    min-width: 150px;
   }
   
-  .header-content {
-    padding: 12px;
+  .dropdown-user-info {
+    padding: 10px 12px;
+    gap: 10px;
   }
   
-  .breadcrumb {
-    font-size: 12px;
-  }
-  
-  .user-info {
-    padding: 6px 10px;
-    font-size: 13px;
-  }
-  
-  .avatar {
+  .dropdown-avatar {
     width: 28px;
     height: 28px;
     font-size: 12px;
   }
   
-  .dropdown-menu {
-    min-width: 140px;
+  .dropdown-username {
+    font-size: 13px;
   }
   
   .dropdown-item {
-    padding: 10px 14px;
-    font-size: 13px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  
+  .page-content {
+    padding: 12px;
   }
 }
 
@@ -986,11 +922,6 @@ onMounted(async () => {
     height: 100vh;
   }
   
-  .header-drawer {
-    height: 80px;
-    top: -80px;
-  }
-  
   .floating-actions {
     bottom: 10px;
     right: 10px;
@@ -1015,10 +946,6 @@ onMounted(async () => {
     min-height: 48px;
   }
   
-  .user-info {
-    min-height: 44px;
-  }
-  
   .dropdown-item {
     min-height: 44px;
   }
@@ -1038,8 +965,10 @@ onMounted(async () => {
       0 0 70px rgba(0, 0, 0, 0.5);
   }
   
-  .header-drawer {
-    box-shadow: 0 4px 35px rgba(0, 0, 0, 0.35);
+  .user-dropdown-menu {
+    box-shadow: 
+      0 -10px 45px rgba(0, 0, 0, 0.6),
+      0 0 35px rgba(128, 32, 255, 0.25);
   }
 }
 </style>

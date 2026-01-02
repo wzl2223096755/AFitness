@@ -208,10 +208,45 @@
     </div>
 
     <!-- 动作编辑对话框 -->
-    <el-dialog v-model="showExerciseDialog" title="编辑动作" width="500px">
+    <el-dialog v-model="showExerciseDialog" title="添加/编辑动作" width="600px">
       <el-form :model="exerciseForm" :rules="exerciseRules" ref="exerciseFormRef" label-width="80px">
+        <!-- 训练部位选择 -->
+        <el-form-item label="训练部位">
+          <el-select v-model="exerciseForm.bodyPart" placeholder="选择训练部位" @change="onBodyPartChange">
+            <el-option label="胸部" value="chest" />
+            <el-option label="背部" value="back" />
+            <el-option label="腿部" value="legs" />
+            <el-option label="肩部" value="shoulders" />
+            <el-option label="手臂" value="arms" />
+            <el-option label="核心" value="core" />
+            <el-option label="有氧" value="cardio" />
+            <el-option label="全身" value="full_body" />
+          </el-select>
+        </el-form-item>
+        
+        <!-- 动作复选框 -->
+        <el-form-item label="选择动作" v-if="exerciseForm.bodyPart">
+          <div class="exercise-select-group">
+            <div class="select-header">
+              <span class="select-title">可选动作（点击选择）</span>
+            </div>
+            <div class="exercise-options">
+              <div 
+                v-for="exercise in currentBodyPartExercises" 
+                :key="exercise.name"
+                class="exercise-option"
+                :class="{ selected: exerciseForm.name === exercise.name }"
+                @click="selectExerciseOption(exercise)"
+              >
+                <span class="option-name">{{ exercise.name }}</span>
+                <span class="option-desc">{{ exercise.desc }}</span>
+              </div>
+            </div>
+          </div>
+        </el-form-item>
+        
         <el-form-item label="动作名称" prop="name">
-          <el-input v-model="exerciseForm.name" placeholder="请输入动作名称" />
+          <el-input v-model="exerciseForm.name" placeholder="请输入或选择动作名称" />
         </el-form-item>
         <el-form-item label="组数" prop="sets">
           <el-input-number v-model="exerciseForm.sets" :min="1" :max="10" />
@@ -221,6 +256,7 @@
         </el-form-item>
         <el-form-item label="重量" prop="weight">
           <el-input-number v-model="exerciseForm.weight" :min="0" :max="200" />
+          <span style="margin-left: 8px;">kg</span>
         </el-form-item>
         <el-form-item label="休息时间" prop="rest">
           <el-input-number v-model="exerciseForm.rest" :min="15" :max="300" />
@@ -274,7 +310,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { fitnessApi } from '../api/fitness'
 import { 
@@ -317,6 +353,7 @@ const configRules = {
 // 动作表单
 const exerciseForm = reactive({
   name: '',
+  bodyPart: '', // 新增：训练部位
   sets: 3,
   reps: '8-12',
   weight: 0,
@@ -372,6 +409,102 @@ const exerciseLibrary = {
   core: ['平板支撑', '卷腹', '俄罗斯转体', '举腿', '侧平板'],
   cardio: ['跑步', '单车', '划船机', '椭圆机', '跳绳'],
   full_body: ['深蹲', '卧推', '划船', '推举', '硬拉']
+}
+
+// 详细动作库（带描述）
+const detailedExerciseLibrary = {
+  chest: [
+    { name: '卧推', desc: '胸大肌主要训练', defaultSets: 4, defaultReps: '8-12', defaultWeight: 40 },
+    { name: '上斜卧推', desc: '上胸肌训练', defaultSets: 4, defaultReps: '8-12', defaultWeight: 30 },
+    { name: '下斜卧推', desc: '下胸肌训练', defaultSets: 3, defaultReps: '10-12', defaultWeight: 35 },
+    { name: '哑铃飞鸟', desc: '胸肌拉伸', defaultSets: 3, defaultReps: '12-15', defaultWeight: 12 },
+    { name: '双杠臂屈伸', desc: '胸肌/三头', defaultSets: 3, defaultReps: '8-12', defaultWeight: 0 },
+    { name: '俯卧撑', desc: '自重训练', defaultSets: 3, defaultReps: '15-20', defaultWeight: 0 },
+    { name: '夹胸', desc: '胸肌内侧', defaultSets: 3, defaultReps: '12-15', defaultWeight: 20 }
+  ],
+  back: [
+    { name: '引体向上', desc: '背阔肌/二头', defaultSets: 4, defaultReps: '6-10', defaultWeight: 0 },
+    { name: '杠铃划船', desc: '背部厚度', defaultSets: 4, defaultReps: '8-12', defaultWeight: 50 },
+    { name: '硬拉', desc: '后链综合', defaultSets: 4, defaultReps: '5-8', defaultWeight: 80 },
+    { name: '高位下拉', desc: '背阔肌宽度', defaultSets: 4, defaultReps: '10-12', defaultWeight: 45 },
+    { name: '坐姿划船', desc: '中背部', defaultSets: 3, defaultReps: '10-12', defaultWeight: 40 },
+    { name: '单臂哑铃划船', desc: '背阔肌', defaultSets: 3, defaultReps: '10-12', defaultWeight: 25 },
+    { name: 'T杠划船', desc: '背部厚度', defaultSets: 3, defaultReps: '8-12', defaultWeight: 40 }
+  ],
+  legs: [
+    { name: '深蹲', desc: '腿部综合', defaultSets: 4, defaultReps: '8-12', defaultWeight: 60 },
+    { name: '腿举', desc: '股四头肌', defaultSets: 4, defaultReps: '10-15', defaultWeight: 100 },
+    { name: '罗马尼亚硬拉', desc: '腘绳肌', defaultSets: 4, defaultReps: '8-12', defaultWeight: 50 },
+    { name: '腿弯举', desc: '腘绳肌', defaultSets: 3, defaultReps: '10-15', defaultWeight: 30 },
+    { name: '腿屈伸', desc: '股四头肌', defaultSets: 3, defaultReps: '12-15', defaultWeight: 35 },
+    { name: '箭步蹲', desc: '腿部/臀部', defaultSets: 3, defaultReps: '10-12', defaultWeight: 20 },
+    { name: '提踵', desc: '小腿', defaultSets: 4, defaultReps: '15-20', defaultWeight: 40 },
+    { name: '臀桥', desc: '臀大肌', defaultSets: 3, defaultReps: '12-15', defaultWeight: 0 }
+  ],
+  shoulders: [
+    { name: '肩推', desc: '三角肌前束', defaultSets: 4, defaultReps: '8-12', defaultWeight: 30 },
+    { name: '侧平举', desc: '三角肌中束', defaultSets: 4, defaultReps: '12-15', defaultWeight: 8 },
+    { name: '前平举', desc: '三角肌前束', defaultSets: 3, defaultReps: '12-15', defaultWeight: 8 },
+    { name: '俯身飞鸟', desc: '三角肌后束', defaultSets: 3, defaultReps: '12-15', defaultWeight: 6 },
+    { name: '耸肩', desc: '斜方肌', defaultSets: 3, defaultReps: '12-15', defaultWeight: 40 },
+    { name: '面拉', desc: '后束/斜方', defaultSets: 3, defaultReps: '15-20', defaultWeight: 15 },
+    { name: '阿诺德推举', desc: '三角肌综合', defaultSets: 3, defaultReps: '10-12', defaultWeight: 15 }
+  ],
+  arms: [
+    { name: '杠铃弯举', desc: '二头肌', defaultSets: 4, defaultReps: '10-12', defaultWeight: 25 },
+    { name: '锤式弯举', desc: '肱肌/二头', defaultSets: 3, defaultReps: '10-12', defaultWeight: 12 },
+    { name: '集中弯举', desc: '二头肌峰', defaultSets: 3, defaultReps: '12-15', defaultWeight: 10 },
+    { name: '三头臂屈伸', desc: '三头肌', defaultSets: 4, defaultReps: '10-12', defaultWeight: 20 },
+    { name: '窄距卧推', desc: '三头肌', defaultSets: 3, defaultReps: '8-12', defaultWeight: 40 },
+    { name: '绳索下压', desc: '三头肌', defaultSets: 3, defaultReps: '12-15', defaultWeight: 25 },
+    { name: '过头臂屈伸', desc: '三头长头', defaultSets: 3, defaultReps: '10-12', defaultWeight: 15 }
+  ],
+  core: [
+    { name: '平板支撑', desc: '核心稳定', defaultSets: 3, defaultReps: '30-60秒', defaultWeight: 0 },
+    { name: '卷腹', desc: '腹直肌', defaultSets: 3, defaultReps: '15-20', defaultWeight: 0 },
+    { name: '俄罗斯转体', desc: '腹斜肌', defaultSets: 3, defaultReps: '20-30', defaultWeight: 5 },
+    { name: '悬垂举腿', desc: '下腹', defaultSets: 3, defaultReps: '10-15', defaultWeight: 0 },
+    { name: '侧平板', desc: '腹斜肌', defaultSets: 3, defaultReps: '30秒', defaultWeight: 0 },
+    { name: '腹肌轮', desc: '核心综合', defaultSets: 3, defaultReps: '10-15', defaultWeight: 0 },
+    { name: '死虫式', desc: '核心稳定', defaultSets: 3, defaultReps: '10-12', defaultWeight: 0 }
+  ],
+  cardio: [
+    { name: '跑步', desc: '心肺耐力', defaultSets: 1, defaultReps: '20-30分钟', defaultWeight: 0 },
+    { name: '骑行', desc: '低冲击有氧', defaultSets: 1, defaultReps: '30-45分钟', defaultWeight: 0 },
+    { name: '划船机', desc: '全身有氧', defaultSets: 1, defaultReps: '20-30分钟', defaultWeight: 0 },
+    { name: '椭圆机', desc: '低冲击有氧', defaultSets: 1, defaultReps: '30-40分钟', defaultWeight: 0 },
+    { name: '跳绳', desc: '高强度有氧', defaultSets: 3, defaultReps: '3-5分钟', defaultWeight: 0 },
+    { name: 'HIIT', desc: '高强度间歇', defaultSets: 1, defaultReps: '15-20分钟', defaultWeight: 0 },
+    { name: '快走', desc: '低强度有氧', defaultSets: 1, defaultReps: '40-60分钟', defaultWeight: 0 }
+  ],
+  full_body: [
+    { name: '深蹲', desc: '下肢为主', defaultSets: 4, defaultReps: '8-12', defaultWeight: 60 },
+    { name: '卧推', desc: '上肢推', defaultSets: 4, defaultReps: '8-12', defaultWeight: 40 },
+    { name: '硬拉', desc: '后链综合', defaultSets: 4, defaultReps: '5-8', defaultWeight: 80 },
+    { name: '引体向上', desc: '上肢拉', defaultSets: 4, defaultReps: '6-10', defaultWeight: 0 },
+    { name: '波比跳', desc: '全身爆发', defaultSets: 3, defaultReps: '10-15', defaultWeight: 0 },
+    { name: '壶铃摆荡', desc: '髋部爆发', defaultSets: 3, defaultReps: '15-20', defaultWeight: 16 },
+    { name: '农夫行走', desc: '核心/握力', defaultSets: 3, defaultReps: '30-40米', defaultWeight: 30 },
+    { name: '土耳其起立', desc: '全身稳定', defaultSets: 3, defaultReps: '5-8', defaultWeight: 12 }
+  ]
+}
+
+// 当前训练部位的动作列表
+const currentBodyPartExercises = computed(() => {
+  return detailedExerciseLibrary[exerciseForm.bodyPart] || []
+})
+
+// 训练部位变化时
+const onBodyPartChange = () => {
+  exerciseForm.name = ''
+}
+
+// 选择动作
+const selectExerciseOption = (exercise) => {
+  exerciseForm.name = exercise.name
+  exerciseForm.sets = exercise.defaultSets
+  exerciseForm.reps = exercise.defaultReps
+  exerciseForm.weight = exercise.defaultWeight
 }
 
 // 方法
@@ -583,8 +716,23 @@ const getDefaultRest = (focus) => {
 
 const addExercise = (weekIndex, dayIndex) => {
   currentExercisePosition.value = { weekIndex, dayIndex, exerciseIndex: -1 }
+  
+  // 根据当天的训练重点预设训练部位
+  const day = weeklyPlan.value[weekIndex].days[dayIndex]
+  const focusToBodyPart = {
+    chest: 'chest',
+    back: 'back',
+    legs: 'legs',
+    shoulders: 'shoulders',
+    arms: 'arms',
+    core: 'core',
+    cardio: 'cardio',
+    full_body: 'full_body'
+  }
+  
   Object.assign(exerciseForm, {
     name: '',
+    bodyPart: focusToBodyPart[day.focus] || '',
     sets: 3,
     reps: '8-12',
     weight: 0,
@@ -995,6 +1143,69 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+/* 动作选择样式 */
+.exercise-select-group {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #e4e7ed;
+}
+
+.select-header {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.select-title {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.exercise-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.exercise-option {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #e4e7ed;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exercise-option:hover {
+  border-color: #409EFF;
+  background: #f0f9ff;
+  transform: translateY(-1px);
+}
+
+.exercise-option.selected {
+  border-color: #409EFF;
+  background: #ecf5ff;
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.2);
+}
+
+.option-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.option-desc {
+  font-size: 11px;
+  color: #999;
 }
 
 :deep(.el-tabs__content) {

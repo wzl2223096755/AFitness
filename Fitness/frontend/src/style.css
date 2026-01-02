@@ -2,40 +2,55 @@
    AFitness - 现代科技感主题
    ===================================================== */
 
-/* CSS 变量定义 */
+/* CSS 变量定义 - 支持动态主题切换 */
 :root {
-  /* 主色调 - 科技蓝紫渐变 */
-  --primary: #6366f1;
-  --primary-light: #818cf8;
-  --primary-dark: #4f46e5;
-  --secondary: #06b6d4;
-  --accent: #8b5cf6;
+  /* 主题变量 - 由 theme store 动态设置 */
+  --theme-primary: #8020ff;
+  --theme-secondary: #ff00ff;
+  --theme-accent: #00f2fe;
+  --theme-success: #00ff88;
+  --theme-warning: #ffaa00;
+  --theme-danger: #ff0055;
+  --theme-bg-primary: #0a0a14;
+  --theme-bg-secondary: #121225;
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #8888aa;
+  --theme-border-color: rgba(112, 0, 255, 0.2);
+  --theme-primary-rgb: 128, 32, 255;
+  --theme-bg-secondary-rgb: 18, 18, 37;
+  
+  /* 主色调 - 使用主题变量 */
+  --primary: var(--theme-primary);
+  --primary-light: var(--theme-secondary);
+  --primary-dark: var(--theme-primary);
+  --secondary: var(--theme-accent);
+  --accent: var(--theme-secondary);
   
   /* 霓虹色 */
-  --neon-blue: #00d4ff;
-  --neon-purple: #bf00ff;
-  --neon-pink: #ff006e;
-  --neon-green: #00ff88;
+  --neon-blue: var(--theme-accent);
+  --neon-purple: var(--theme-primary);
+  --neon-pink: var(--theme-danger);
+  --neon-green: var(--theme-success);
   
   /* 背景色 */
-  --bg-dark: #0a0a1a;
-  --bg-card: rgba(15, 15, 35, 0.8);
+  --bg-dark: var(--theme-bg-primary);
+  --bg-card: rgba(var(--theme-bg-secondary-rgb), 0.8);
   --bg-glass: rgba(255, 255, 255, 0.05);
   
   /* 文字色 */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: var(--theme-text-primary);
+  --text-secondary: var(--theme-text-secondary);
+  --text-muted: var(--theme-text-secondary);
   
   /* 边框和阴影 */
-  --border-glow: rgba(99, 102, 241, 0.3);
-  --shadow-neon: 0 0 20px rgba(99, 102, 241, 0.4);
+  --border-glow: var(--theme-border-color);
+  --shadow-neon: 0 0 20px rgba(var(--theme-primary-rgb), 0.4);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
   
   /* 渐变 */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
-  --gradient-dark: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
-  --gradient-card: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+  --gradient-primary: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 50%, var(--theme-accent) 100%);
+  --gradient-dark: linear-gradient(135deg, var(--theme-bg-primary) 0%, var(--theme-bg-secondary) 50%, var(--theme-bg-primary) 100%);
+  --gradient-card: linear-gradient(135deg, rgba(var(--theme-primary-rgb), 0.1) 0%, rgba(var(--theme-primary-rgb), 0.05) 100%);
   
   /* 动画时间 */
   --transition-fast: 0.2s;
@@ -628,4 +643,224 @@ html, body {
   0% { transform: scale(1); }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); }
+}
+
+
+/* =====================================================
+   Element Plus 表格深色主题覆盖 - 使用主题变量
+   ===================================================== */
+.el-table {
+  --el-table-bg-color: transparent !important;
+  --el-table-tr-bg-color: transparent !important;
+  --el-table-header-bg-color: rgba(var(--theme-primary-rgb), 0.15) !important;
+  --el-table-row-hover-bg-color: rgba(var(--theme-primary-rgb), 0.15) !important;
+  --el-table-border-color: var(--theme-border-color) !important;
+  --el-table-text-color: var(--theme-text-primary) !important;
+  --el-table-header-text-color: var(--theme-text-primary) !important;
+  background-color: transparent !important;
+}
+
+.el-table__header-wrapper {
+  background: rgba(var(--theme-primary-rgb), 0.15) !important;
+}
+
+.el-table__header {
+  background: rgba(var(--theme-primary-rgb), 0.15) !important;
+}
+
+.el-table th {
+  background: rgba(var(--theme-primary-rgb), 0.15) !important;
+  color: var(--theme-text-primary) !important;
+  border-bottom: 2px solid rgba(var(--theme-primary-rgb), 0.3) !important;
+}
+
+.el-table th.el-table__cell {
+  background: rgba(var(--theme-primary-rgb), 0.15) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.el-table th .cell {
+  color: var(--theme-text-primary) !important;
+}
+
+.el-table td {
+  background: transparent !important;
+  color: var(--theme-text-primary) !important;
+  border-bottom: 1px solid var(--theme-border-color) !important;
+}
+
+.el-table td.el-table__cell {
+  background: transparent !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.el-table td .cell {
+  color: var(--theme-text-primary) !important;
+}
+
+.el-table__body tr:hover > td {
+  background-color: rgba(var(--theme-primary-rgb), 0.15) !important;
+}
+
+.el-table__body tr:hover > td.el-table__cell {
+  background-color: rgba(var(--theme-primary-rgb), 0.15) !important;
+}
+
+.el-table__body tr.el-table__row--striped td {
+  background: rgba(var(--theme-bg-secondary-rgb), 0.3) !important;
+}
+
+.el-table__empty-text {
+  color: var(--theme-text-secondary) !important;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: rgba(var(--theme-bg-secondary-rgb), 0.3) !important;
+}
+
+/* 表格排序图标颜色 */
+.el-table .caret-wrapper .sort-caret {
+  border-bottom-color: var(--theme-text-secondary) !important;
+  border-top-color: var(--theme-text-secondary) !important;
+}
+
+.el-table .caret-wrapper .sort-caret.ascending {
+  border-bottom-color: var(--theme-primary) !important;
+}
+
+.el-table .caret-wrapper .sort-caret.descending {
+  border-top-color: var(--theme-primary) !important;
+}
+
+/* 表格固定列阴影 */
+.el-table__fixed-right::before,
+.el-table__fixed::before {
+  background-color: var(--theme-border-color) !important;
+}
+
+/* 表格内按钮样式 */
+.el-table .el-button--text {
+  color: var(--theme-primary) !important;
+}
+
+.el-table .el-button--text:hover {
+  color: var(--theme-accent) !important;
+}
+
+/* =====================================================
+   Element Plus 其他组件主题覆盖
+   ===================================================== */
+
+/* 按钮 */
+.el-button--primary {
+  background: var(--theme-primary) !important;
+  border-color: var(--theme-primary) !important;
+}
+
+.el-button--primary:hover {
+  background: var(--theme-secondary) !important;
+  border-color: var(--theme-secondary) !important;
+}
+
+/* 输入框 */
+.el-input__wrapper {
+  background: rgba(var(--theme-bg-secondary-rgb), 0.5) !important;
+  border-color: var(--theme-border-color) !important;
+}
+
+.el-input__wrapper:hover {
+  border-color: var(--theme-primary) !important;
+}
+
+.el-input__wrapper.is-focus {
+  border-color: var(--theme-primary) !important;
+  box-shadow: 0 0 0 1px rgba(var(--theme-primary-rgb), 0.2) !important;
+}
+
+.el-input__inner {
+  color: var(--theme-text-primary) !important;
+}
+
+.el-input__inner::placeholder {
+  color: var(--theme-text-secondary) !important;
+}
+
+/* 选择器 */
+.el-select__wrapper {
+  background: rgba(var(--theme-bg-secondary-rgb), 0.5) !important;
+  border-color: var(--theme-border-color) !important;
+}
+
+.el-select-dropdown {
+  background: var(--theme-bg-secondary) !important;
+  border-color: var(--theme-border-color) !important;
+}
+
+.el-select-dropdown__item {
+  color: var(--theme-text-primary) !important;
+}
+
+.el-select-dropdown__item:hover {
+  background: rgba(var(--theme-primary-rgb), 0.15) !important;
+}
+
+.el-select-dropdown__item.is-selected {
+  color: var(--theme-primary) !important;
+}
+
+/* 日期选择器 */
+.el-date-picker {
+  background: var(--theme-bg-secondary) !important;
+  border-color: var(--theme-border-color) !important;
+}
+
+/* 分页 */
+.el-pagination {
+  --el-pagination-bg-color: transparent !important;
+  --el-pagination-text-color: var(--theme-text-secondary) !important;
+  --el-pagination-button-color: var(--theme-text-primary) !important;
+  --el-pagination-hover-color: var(--theme-primary) !important;
+}
+
+/* 卡片 */
+.el-card {
+  background: rgba(var(--theme-bg-secondary-rgb), 0.8) !important;
+  border-color: var(--theme-border-color) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* 对话框 */
+.el-dialog {
+  background: var(--theme-bg-secondary) !important;
+  border: 1px solid var(--theme-border-color) !important;
+}
+
+.el-dialog__title {
+  color: var(--theme-text-primary) !important;
+}
+
+.el-dialog__body {
+  color: var(--theme-text-primary) !important;
+}
+
+/* 消息提示 */
+.el-message {
+  background: var(--theme-bg-secondary) !important;
+  border-color: var(--theme-border-color) !important;
+}
+
+/* 标签 */
+.el-tag {
+  background: rgba(var(--theme-primary-rgb), 0.15) !important;
+  border-color: var(--theme-border-color) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* 进度条 */
+.el-progress-bar__outer {
+  background: rgba(var(--theme-bg-secondary-rgb), 0.5) !important;
+}
+
+.el-progress-bar__inner {
+  background: var(--gradient-primary) !important;
 }

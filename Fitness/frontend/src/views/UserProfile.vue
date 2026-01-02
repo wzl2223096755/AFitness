@@ -274,25 +274,27 @@ export default {
 }
 
 .profile-card {
-  background: #fff;
+  background: rgba(18, 18, 37, 0.95);
   padding: 24px;
   border-radius: 12px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .body-stats {
-  background: #fff;
+  background: rgba(18, 18, 37, 0.95);
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .body-stats h3 {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: var(--el-text-color-primary);
+  color: var(--text-primary, #ffffff);
 }
 
 .stats-grid {
@@ -303,7 +305,8 @@ export default {
 }
 
 .stat-item {
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  background: rgba(18, 18, 37, 0.8);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   padding: 24px;
   border-radius: 12px;
   text-align: center;
@@ -312,26 +315,26 @@ export default {
 
 .stat-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .stat-value {
   font-size: 32px;
   font-weight: 700;
-  color: #409eff;
+  color: var(--color-primary, #8020ff);
   margin-bottom: 8px;
 }
 
 .stat-label {
   font-size: 15px;
-  color: #606266;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 4px;
   font-weight: 500;
 }
 
 .stat-desc {
   font-size: 13px;
-  color: #909399;
+  color: var(--text-secondary, #8888aa);
 }
 
 /* 响应式设计 */

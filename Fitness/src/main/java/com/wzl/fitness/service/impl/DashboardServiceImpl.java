@@ -233,7 +233,7 @@ public class DashboardServiceImpl implements DashboardService {
         List<TrainingRecord> recentRecords = trainingRecordRepository
             .findTop10ByUserOrderByTrainingDateDesc(currentUser);
         
-        // 转换为DTO
+        // 转换为DTO - 不加载懒加载的集合属性
         return recentRecords.stream().map(record -> {
             TrainingRecordResponse response = new TrainingRecordResponse();
             response.setId(record.getId());
@@ -246,7 +246,7 @@ public class DashboardServiceImpl implements DashboardService {
             response.setDuration(record.getDuration());
             response.setNotes(record.getNotes());
             response.setCreatedAt(record.getCreatedAt());
-            response.setExerciseDetails(record.getExerciseDetails());
+            // 不设置 exerciseDetails，避免懒加载异常
             return response;
         }).collect(Collectors.toList());
     }

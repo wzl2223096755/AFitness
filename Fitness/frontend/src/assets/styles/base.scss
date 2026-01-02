@@ -436,3 +436,100 @@ body {
     font-size: 14px;
   }
 }
+
+
+// =============================================================================
+// Element Plus 表格深色主题全局覆盖
+// =============================================================================
+// 确保所有页面的表格都使用深色主题 - Updated
+
+.el-table {
+  --el-table-bg-color: transparent !important;
+  --el-table-tr-bg-color: transparent !important;
+  --el-table-header-bg-color: rgba(128, 32, 255, 0.15) !important;
+  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15) !important;
+  --el-table-border-color: rgba(112, 0, 255, 0.2) !important;
+  --el-table-text-color: #e0e0ff !important;
+  --el-table-header-text-color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.el-table__header-wrapper {
+  background: rgba(128, 32, 255, 0.15) !important;
+}
+
+.el-table__header {
+  background: rgba(128, 32, 255, 0.15) !important;
+}
+
+.el-table th {
+  background: rgba(128, 32, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid rgba(112, 0, 255, 0.3) !important;
+}
+
+.el-table th.el-table__cell {
+  background: rgba(128, 32, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.el-table th .cell {
+  color: #ffffff !important;
+}
+
+.el-table td {
+  background: transparent !important;
+  color: #e0e0ff !important;
+  border-bottom: 1px solid rgba(112, 0, 255, 0.1) !important;
+}
+
+.el-table td.el-table__cell {
+  background: transparent !important;
+  color: #e0e0ff !important;
+}
+
+.el-table td .cell {
+  color: #e0e0ff !important;
+}
+
+.el-table__body tr:hover > td {
+  background-color: rgba(128, 32, 255, 0.15) !important;
+}
+
+.el-table__body tr:hover > td.el-table__cell {
+  background-color: rgba(128, 32, 255, 0.15) !important;
+}
+
+.el-table__body tr.el-table__row--striped td {
+  background: rgba(18, 18, 37, 0.3) !important;
+}
+
+.el-table__empty-text {
+  color: #8888aa !important;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: rgba(18, 18, 37, 0.3) !important;
+}
+
+// 表格排序图标颜色
+.el-table .caret-wrapper {
+  .sort-caret {
+    border-bottom-color: #8888aa !important;
+    border-top-color: #8888aa !important;
+  }
+  
+  .sort-caret.ascending {
+    border-bottom-color: $primary-color !important;
+  }
+  
+  .sort-caret.descending {
+    border-top-color: $primary-color !important;
+  }
+}
+
+// 表格固定列阴影
+.el-table__fixed-right::before,
+.el-table__fixed::before {
+  background-color: rgba(112, 0, 255, 0.2) !important;
+}

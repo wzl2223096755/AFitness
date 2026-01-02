@@ -7,8 +7,8 @@ import com.wzl.fitness.entity.UserNutritionGoal;
 import com.wzl.fitness.repository.UserNutritionGoalRepository;
 import com.wzl.fitness.service.NutritionCalculationService;
 import com.wzl.fitness.service.UserNutritionGoalService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +18,17 @@ import java.util.Optional;
  * 用户营养目标服务实现类
  */
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class UserNutritionGoalServiceImpl implements UserNutritionGoalService {
     
+    private static final Logger log = LoggerFactory.getLogger(UserNutritionGoalServiceImpl.class);
     private final UserNutritionGoalRepository nutritionGoalRepository;
     private final NutritionCalculationService nutritionCalculationService;
+    
+    public UserNutritionGoalServiceImpl(UserNutritionGoalRepository nutritionGoalRepository,
+                                        NutritionCalculationService nutritionCalculationService) {
+        this.nutritionGoalRepository = nutritionGoalRepository;
+        this.nutritionCalculationService = nutritionCalculationService;
+    }
     
     @Override
     public Optional<UserNutritionGoal> getUserNutritionGoal(User user) {

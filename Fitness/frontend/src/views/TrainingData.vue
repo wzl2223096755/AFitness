@@ -57,10 +57,12 @@
           </el-col>
           
           <el-col :span="8">
-            <el-form-item label="动作类型" prop="exerciseType">
-              <el-select v-model="trainingForm.exerciseType" placeholder="请选择动作类型">
+            <el-form-item label="训练类型" prop="exerciseType">
+              <el-select v-model="trainingForm.exerciseType" placeholder="请选择训练类型" @change="handleExerciseTypeChange">
                 <el-option label="上肢" value="上肢" />
                 <el-option label="下肢" value="下肢" />
+                <el-option label="核心" value="核心" />
+                <el-option label="有氧" value="有氧" />
                 <el-option label="全身" value="全身" />
               </el-select>
             </el-form-item>
@@ -74,6 +76,31 @@
                 placeholder="选择日期"
                 value-format="YYYY-MM-DD"
               />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <!-- 训练项目复选框 -->
+        <el-row :gutter="20" v-if="trainingForm.exerciseType">
+          <el-col :span="24">
+            <el-form-item label="训练动作" prop="selectedExercises">
+              <div class="exercise-checkbox-group">
+                <div class="checkbox-group-header">
+                  <span class="group-title">选择今日训练动作（可多选）</span>
+                  <span class="selected-count">已选 {{ trainingForm.selectedExercises.length }} 项</span>
+                </div>
+                <el-checkbox-group v-model="trainingForm.selectedExercises" @change="handleExerciseSelect">
+                  <el-checkbox 
+                    v-for="exercise in currentExerciseOptions" 
+                    :key="exercise.value"
+                    :label="exercise.value"
+                    class="exercise-checkbox"
+                  >
+                    <span class="exercise-label">{{ exercise.label }}</span>
+                    <span class="exercise-desc">{{ exercise.desc }}</span>
+                  </el-checkbox>
+                </el-checkbox-group>
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -175,10 +202,12 @@
       <div class="card-header mb-5">
         <h3 class="text-lg font-semibold">最近训练记录</h3>
         <div class="record-actions gap-3">
-          <el-select v-model="filterOptions.exerciseType" placeholder="筛选动作类型" @change="handleFilterChange">
+          <el-select v-model="filterOptions.exerciseType" placeholder="筛选训练类型" @change="handleFilterChange">
             <el-option label="全部" value="" />
             <el-option label="上肢" value="上肢" />
             <el-option label="下肢" value="下肢" />
+            <el-option label="核心" value="核心" />
+            <el-option label="有氧" value="有氧" />
             <el-option label="全身" value="全身" />
           </el-select>
           <el-button type="primary" size="small" @click="refreshRecords">
@@ -199,7 +228,7 @@
       >
         <el-table-column prop="date" label="日期" width="120" sortable="custom" />
         <el-table-column prop="exerciseName" label="动作名称" width="150" />
-        <el-table-column prop="exerciseType" label="动作类型" width="100" />
+        <el-table-column prop="exerciseType" label="训练类型" width="100" />
         <el-table-column prop="weight" label="重量(kg)" width="100" sortable="custom">
           <template #default="scope">
             <span class="weight-value">{{ scope?.row?.weight || '-' }}</span>
@@ -274,6 +303,8 @@
               <el-select v-model="editForm.exerciseType" placeholder="请选择动作类型">
                 <el-option label="上肢" value="上肢" />
                 <el-option label="下肢" value="下肢" />
+                <el-option label="核心" value="核心" />
+                <el-option label="有氧" value="有氧" />
                 <el-option label="全身" value="全身" />
               </el-select>
             </el-form-item>
@@ -412,6 +443,7 @@ const suggestionsRef = ref(null)
 const trainingForm = reactive({
   exerciseName: '',
   exerciseType: '',
+  selectedExercises: [], // 新增：选中的训练项目
   date: new Date().toISOString().split('T')[0],
   weight: null,
   sets: null,
@@ -458,6 +490,86 @@ const exerciseSuggestions = [
   '腹肌轮', '杠铃弯举', '三头臂屈伸', '腿弯举', '提踵',
   '哑铃飞鸟', '侧平举', '卷腹', '平板支撑'
 ]
+
+// 训练项目配置 - 按训练类型分类
+const exercisesByType = {
+  '上肢': [
+    { value: '卧推', label: '卧推', desc: '胸部主要训练' },
+    { value: '引体向上', label: '引体向上', desc: '背部/二头' },
+    { value: '肩推', label: '肩推', desc: '肩部三角肌' },
+    { value: '划船', label: '划船', desc: '背部厚度' },
+    { value: '高位下拉', label: '高位下拉', desc: '背阔肌' },
+    { value: '俯卧撑', label: '俯卧撑', desc: '胸部/三头' },
+    { value: '双杠臂屈伸', label: '双杠臂屈伸', desc: '胸部/三头' },
+    { value: '杠铃弯举', label: '杠铃弯举', desc: '二头肌' },
+    { value: '三头臂屈伸', label: '三头臂屈伸', desc: '三头肌' },
+    { value: '哑铃飞鸟', label: '哑铃飞鸟', desc: '胸部拉伸' },
+    { value: '侧平举', label: '侧平举', desc: '肩部中束' }
+  ],
+  '下肢': [
+    { value: '深蹲', label: '深蹲', desc: '腿部综合' },
+    { value: '硬拉', label: '硬拉', desc: '后链/腿部' },
+    { value: '腿举', label: '腿举', desc: '股四头肌' },
+    { value: '罗马尼亚硬拉', label: '罗马尼亚硬拉', desc: '腘绳肌' },
+    { value: '腿弯举', label: '腿弯举', desc: '腘绳肌' },
+    { value: '提踵', label: '提踵', desc: '小腿' },
+    { value: '箭步蹲', label: '箭步蹲', desc: '腿部/臀部' },
+    { value: '腿屈伸', label: '腿屈伸', desc: '股四头肌' },
+    { value: '臀桥', label: '臀桥', desc: '臀大肌' }
+  ],
+  '核心': [
+    { value: '卷腹', label: '卷腹', desc: '腹直肌' },
+    { value: '平板支撑', label: '平板支撑', desc: '核心稳定' },
+    { value: '腹肌轮', label: '腹肌轮', desc: '核心综合' },
+    { value: '俄罗斯转体', label: '俄罗斯转体', desc: '腹斜肌' },
+    { value: '悬垂举腿', label: '悬垂举腿', desc: '下腹' },
+    { value: '死虫式', label: '死虫式', desc: '核心稳定' },
+    { value: '侧平板', label: '侧平板', desc: '腹斜肌' }
+  ],
+  '有氧': [
+    { value: '跑步', label: '跑步', desc: '心肺耐力' },
+    { value: '骑行', label: '骑行', desc: '低冲击有氧' },
+    { value: '游泳', label: '游泳', desc: '全身有氧' },
+    { value: '跳绳', label: '跳绳', desc: '高强度有氧' },
+    { value: '椭圆机', label: '椭圆机', desc: '低冲击有氧' },
+    { value: '划船机', label: '划船机', desc: '全身有氧' },
+    { value: 'HIIT', label: 'HIIT', desc: '高强度间歇' },
+    { value: '快走', label: '快走', desc: '低强度有氧' }
+  ],
+  '全身': [
+    { value: '硬拉', label: '硬拉', desc: '全身力量' },
+    { value: '深蹲', label: '深蹲', desc: '下肢为主' },
+    { value: '卧推', label: '卧推', desc: '上肢推' },
+    { value: '引体向上', label: '引体向上', desc: '上肢拉' },
+    { value: '波比跳', label: '波比跳', desc: '全身爆发' },
+    { value: '壶铃摆荡', label: '壶铃摆荡', desc: '髋部爆发' },
+    { value: '农夫行走', label: '农夫行走', desc: '核心/握力' },
+    { value: '土耳其起立', label: '土耳其起立', desc: '全身稳定' }
+  ]
+}
+
+// 当前训练类型对应的训练项目选项
+const currentExerciseOptions = computed(() => {
+  return exercisesByType[trainingForm.exerciseType] || []
+})
+
+// 处理训练类型变化
+const handleExerciseTypeChange = () => {
+  // 清空已选择的训练项目
+  trainingForm.selectedExercises = []
+  // 清空动作名称
+  trainingForm.exerciseName = ''
+}
+
+// 处理训练项目选择
+const handleExerciseSelect = (selected) => {
+  // 将选中的项目合并为动作名称
+  if (selected.length > 0) {
+    trainingForm.exerciseName = selected.join('、')
+  } else {
+    trainingForm.exerciseName = ''
+  }
+}
 
 // 计算属性
 const filteredExercises = computed(() => {
@@ -677,6 +789,7 @@ const resetForm = () => {
   }
   trainingForm.date = new Date().toISOString().split('T')[0]
   trainingForm.fatigueLevel = 3
+  trainingForm.selectedExercises = [] // 清空选中的训练项目
   showExerciseSuggestions.value = false
 }
 
@@ -850,22 +963,23 @@ onUnmounted(() => {
 /* Requirements: 7.1, 7.2, 7.3 - Table and list typography */
 
 .training-data-page {
-  background: var(--bg-color, #f5f7fa);
+  background: var(--bg-secondary, #121225);
   min-height: 100vh;
 }
 
 .page-header h1 {
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
 }
 
 .page-description {
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary, #8888aa);
 }
 
 .form-card {
-  background: var(--white, #ffffff);
+  background: var(--bg-card, rgba(255, 255, 255, 0.03));
   border-radius: var(--border-radius-lg, 16px);
-  box-shadow: var(--box-shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
 }
 
 .card-header {
@@ -875,7 +989,7 @@ onUnmounted(() => {
 }
 
 .card-header h3 {
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
   margin: 0;
 }
 
@@ -900,10 +1014,10 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   margin-top: 4px;
-  background: var(--white);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow-lg);
+  background: var(--bg-secondary, #121225);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  border-radius: var(--border-radius-base, 4px);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
@@ -912,23 +1026,25 @@ onUnmounted(() => {
 .suggestion-item {
   padding: 10px 15px;
   cursor: pointer;
-  transition: background-color var(--transition-time);
+  color: var(--text-regular, #e0e0ff);
+  transition: background-color 0.3s;
 }
 
 .suggestion-item:hover {
-  background-color: var(--hover-bg-color);
+  background-color: rgba(112, 0, 255, 0.2);
 }
 
 .suggestion-item-active {
-  background-color: var(--primary-color-light);
-  color: var(--primary-color);
+  background-color: rgba(112, 0, 255, 0.3);
+  color: var(--color-accent, #00f2fe);
   font-weight: 500;
 }
 
 .recent-records {
-  background: var(--white, #ffffff);
+  background: var(--bg-card, rgba(255, 255, 255, 0.03));
   border-radius: var(--border-radius-lg, 16px);
-  box-shadow: var(--box-shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
 }
 
 .pagination-container {
@@ -942,11 +1058,12 @@ onUnmounted(() => {
 .weight-value {
   font-weight: var(--font-weight-medium, 500);
   font-variant-numeric: tabular-nums;
+  color: var(--text-regular, #e0e0ff);
 }
 
 .highlight-volume {
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--success-color, #10b981);
+  color: var(--color-success, #00ff88);
   font-variant-numeric: tabular-nums;
 }
 
@@ -954,20 +1071,45 @@ onUnmounted(() => {
 :deep(.el-table .cell) {
   padding: var(--table-cell-padding-y, 0.75rem) var(--table-cell-padding-x, 1rem);
   font-variant-numeric: tabular-nums;
+  color: var(--text-regular, #e0e0ff);
 }
 
 /* Table header styling - Requirements: 7.2 */
 :deep(.el-table th .cell) {
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
+}
+
+/* 深色主题表格样式 */
+:deep(.el-table) {
+  background-color: transparent;
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(112, 0, 255, 0.1);
+  --el-table-header-text-color: #ffffff;
+  --el-table-text-color: #e0e0ff;
+  --el-table-border-color: rgba(112, 0, 255, 0.2);
+  --el-table-row-hover-bg-color: rgba(112, 0, 255, 0.15);
+}
+
+:deep(.el-table__header-wrapper) {
+  background-color: rgba(112, 0, 255, 0.1);
+}
+
+:deep(.el-table__body-wrapper) {
+  background-color: transparent;
+}
+
+:deep(.el-table__empty-text) {
+  color: var(--text-secondary, #8888aa);
 }
 
 .table-row-even {
-  background-color: var(--table-even-row-bg, #f9fafb);
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 .table-row-odd {
-  background-color: var(--white, #ffffff);
+  background-color: transparent;
 }
 
 .training-volume .el-input__wrapper {
@@ -1227,33 +1369,42 @@ onUnmounted(() => {
   transform: scale(1.1);
 }
 
-/* 表格样式优化 */
+/* 表格样式优化 - 深色主题 */
 :deep(.el-table) {
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 :deep(.el-table__header-wrapper) {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: rgba(128, 32, 255, 0.15) !important;
 }
 
 :deep(.el-table th) {
-  background: transparent;
-  color: #475569;
+  background: transparent !important;
+  color: var(--text-primary, #ffffff) !important;
   font-weight: 600;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--border-color, rgba(112, 0, 255, 0.2)) !important;
+}
+
+:deep(.el-table th .cell) {
+  color: var(--text-primary, #ffffff) !important;
 }
 
 :deep(.el-table tr:hover > td) {
-  background-color: rgba(16, 185, 129, 0.05);
+  background-color: rgba(128, 32, 255, 0.15) !important;
 }
 
 :deep(.el-table td) {
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--border-light, rgba(112, 0, 255, 0.1)) !important;
+  color: var(--text-regular, #e0e0ff) !important;
 }
 
-/* 分页器样式 */
+:deep(.el-table td .cell) {
+  color: var(--text-regular, #e0e0ff) !important;
+}
+
+/* 分页器样式 - 深色主题 */
 :deep(.el-pagination) {
   justify-content: flex-end;
 }
@@ -1262,36 +1413,181 @@ onUnmounted(() => {
   border-radius: 6px;
   margin: 0 2px;
   transition: all 0.3s ease;
+  background: transparent;
+  color: var(--text-secondary, #8888aa);
 }
 
 :deep(.el-pagination .el-pager li:hover) {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background-color: rgba(128, 32, 255, 0.15);
+  color: var(--color-primary, #8020ff);
 }
 
 :deep(.el-pagination .el-pager li.is-active) {
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, var(--color-primary, #8020ff) 0%, var(--color-accent, #00f2fe) 100%);
   color: white;
 }
 
 :deep(.el-pagination button:hover) {
-  color: #10b981;
+  color: var(--color-primary, #8020ff);
 }
 
-/* 选择器样式 */
+/* 选择器样式 - 深色主题 */
 :deep(.el-select-dropdown) {
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  background: var(--bg-secondary, #121225);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+}
+
+:deep(.el-select-dropdown__item) {
+  color: var(--text-primary, #ffffff);
 }
 
 :deep(.el-select-dropdown__item:hover) {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background-color: rgba(128, 32, 255, 0.15);
+  color: var(--color-primary, #8020ff);
 }
 
 :deep(.el-select-dropdown__item.selected) {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background-color: rgba(128, 32, 255, 0.2);
+  color: var(--color-primary, #8020ff);
   font-weight: 500;
+}
+
+/* 训练项目复选框样式 */
+.exercise-checkbox-group {
+  padding: 16px;
+  background: rgba(128, 32, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+}
+
+.checkbox-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+}
+
+.group-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+}
+
+.selected-count {
+  font-size: 13px;
+  color: var(--color-accent, #00f2fe);
+  background: rgba(0, 242, 254, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.exercise-checkbox-group :deep(.el-checkbox-group) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.exercise-checkbox {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  margin-right: 0 !important;
+}
+
+.exercise-checkbox:hover {
+  background: rgba(128, 32, 255, 0.1);
+  border-color: var(--color-primary, #8020ff);
+  transform: translateY(-2px);
+}
+
+:deep(.exercise-checkbox .el-checkbox__input) {
+  margin-top: 2px;
+}
+
+:deep(.exercise-checkbox .el-checkbox__label) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 8px;
+}
+
+:deep(.exercise-checkbox.is-checked) {
+  background: rgba(128, 32, 255, 0.15);
+  border-color: var(--color-primary, #8020ff);
+  box-shadow: 0 0 12px rgba(128, 32, 255, 0.3);
+}
+
+:deep(.exercise-checkbox .el-checkbox__inner) {
+  background: transparent;
+  border-color: var(--text-secondary, #8888aa);
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+}
+
+:deep(.exercise-checkbox.is-checked .el-checkbox__inner) {
+  background: linear-gradient(135deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
+  border-color: transparent;
+}
+
+:deep(.exercise-checkbox .el-checkbox__inner::after) {
+  border-width: 2px;
+  left: 5px;
+  top: 2px;
+}
+
+.exercise-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+}
+
+.exercise-desc {
+  font-size: 12px;
+  color: var(--text-secondary, #8888aa);
+}
+
+/* 响应式复选框 */
+@media (max-width: 768px) {
+  .exercise-checkbox-group :deep(.el-checkbox-group) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .exercise-checkbox-group {
+    padding: 12px;
+  }
+  
+  .checkbox-group-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .exercise-checkbox {
+    padding: 10px 12px;
+  }
+  
+  .exercise-label {
+    font-size: 13px;
+  }
+  
+  .exercise-desc {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-checkbox-group :deep(.el-checkbox-group) {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

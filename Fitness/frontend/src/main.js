@@ -6,6 +6,8 @@ import App from './App.vue'
 import router from './router'
 // 导入自定义样式系统
 import './style.css'
+// 导入主题 store
+import { useThemeStore } from './stores/theme'
 // 导入资源优化工具
 import { initResourceOptimization } from './utils/resourceOptimization'
 import { registerLazyDirectives } from './directives/lazyLoad'
@@ -20,8 +22,13 @@ import { initErrorMonitoring } from './utils/errorMonitoring'
 
 const app = createApp(App)
 
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
 app.use(router)
+
+// 初始化主题（在 pinia 安装后）
+const themeStore = useThemeStore()
+themeStore.loadFromStorage()
 
 // 初始化错误监控服务（在其他初始化之前）
 initErrorMonitoring(app, router)

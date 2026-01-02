@@ -536,7 +536,7 @@ onUnmounted(() => {
 }
 
 .section-title {
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
   margin: 0;
   display: flex;
   align-items: center;
@@ -559,24 +559,24 @@ onUnmounted(() => {
 
 .time-range-btn {
   padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
-  border: 1px solid #e5e7eb;
-  background: white;
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  background: var(--bg-secondary, #121225);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: var(--font-size-sm, 0.875rem);
-  color: #6b7280;
+  color: var(--text-secondary, #8888aa);
 }
 
 .time-range-btn:hover {
-  border-color: #3b82f6;
-  color: #3b82f6;
+  border-color: var(--color-primary, #8020ff);
+  color: var(--color-primary, #8020ff);
 }
 
 .time-range-btn.active {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: white;
+  background: var(--color-primary, #8020ff);
+  border-color: var(--color-primary, #8020ff);
+  color: var(--text-white, #ffffff);
 }
 
 /* Metrics grid uses auto-grid pattern from _grid.scss */
@@ -589,19 +589,20 @@ onUnmounted(() => {
 
 /* Metric card - Requirements: 6.1, 6.2 - consistent internal padding (20-28px) */
 .metric-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(18, 18, 37, 0.95);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 .metric-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3)), 0 0 25px rgba(128, 32, 255, 0.2);
 }
 
 .metric-card::before {
@@ -652,12 +653,12 @@ onUnmounted(() => {
 
 /* Using typography classes from _typography.scss */
 .metric-title {
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
   margin: 0 0 var(--spacing-1, 0.25rem) 0;
 }
 
 .metric-subtitle {
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary, #8888aa);
   margin: 0;
 }
 
@@ -699,11 +700,11 @@ onUnmounted(() => {
 .value-number {
   font-variant-numeric: tabular-nums;
   line-height: var(--line-height-tight, 1.25);
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
 }
 
 .value-unit {
-  color: var(--text-secondary, #64748b);
+  color: var(--text-secondary, #8888aa);
 }
 
 .metric-trend {
@@ -736,7 +737,7 @@ onUnmounted(() => {
   display: inline-block;
   width: 60px;
   height: 32px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--bg-secondary, #121225) 25%, rgba(128, 32, 255, 0.2) 50%, var(--bg-secondary, #121225) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
   border-radius: 4px;
@@ -754,7 +755,7 @@ onUnmounted(() => {
 /* Additional metric styles using design tokens */
 .metric-label {
   font-size: var(--font-size-xs, 0.8rem);
-  color: #9ca3af;
+  color: var(--text-secondary, #8888aa);
   margin-bottom: var(--spacing-1, 0.25rem);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wide, 0.025em);
@@ -788,13 +789,14 @@ onUnmounted(() => {
 .factor-item {
   text-align: center;
   padding: var(--spacing-2, 0.5rem);
-  background: #f9fafb;
+  background: rgba(18, 18, 37, 0.8);
   border-radius: 8px;
+  border: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
 }
 
 .factor-label {
   font-size: var(--font-size-xs, 0.8rem);
-  color: #6b7280;
+  color: var(--text-secondary, #8888aa);
   margin-bottom: var(--spacing-1, 0.25rem);
 }
 
@@ -813,7 +815,7 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-2, 0.5rem) 0;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
 }
 
 .goal-item:last-child {
@@ -826,19 +828,19 @@ onUnmounted(() => {
 
 .goal-name {
   font-size: var(--font-size-sm, 0.875rem);
-  color: #374151;
+  color: var(--text-primary, #ffffff);
   margin-bottom: var(--spacing-1, 0.25rem);
 }
 
 .goal-progress {
   font-size: var(--font-size-xs, 0.8rem);
-  color: #6b7280;
+  color: var(--text-secondary, #8888aa);
 }
 
 .goal-bar {
   width: 60px;
   height: 6px;
-  background: #e5e7eb;
+  background: rgba(136, 136, 170, 0.2);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -863,7 +865,7 @@ onUnmounted(() => {
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-secondary, #121225);
   border-radius: 16px;
   padding: var(--spacing-6, 1.5rem);
   max-width: 500px;
@@ -872,6 +874,8 @@ onUnmounted(() => {
   overflow-y: auto;
   position: relative;
   animation: modalSlideIn 0.3s ease;
+  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
 }
 
 @keyframes modalSlideIn {
@@ -895,7 +899,7 @@ onUnmounted(() => {
 .modal-title {
   font-size: var(--font-size-lg, 1.125rem);
   font-weight: var(--font-weight-semibold, 600);
-  color: #1f2937;
+  color: var(--text-primary, #ffffff);
   margin: 0;
 }
 
@@ -903,17 +907,18 @@ onUnmounted(() => {
   width: 32px;
   height: 32px;
   border: none;
-  background: #f3f4f6;
+  background: rgba(136, 136, 170, 0.2);
   border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  color: var(--text-primary, #ffffff);
 }
 
 .modal-close:hover {
-  background: #e5e7eb;
+  background: rgba(128, 32, 255, 0.3);
 }
 
 .recovery-score-display {
@@ -939,26 +944,27 @@ onUnmounted(() => {
 
 .score-label {
   font-size: var(--font-size-sm, 0.875rem);
-  color: #6b7280;
+  color: var(--text-secondary, #8888aa);
   margin-bottom: var(--spacing-2, 0.5rem);
 }
 
 .score-description {
   font-size: var(--font-size-sm, 0.875rem);
-  color: #374151;
+  color: var(--text-primary, #ffffff);
   line-height: var(--line-height-relaxed, 1.625);
 }
 
 .recommendations {
-  background: #f9fafb;
+  background: rgba(18, 18, 37, 0.8);
   border-radius: 12px;
   padding: var(--spacing-4, 1rem);
+  border: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
 }
 
 .recommendations-title {
   font-size: var(--font-size-base, 1rem);
   font-weight: var(--font-weight-semibold, 600);
-  color: #1f2937;
+  color: var(--text-primary, #ffffff);
   margin-bottom: var(--spacing-3, 0.75rem);
 }
 
@@ -974,7 +980,7 @@ onUnmounted(() => {
   gap: var(--spacing-2, 0.5rem);
   padding: var(--spacing-2, 0.5rem) 0;
   font-size: var(--font-size-sm, 0.875rem);
-  color: #374151;
+  color: var(--text-secondary, #8888aa);
 }
 
 .recommendation-icon {
@@ -1032,109 +1038,6 @@ onUnmounted(() => {
   .time-range-btn {
     padding: var(--spacing-1, 0.25rem) var(--spacing-3, 0.75rem);
     font-size: var(--font-size-xs, 0.8rem);
-  }
-}
-
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-  .metrics-overview {
-    background: #1f2937;
-  }
-  
-  .section-title {
-    color: #f9fafb;
-  }
-  
-  .metric-card {
-    background: rgba(55, 65, 81, 0.95);
-    border-color: rgba(75, 85, 99, 0.3);
-  }
-  
-  .metric-title {
-    color: #f9fafb;
-  }
-  
-  .metric-subtitle {
-    color: #d1d5db;
-  }
-  
-  .value-number {
-    color: #f9fafb;
-  }
-  
-  .value-unit {
-    color: #d1d5db;
-  }
-  
-  .time-range-btn {
-    background: #374151;
-    border-color: #4b5563;
-    color: #d1d5db;
-  }
-  
-  .time-range-btn:hover {
-    border-color: #60a5fa;
-    color: #60a5fa;
-  }
-  
-  .metric-label {
-    color: #9ca3af;
-  }
-  
-  .factor-item {
-    background: #4b5563;
-  }
-  
-  .factor-label {
-    color: #9ca3af;
-  }
-  
-  .goal-name {
-    color: #f3f4f6;
-  }
-  
-  .goal-progress {
-    color: #d1d5db;
-  }
-  
-  .goal-bar {
-    background: #4b5563;
-  }
-  
-  .modal-content {
-    background: #374151;
-  }
-  
-  .modal-title {
-    color: #f9fafb;
-  }
-  
-  .modal-close {
-    background: #4b5563;
-  }
-  
-  .modal-close:hover {
-    background: #6b7280;
-  }
-  
-  .score-label {
-    color: #d1d5db;
-  }
-  
-  .score-description {
-    color: #e5e7eb;
-  }
-  
-  .recommendations {
-    background: #4b5563;
-  }
-  
-  .recommendations-title {
-    color: #f9fafb;
-  }
-  
-  .recommendation-item {
-    color: #e5e7eb;
   }
 }
 </style>

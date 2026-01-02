@@ -8,8 +8,8 @@ import com.wzl.fitness.entity.User;
 import com.wzl.fitness.repository.RecoveryDataRepository;
 import com.wzl.fitness.repository.TrainingRecordRepository;
 import com.wzl.fitness.service.RecoveryAssessmentService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +23,17 @@ import java.util.Optional;
  * 恢复评估服务实现类
  */
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class RecoveryAssessmentServiceImpl implements RecoveryAssessmentService {
     
+    private static final Logger log = LoggerFactory.getLogger(RecoveryAssessmentServiceImpl.class);
     private final RecoveryDataRepository recoveryDataRepository;
     private final TrainingRecordRepository trainingRecordRepository;
+    
+    public RecoveryAssessmentServiceImpl(RecoveryDataRepository recoveryDataRepository,
+                                         TrainingRecordRepository trainingRecordRepository) {
+        this.recoveryDataRepository = recoveryDataRepository;
+        this.trainingRecordRepository = trainingRecordRepository;
+    }
     
     @Override
     @Transactional
