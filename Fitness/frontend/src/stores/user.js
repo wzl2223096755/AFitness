@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
 import { authApi } from '@/api/auth'
+import { ADMIN_FRONTEND_URL, redirectToAdminFrontend } from '@/router'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -72,10 +73,20 @@ export const useUserStore = defineStore('user', {
         localStorage.setItem('refreshToken', refreshToken)
         localStorage.setItem('isLoggedIn', 'true')
         
+        // 保存用户角色信息
+        localStorage.setItem('userRole', role)
+        localStorage.setItem('userInfo', JSON.stringify({ id: userId, username, role }))
+        
         // 设置用户信息
         this.currentUser = { id: userId, username, role }
         this.roles = [role]
         this.isAuthenticated = true
+        
+        // 检查是否为管理员，如果是则重定向到管理端
+        if (role === 'ADMIN' || role === 'ROLE_ADMIN') {
+          redirectToAdminFrontend()
+          return response
+        }
         
         return response
       } catch (error) {
@@ -201,6 +212,7 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('isLoggedIn')
       localStorage.removeItem('userInfo')
+      localStorage.removeItem('userRole')
     },
 
     // 更新用户设置

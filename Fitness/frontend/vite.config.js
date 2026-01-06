@@ -127,7 +127,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@shared': resolve(__dirname, '../shared'),
     },
+    // Ensure dependencies from shared folder are resolved from frontend's node_modules
+    dedupe: ['vue', 'vue-router', 'pinia', 'axios', 'element-plus'],
   },
   define: {
     global: 'globalThis',
@@ -138,7 +141,9 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
-        changeOrigin: true
+        changeOrigin: true,
+        timeout: 60000, // 代理超时60秒
+        proxyTimeout: 60000
       },
       '/ws': {
         target: 'ws://localhost:8080',

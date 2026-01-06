@@ -264,9 +264,24 @@ const handleLogin = async () => {
     })
     
     if (response.code === 200 && response.data?.accessToken) {
-      localStorage.setItem('token', response.data.accessToken)
+      const data = response.data
+      
+      // 保存认证信息
+      localStorage.setItem('token', data.accessToken)
       localStorage.setItem('isLoggedIn', 'true')
-      localStorage.setItem('username', loginForm.username)
+      localStorage.setItem('username', data.username || loginForm.username)
+      localStorage.setItem('userRole', data.role || 'USER')
+      localStorage.setItem('userId', data.userId)
+      if (data.refreshToken) {
+        localStorage.setItem('refreshToken', data.refreshToken)
+      }
+      
+      // 保存完整用户信息
+      localStorage.setItem('userInfo', JSON.stringify({
+        userId: data.userId,
+        username: data.username || loginForm.username,
+        role: data.role
+      }))
       
       if (loginForm.rememberMe) {
         localStorage.setItem('rememberedUsername', loginForm.username)
@@ -274,8 +289,17 @@ const handleLogin = async () => {
       
       ElMessage.success('登录成功！')
       
+      // 根据角色跳转到不同界面
+      const isAdmin = data.role === 'ADMIN' || data.role === 'ROLE_ADMIN'
+      
       setTimeout(() => {
-        router.push('/dashboard')
+        if (isAdmin) {
+          // 管理员跳转到管理后台
+          router.push('/admin/dashboard')
+        } else {
+          // 普通用户跳转到用户仪表盘
+          router.push('/dashboard')
+        }
       }, 500)
     } else {
       ElMessage.error(response.message || '登录失败')

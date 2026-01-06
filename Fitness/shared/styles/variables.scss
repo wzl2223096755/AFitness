@@ -1,0 +1,216 @@
+// =============================================================================
+// Variables - Fitness System Design Variables
+// =============================================================================
+// 共享设计变量文件，供用户端和管理端使用
+
+@use 'tokens' as tokens;
+
+// =============================================================================
+// 离子化主题颜色变量 (Neon Ionized Palette)
+// =============================================================================
+$primary-color: #8020ff;
+$secondary-color: #ff00ff;
+$accent-color: #00f2fe;
+$success-color: #00ff88;
+$warning-color: #ffaa00;
+$danger-color: #ff0055;
+$info-color: #8888ff;
+
+// =============================================================================
+// 背景颜色 (Dark Space)
+// =============================================================================
+$bg-primary: #0a0a14;
+$bg-secondary: #121225;
+$bg-sidebar: #05050a;
+$bg-header: rgba(10, 10, 20, 0.8);
+$bg-card: rgba(255, 255, 255, 0.03);
+
+// =============================================================================
+// 文字颜色
+// =============================================================================
+$text-primary: #ffffff;
+$text-regular: #e0e0ff;
+$text-secondary: #8888aa;
+$text-placeholder: #555577;
+$text-white: #ffffff;
+
+// =============================================================================
+// 边框颜色
+// =============================================================================
+$border-color: rgba(112, 0, 255, 0.2);
+$border-light: rgba(112, 0, 255, 0.1);
+$border-lighter: rgba(112, 0, 255, 0.05);
+
+// =============================================================================
+// 阴影 (Neon Glow)
+// =============================================================================
+$shadow-base: 0 0 15px rgba(112, 0, 255, 0.3);
+$shadow-light: 0 0 10px rgba(112, 0, 255, 0.2);
+
+// =============================================================================
+// 圆角
+// =============================================================================
+$border-radius-base: 4px;
+$border-radius-small: 2px;
+$border-radius-medium: 6px;
+$border-radius-large: 12px;
+
+// =============================================================================
+// 间距 (向后兼容)
+// =============================================================================
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xs: 2px;
+$spacing-xxl: 48px;
+$spacing-3xl: 64px;
+
+// =============================================================================
+// 字体大小 (向后兼容)
+// =============================================================================
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 30px;
+$font-size-4xl: 36px;
+$font-size-5xl: 48px;
+
+// =============================================================================
+// 响应式断点变量
+// =============================================================================
+$breakpoint-xs: 480px;
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+$breakpoints: (
+  'xs': $breakpoint-xs,
+  'sm': $breakpoint-sm,
+  'md': $breakpoint-md,
+  'lg': $breakpoint-lg,
+  'xl': $breakpoint-xl,
+  '2xl': $breakpoint-2xl
+);
+
+// =============================================================================
+// 字体族变量
+// =============================================================================
+$font-family-sans: tokens.$font-family-sans;
+$font-family-mono: tokens.$font-family-mono;
+
+// =============================================================================
+// 行高变量
+// =============================================================================
+$line-height-tight: tokens.$line-height-tight;
+$line-height-normal: tokens.$line-height-normal;
+$line-height-relaxed: tokens.$line-height-relaxed;
+$line-height-loose: tokens.$line-height-loose;
+
+// =============================================================================
+// 字重变量
+// =============================================================================
+$font-weight-light: tokens.$font-weight-light;
+$font-weight-normal: tokens.$font-weight-normal;
+$font-weight-medium: tokens.$font-weight-medium;
+$font-weight-semibold: tokens.$font-weight-semibold;
+$font-weight-bold: tokens.$font-weight-bold;
+$font-weight-extrabold: tokens.$font-weight-extrabold;
+
+// =============================================================================
+// 布局变量
+// =============================================================================
+$sidebar-width: 240px;
+$header-height: 60px;
+$content-max-width: 75ch;
+$content-max-width-wide: 90ch;
+$content-max-width-narrow: 60ch;
+
+// =============================================================================
+// 动画时间
+// =============================================================================
+$transition-time: 0.3s;
+$transition-fast: 0.15s;
+$transition-slow: 0.5s;
+
+// =============================================================================
+// Z-Index 层级
+// =============================================================================
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// =============================================================================
+// CSS Custom Properties Export
+// =============================================================================
+:root {
+  --color-primary: #{$primary-color};
+  --color-secondary: #{$secondary-color};
+  --color-accent: #{$accent-color};
+  --color-success: #{$success-color};
+  --color-warning: #{$warning-color};
+  --color-danger: #{$danger-color};
+  --color-info: #{$info-color};
+
+  --bg-primary: #{$bg-primary};
+  --bg-secondary: #{$bg-secondary};
+  --bg-sidebar: #{$bg-sidebar};
+  --bg-header: #{$bg-header};
+  --bg-card: #{$bg-card};
+
+  --text-primary: #{$text-primary};
+  --text-regular: #{$text-regular};
+  --text-secondary: #{$text-secondary};
+  --text-placeholder: #{$text-placeholder};
+
+  --border-color: #{$border-color};
+  --border-light: #{$border-light};
+  --border-lighter: #{$border-lighter};
+
+  --shadow-base: #{$shadow-base};
+  --shadow-light: #{$shadow-light};
+
+  --border-radius-base: #{$border-radius-base};
+  --border-radius-small: #{$border-radius-small};
+  --border-radius-medium: #{$border-radius-medium};
+  --border-radius-large: #{$border-radius-large};
+
+  --spacing-xs: #{$spacing-xs};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-md: #{$spacing-md};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-xl: #{$spacing-xl};
+
+  --breakpoint-xs: #{$breakpoint-xs};
+  --breakpoint-sm: #{$breakpoint-sm};
+  --breakpoint-md: #{$breakpoint-md};
+  --breakpoint-lg: #{$breakpoint-lg};
+  --breakpoint-xl: #{$breakpoint-xl};
+  --breakpoint-2xl: #{$breakpoint-2xl};
+
+  --sidebar-width: #{$sidebar-width};
+  --header-height: #{$header-height};
+  --content-max-width: #{$content-max-width};
+
+  --transition-time: #{$transition-time};
+  --transition-fast: #{$transition-fast};
+  --transition-slow: #{$transition-slow};
+
+  --z-index-dropdown: #{$z-index-dropdown};
+  --z-index-sticky: #{$z-index-sticky};
+  --z-index-fixed: #{$z-index-fixed};
+  --z-index-modal-backdrop: #{$z-index-modal-backdrop};
+  --z-index-modal: #{$z-index-modal};
+  --z-index-popover: #{$z-index-popover};
+  --z-index-tooltip: #{$z-index-tooltip};
+}

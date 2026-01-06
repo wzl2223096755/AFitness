@@ -31,7 +31,7 @@ public class AdminInitializer implements CommandLineRunner {
      */
     private void initializeAdminUser() {
         String adminUsername = "admin";
-        String defaultPassword = "Admin123!";  // 符合密码规则：大小写字母+数字+特殊符号
+        String defaultPassword = "Test123!";  // 符合密码规则：大小写字母+数字
         
         // 检查是否已存在管理员
         var existingAdmin = userRepository.findByUsername(adminUsername);

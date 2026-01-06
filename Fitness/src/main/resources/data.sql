@@ -1,6 +1,10 @@
 -- =====================================================
 -- AFitness 测试数据 (MySQL)
 -- =====================================================
+-- 测试账户:
+-- 管理员: admin / Admin123! (由系统自动设置)
+-- 普通用户: testuser, fitnessfan, gymmaster, healthpro / password
+-- =====================================================
 
 SET NAMES utf8mb4;
 
@@ -8,10 +12,10 @@ SET NAMES utf8mb4;
 -- 用户数据 (admin已由系统创建，这里添加普通用户)
 -- -----------------------------------------------------
 INSERT IGNORE INTO `user_table` (`id`, `username`, `password`, `email`, `age`, `weight`, `gender`, `height`, `experience_level`, `role`, `points`) VALUES
-(2, 'zhangsan', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'zhangsan@example.com', 25, 70.5, 'MALE', 175, 'INTERMEDIATE', 'USER', 150),
-(3, 'lisi', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'lisi@example.com', 28, 65.0, 'FEMALE', 165, 'BEGINNER', 'USER', 80),
-(4, 'wangwu', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'wangwu@example.com', 32, 80.0, 'MALE', 180, 'ADVANCED', 'USER', 320),
-(5, 'zhaoliu', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'zhaoliu@example.com', 22, 55.0, 'FEMALE', 160, 'BEGINNER', 'USER', 45);
+(2, 'testuser', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'testuser@example.com', 25, 70.5, 'MALE', 175, 'INTERMEDIATE', 'USER', 150),
+(3, 'fitnessfan', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'fitnessfan@example.com', 28, 65.0, 'FEMALE', 165, 'BEGINNER', 'USER', 80),
+(4, 'gymmaster', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'gymmaster@example.com', 32, 80.0, 'MALE', 180, 'ADVANCED', 'USER', 320),
+(5, 'healthpro', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.rsQ0fBZVIPAe/zIhne', 'healthpro@example.com', 22, 55.0, 'FEMALE', 160, 'BEGINNER', 'USER', 45);
 
 -- -----------------------------------------------------
 -- 用户设置

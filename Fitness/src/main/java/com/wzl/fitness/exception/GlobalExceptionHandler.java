@@ -5,8 +5,11 @@ import com.wzl.fitness.common.ResponseCode;
 import com.wzl.fitness.dto.response.ValidationErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.CannotAcquireLockException;
+import org.springframework.dao.QueryTimeoutException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -247,5 +250,38 @@ public class GlobalExceptionHandler {
         logger.warn("状态错误: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(ResponseCode.PARAM_ERROR.getCode(), e.getMessage()));
+    }
+
+    // ==================== 数据库连接异常处理 ====================
+
+    /**
+     * 处理数据库连接获取失败异常
+     */
+    @ExceptionHandler(CannotGetJdbcConnectionException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCannotGetJdbcConnectionException(
+            CannotGetJdbcConnectionException e) {
+        logger.error("数据库连接获取失败: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ApiResponse.error(ResponseCode.SERVER_ERROR.getCode(), "数据库连接暂时不可用，请稍后重试"));
+    }
+
+    /**
+     * 处理数据库查询超时异常
+     */
+    @ExceptionHandler(QueryTimeoutException.class)
+    public ResponseEntity<ApiResponse<Void>> handleQueryTimeoutException(QueryTimeoutException e) {
+        logger.error("数据库查询超时: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT)
+                .body(ApiResponse.error(ResponseCode.SERVER_ERROR.getCode(), "数据库查询超时，请稍后重试"));
+    }
+
+    /**
+     * 处理数据库锁获取失败异常
+     */
+    @ExceptionHandler(CannotAcquireLockException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCannotAcquireLockException(CannotAcquireLockException e) {
+        logger.error("数据库锁获取失败: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(ResponseCode.SERVER_ERROR.getCode(), "数据库资源繁忙，请稍后重试"));
     }
 }

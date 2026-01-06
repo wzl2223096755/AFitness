@@ -33,10 +33,7 @@
             <span class="icon">📊</span>
             <span>仪表盘</span>
           </router-link>
-          <router-link to="/users" class="menu-item" :class="{ active: activeMenu === '/users' }" @click="closeSidebarDrawer">
-            <span class="icon">👥</span>
-            <span>用户管理</span>
-          </router-link>
+          <!-- 用户管理已移至管理端前端 (port 3002) -->
           <router-link to="/training-data" class="menu-item" :class="{ active: activeMenu === '/training-data' }" @click="closeSidebarDrawer">
             <span class="icon">📈</span>
             <span>训练数据</span>
@@ -192,7 +189,6 @@ const isLoginPage = computed(() => route.path === '/login')
 const currentPageTitle = computed(() => {
   const routeMap = {
     '/dashboard': '仪表盘',
-    '/users': '用户管理',
     '/devices': '设备管理',
     '/training-data': '训练数据',
     '/load-analysis': '负荷分析',

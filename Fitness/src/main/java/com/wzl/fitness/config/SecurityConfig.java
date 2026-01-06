@@ -24,7 +24,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Spring Security配置
@@ -68,18 +67,53 @@ public class SecurityConfig {
 
     /**
      * CORS配置
+     * 允许用户端前端 (port 3001) 和管理端前端 (port 3002) 访问
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+        // 明确允许的前端源
+        // - localhost:3001 - 用户端前端 (User Frontend)
+        // - localhost:3002 - 管理端前端 (Admin Frontend)
+        // - localhost:8080, 8081, 3000, 3003 - 其他开发端口
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3001",  // User Frontend
+            "http://localhost:3002",  // Admin Frontend
+            "http://localhost:8080",
+            "http://localhost:8081",
+            "http://localhost:3000",
+            "http://localhost:3003",
+            "http://127.0.0.1:3001",
+            "http://127.0.0.1:3002",
+            "http://127.0.0.1:8080",
+            "http://127.0.0.1:8081",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:3003"
+        ));
+        // 允许的 HTTP 方法
+        configuration.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+        ));
+        // 允许的请求头
+        configuration.setAllowedHeaders(Arrays.asList(
+            "Authorization", 
+            "Content-Type", 
+            "X-Requested-With",
+            "Accept",
+            "Origin",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers"
+        ));
+        // 暴露的响应头（前端可以访问）
+        configuration.setExposedHeaders(Arrays.asList(
+            "Authorization",
+            "X-Total-Count",
+            "Content-Disposition"
+        ));
+        // 允许携带凭证（cookies, authorization headers）
         configuration.setAllowCredentials(true);
+        // 预检请求缓存时间（1小时）
         configuration.setMaxAge(3600L);
-        
-        // 允许null origin（用于本地开发时直接访问HTML文件）
-        configuration.addAllowedOrigin("null");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -121,6 +155,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/api/v1/health").permitAll()
+                .requestMatchers("/api/v1/health/**").permitAll()
                 
                 // 静态资源
                 .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
