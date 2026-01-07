@@ -1,16 +1,24 @@
 <template>
-  <div class="settings">
-    <div class="settings-header">
-      <h2>系统设置</h2>
-      <p>管理您的账户和应用程序设置</p>
+  <div class="settings animate-fade-in-up">
+    <!-- 页面标题 - 使用统一 page-header -->
+    <div class="page-header">
+      <h2 class="page-header__title">系统设置</h2>
+      <p class="page-header__description">管理您的账户和应用程序设置</p>
     </div>
 
     <div class="settings-content">
-      <!-- 个人信息设置 -->
-      <div class="settings-section">
+      <!-- 个人信息设置 - 使用统一卡片组件 -->
+      <div class="card-unified card-unified--primary stagger-1">
         <div class="section-header">
-          <h3>个人信息</h3>
-          <el-button type="primary" @click="editProfile">编辑资料</el-button>
+          <div class="section-header__title-area">
+            <h3 class="section-header__title">
+              <span class="icon-md">👤</span>
+              个人信息
+            </h3>
+          </div>
+          <div class="section-header__actions">
+            <button class="btn-unified btn-unified--primary btn-unified--sm" @click="editProfile">编辑资料</button>
+          </div>
         </div>
         <div class="profile-info">
           <div class="info-item">
@@ -23,9 +31,9 @@
           </div>
           <div class="info-item">
             <label>角色:</label>
-            <el-tag :type="userStore.currentUser?.role === 'ADMIN' ? 'danger' : 'primary'">
+            <span class="role-badge" :class="userStore.currentUser?.role === 'ADMIN' ? 'role-badge--admin' : 'role-badge--user'">
               {{ userStore.currentUser?.role || 'USER' }}
-            </el-tag>
+            </span>
           </div>
           <div class="info-item">
             <label>注册时间:</label>
@@ -34,10 +42,13 @@
         </div>
       </div>
 
-      <!-- 系统偏好设置 -->
-      <div class="settings-section">
-        <div class="section-header">
-          <h3>系统偏好</h3>
+      <!-- 系统偏好设置 - 使用统一卡片组件 -->
+      <div class="card-unified stagger-2">
+        <div class="section-header section-header--sm">
+          <h3 class="section-header__title">
+            <span class="icon-md">⚙️</span>
+            系统偏好
+          </h3>
         </div>
         <div class="preference-list">
           <div class="preference-item">
@@ -45,36 +56,39 @@
               <label>深色模式</label>
               <span>启用深色主题界面</span>
             </div>
-            <el-switch v-model="preferences.darkMode" @change="toggleDarkMode" />
+            <div class="toggle-switch" :class="{ 'active': preferences.darkMode }" @click="toggleDarkMode(!preferences.darkMode)"></div>
           </div>
           <div class="preference-item">
             <div class="preference-info">
               <label>自动保存</label>
               <span>自动保存训练数据</span>
             </div>
-            <el-switch v-model="preferences.autoSave" @change="updatePreferences" />
+            <div class="toggle-switch" :class="{ 'active': preferences.autoSave }" @click="preferences.autoSave = !preferences.autoSave; updatePreferences()"></div>
           </div>
           <div class="preference-item">
             <div class="preference-info">
               <label>数据同步</label>
               <span>实时同步健身数据</span>
             </div>
-            <el-switch v-model="preferences.realTimeSync" @change="updatePreferences" />
+            <div class="toggle-switch" :class="{ 'active': preferences.realTimeSync }" @click="preferences.realTimeSync = !preferences.realTimeSync; updatePreferences()"></div>
           </div>
           <div class="preference-item">
             <div class="preference-info">
               <label>通知提醒</label>
               <span>接收训练提醒和通知</span>
             </div>
-            <el-switch v-model="preferences.notifications" @change="updatePreferences" />
+            <div class="toggle-switch" :class="{ 'active': preferences.notifications }" @click="preferences.notifications = !preferences.notifications; updatePreferences()"></div>
           </div>
         </div>
       </div>
 
-      <!-- 数据管理 -->
-      <div class="settings-section">
-        <div class="section-header">
-          <h3>数据管理</h3>
+      <!-- 数据管理 - 使用统一卡片组件 -->
+      <div class="card-unified stagger-3">
+        <div class="section-header section-header--sm">
+          <h3 class="section-header__title">
+            <span class="icon-md">📁</span>
+            数据管理
+          </h3>
         </div>
         <div class="data-actions">
           <div class="action-item">
@@ -82,29 +96,36 @@
               <label>导出数据</label>
               <span>导出所有训练数据为CSV格式</span>
             </div>
-            <el-button @click="exportData" :loading="exporting">导出</el-button>
+            <button class="btn-unified btn-unified--secondary btn-unified--sm" @click="exportData" :disabled="exporting">
+              {{ exporting ? '导出中...' : '导出' }}
+            </button>
           </div>
           <div class="action-item">
             <div class="action-info">
               <label>清除缓存</label>
               <span>清除本地缓存数据</span>
             </div>
-            <el-button @click="clearCache" type="warning">清除</el-button>
+            <button class="btn-unified btn-unified--secondary btn-unified--sm" @click="clearCache">清除</button>
           </div>
-          <div class="action-item danger">
+          <div class="action-item action-item--danger">
             <div class="action-info">
               <label>重置数据</label>
               <span>删除所有个人数据（不可恢复）</span>
             </div>
-            <el-button @click="resetData" type="danger" :loading="resetting">重置</el-button>
+            <button class="btn-unified btn-unified--danger btn-unified--sm" @click="resetData" :disabled="resetting">
+              {{ resetting ? '重置中...' : '重置' }}
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- 关于 -->
-      <div class="settings-section">
-        <div class="section-header">
-          <h3>关于</h3>
+      <!-- 关于 - 使用统一卡片组件 -->
+      <div class="card-unified card-unified--sm stagger-4">
+        <div class="section-header section-header--sm">
+          <h3 class="section-header__title">
+            <span class="icon-md">ℹ️</span>
+            关于
+          </h3>
         </div>
         <div class="about-info">
           <div class="info-item">
@@ -124,13 +145,13 @@
     </div>
 
     <!-- 编辑个人资料对话框 -->
-    <el-dialog v-model="showProfileDialog" title="编辑个人资料" width="500px">
+    <el-dialog v-model="showProfileDialog" title="编辑个人资料" width="500px" class="glass-modal">
       <el-form :model="profileForm" :rules="profileRules" ref="profileFormRef" label-width="80px">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="profileForm.username" placeholder="请输入用户名" />
+          <el-input v-model="profileForm.username" placeholder="请输入用户名" class="input-unified" />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="profileForm.email" placeholder="请输入邮箱" />
+          <el-input v-model="profileForm.email" placeholder="请输入邮箱" class="input-unified" />
         </el-form-item>
         <el-form-item label="年龄" prop="age">
           <el-input-number v-model="profileForm.age" :min="1" :max="150" placeholder="请输入年龄" />
@@ -148,7 +169,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="训练经验" prop="experienceLevel">
-          <el-select v-model="profileForm.experienceLevel" placeholder="请选择训练经验">
+          <el-select v-model="profileForm.experienceLevel" placeholder="请选择训练经验" class="select-unified">
             <el-option label="初学者" value="beginner" />
             <el-option label="中级" value="intermediate" />
             <el-option label="高级" value="advanced" />
@@ -156,8 +177,10 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showProfileDialog = false">取消</el-button>
-        <el-button type="primary" @click="saveProfile" :loading="saving">保存</el-button>
+        <button class="btn-unified btn-unified--ghost" @click="showProfileDialog = false">取消</button>
+        <button class="btn-unified btn-unified--primary" @click="saveProfile" :disabled="saving">
+          {{ saving ? '保存中...' : '保存' }}
+        </button>
       </template>
     </el-dialog>
   </div>
@@ -255,6 +278,7 @@ const saveProfile = async () => {
 
 // 切换深色模式
 const toggleDarkMode = (value) => {
+  preferences.darkMode = value
   if (value) {
     document.documentElement.classList.add('dark')
   } else {
@@ -404,65 +428,51 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Settings 页面 - 使用统一组件样式 */
 .settings {
-  padding: 20px;
+  padding: var(--spacing-5, 20px);
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.settings-header {
+/* 页面标题 */
+.page-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: var(--spacing-10, 40px);
 }
 
-.settings-header h2 {
-  color: var(--el-text-color-primary);
-  margin-bottom: 8px;
+.page-header__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #f8fafc);
+  margin: 0 0 var(--spacing-2, 8px) 0;
 }
 
-.settings-header p {
-  color: var(--el-text-color-secondary);
-}
-
-.settings-content {
-  display: grid;
-  gap: 24px;
-}
-
-.settings-section {
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color);
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--el-border-color);
-}
-
-.section-header h3 {
-  color: var(--el-text-color-primary);
+.page-header__description {
+  color: var(--color-text-secondary, #94a3b8);
+  font-size: 1rem;
   margin: 0;
 }
 
+/* 设置内容区域 */
+.settings-content {
+  display: grid;
+  gap: var(--spacing-6, 24px);
+}
+
+/* 个人信息和关于信息 */
 .profile-info,
 .about-info {
   display: grid;
-  gap: 16px;
+  gap: var(--spacing-4, 16px);
 }
 
 .info-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--el-border-color-light);
+  padding: var(--spacing-3, 12px) 0;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
 }
 
 .info-item:last-child {
@@ -471,26 +481,55 @@ onMounted(() => {
 
 .info-item label {
   font-weight: 500;
-  color: var(--el-text-color-primary);
+  color: var(--color-text-secondary, #94a3b8);
   min-width: 100px;
 }
 
 .info-item span {
-  color: var(--el-text-color-regular);
+  color: var(--color-text-primary, #f8fafc);
+  font-weight: 500;
 }
 
+/* 角色徽章 */
+.role-badge {
+  padding: var(--spacing-1, 4px) var(--spacing-3, 12px);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.role-badge--admin {
+  background: var(--color-danger-bg, rgba(239, 68, 68, 0.15));
+  color: var(--color-danger, #ef4444);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.role-badge--user {
+  background: rgba(99, 102, 241, 0.15);
+  color: #6366f1;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+/* 偏好设置列表 */
 .preference-list {
   display: grid;
-  gap: 16px;
+  gap: var(--spacing-4, 16px);
 }
 
 .preference-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  background: var(--el-fill-color-light);
-  border-radius: 6px;
+  padding: var(--spacing-4, 16px);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  transition: all 0.3s ease;
+}
+
+.preference-item:hover {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.2);
 }
 
 .preference-info {
@@ -499,33 +538,46 @@ onMounted(() => {
 
 .preference-info label {
   display: block;
-  font-weight: 500;
-  color: var(--el-text-color-primary);
-  margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--color-text-primary, #f8fafc);
+  margin-bottom: var(--spacing-1, 4px);
 }
 
 .preference-info span {
-  font-size: 14px;
-  color: var(--el-text-color-secondary);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #94a3b8);
 }
 
+/* 数据操作列表 */
 .data-actions {
   display: grid;
-  gap: 16px;
+  gap: var(--spacing-4, 16px);
 }
 
 .action-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  background: var(--el-fill-color-light);
-  border-radius: 6px;
+  padding: var(--spacing-4, 16px);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  transition: all 0.3s ease;
 }
 
-.action-item.danger {
-  background: var(--el-color-danger-light-9);
-  border: 1px solid var(--el-color-danger-light-7);
+.action-item:hover {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.action-item--danger {
+  background: var(--color-danger-bg, rgba(239, 68, 68, 0.1));
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.action-item--danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .action-info {
@@ -534,142 +586,144 @@ onMounted(() => {
 
 .action-info label {
   display: block;
-  font-weight: 500;
-  color: var(--el-text-color-primary);
-  margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--color-text-primary, #f8fafc);
+  margin-bottom: var(--spacing-1, 4px);
 }
 
 .action-info span {
-  font-size: 14px;
-  color: var(--el-text-color-secondary);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #94a3b8);
 }
 
+/* 响应式优化 */
 @media (max-width: 768px) {
   .settings {
-    padding: 12px;
+    padding: var(--spacing-3, 12px);
   }
   
-  .settings-header {
-    margin-bottom: 24px;
+  .page-header {
+    margin-bottom: var(--spacing-6, 24px);
   }
   
-  .settings-header h2 {
-    font-size: 20px;
+  .page-header__title {
+    font-size: 1.5rem;
   }
   
-  .settings-header p {
-    font-size: 14px;
-  }
-  
-  .settings-section {
-    padding: 16px;
-    border-radius: 12px;
-  }
-  
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .section-header h3 {
-    font-size: 16px;
-  }
-  
-  .section-header .el-button {
-    width: 100%;
+  .page-header__description {
+    font-size: 0.875rem;
   }
   
   .preference-item,
   .action-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px;
+    gap: var(--spacing-3, 12px);
   }
   
-  .preference-item .el-switch,
-  .action-item .el-button {
+  .preference-item .toggle-switch,
+  .action-item .btn-unified {
     align-self: flex-end;
   }
   
   .info-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
-    padding: 10px 0;
+    gap: var(--spacing-2, 6px);
   }
   
   .info-item label {
-    font-size: 13px;
-    color: var(--el-text-color-secondary);
+    font-size: 0.8rem;
   }
   
   .info-item span {
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 0.95rem;
   }
 }
 
 @media (max-width: 480px) {
   .settings {
-    padding: 10px;
-  }
-  
-  .settings-section {
-    padding: 14px;
+    padding: var(--spacing-3, 10px);
   }
   
   .preference-info label,
   .action-info label {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
   
   .preference-info span,
   .action-info span {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   
-  .action-item .el-button {
+  .action-item .btn-unified {
     width: 100%;
   }
 }
 
-/* 对话框移动端优化 */
+/* 对话框样式覆盖 */
 :deep(.el-dialog) {
-  @media (max-width: 768px) {
+  background: var(--glass-bg, rgba(15, 15, 35, 0.95)) !important;
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2)) !important;
+  border-radius: 20px !important;
+}
+
+:deep(.el-dialog__header) {
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+  padding: var(--spacing-5, 20px) var(--spacing-6, 24px);
+}
+
+:deep(.el-dialog__title) {
+  color: var(--color-text-primary, #f8fafc) !important;
+  font-weight: 600;
+}
+
+:deep(.el-dialog__body) {
+  padding: var(--spacing-6, 24px);
+}
+
+:deep(.el-dialog__footer) {
+  border-top: 1px solid rgba(99, 102, 241, 0.1);
+  padding: var(--spacing-4, 16px) var(--spacing-6, 24px);
+  display: flex;
+  gap: var(--spacing-3, 12px);
+  justify-content: flex-end;
+}
+
+:deep(.el-form-item__label) {
+  color: var(--color-text-secondary, #94a3b8) !important;
+}
+
+@media (max-width: 768px) {
+  :deep(.el-dialog) {
     width: 95% !important;
     margin: 0 auto !important;
   }
-  
-  @media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
+  :deep(.el-dialog) {
     width: 100% !important;
     height: 100vh !important;
     max-height: 100vh !important;
     margin: 0 !important;
     border-radius: 0 !important;
   }
-}
-
-:deep(.el-dialog__body) {
-  @media (max-width: 480px) {
+  
+  :deep(.el-dialog__body) {
     max-height: calc(100vh - 140px);
     overflow-y: auto;
   }
-}
-
-:deep(.el-form-item__label) {
-  @media (max-width: 768px) {
+  
+  :deep(.el-form-item__label) {
     text-align: left !important;
     float: none !important;
     display: block !important;
     width: 100% !important;
-    padding-bottom: 8px;
+    padding-bottom: var(--spacing-2, 8px);
   }
-}
-
-:deep(.el-form-item__content) {
-  @media (max-width: 768px) {
+  
+  :deep(.el-form-item__content) {
     margin-left: 0 !important;
   }
 }

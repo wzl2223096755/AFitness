@@ -1,0 +1,531 @@
+// =============================================================================
+// Shadow System - Utility Classes and Effects
+// =============================================================================
+// 阴影系统工具类，基于 _tokens.scss 中定义的阴影令牌
+// Requirements: 2.1, 2.3, 2.4, 2.6
+
+@use './tokens' as *;
+
+// =============================================================================
+// Shadow Utility Classes
+// =============================================================================
+// 5 级阴影工具类 (xs, sm, md, lg, xl)
+// Requirements: 2.1
+
+.shadow-xs {
+  box-shadow: $shadow-xs;
+}
+
+.shadow-sm {
+  box-shadow: $shadow-sm;
+}
+
+.shadow-md {
+  box-shadow: $shadow-md;
+}
+
+.shadow-lg {
+  box-shadow: $shadow-lg;
+}
+
+.shadow-xl {
+  box-shadow: $shadow-xl;
+}
+
+// =============================================================================
+// Elevated Shadow Classes (Hover Effects)
+// =============================================================================
+// 悬停提升阴影效果
+// Requirements: 2.3
+
+.shadow-elevated {
+  transition: box-shadow $duration-normal $ease-out,
+              transform $duration-normal $ease-out;
+  
+  &:hover {
+    box-shadow: $shadow-elevated-md;
+    transform: translateY(-2px);
+  }
+}
+
+.shadow-elevated-sm {
+  transition: box-shadow $duration-normal $ease-out,
+              transform $duration-normal $ease-out;
+  
+  &:hover {
+    box-shadow: $shadow-elevated-sm;
+    transform: translateY(-1px);
+  }
+}
+
+.shadow-elevated-lg {
+  transition: box-shadow $duration-normal $ease-out,
+              transform $duration-normal $ease-out;
+  
+  &:hover {
+    box-shadow: $shadow-elevated-lg;
+    transform: translateY(-4px);
+  }
+}
+
+// =============================================================================
+// Inner Glow Classes (Focus/Active States)
+// =============================================================================
+// 内发光效果，用于焦点和激活状态
+
+.inner-glow-primary {
+  box-shadow: $inner-glow-primary;
+}
+
+.inner-glow-success {
+  box-shadow: $inner-glow-success;
+}
+
+.inner-glow-danger {
+  box-shadow: $inner-glow-danger;
+}
+
+// =============================================================================
+// Combined Shadow + Inner Glow Classes
+// =============================================================================
+// 组合阴影和内发光效果
+
+.shadow-focus-primary {
+  box-shadow: $shadow-md, $inner-glow-primary;
+}
+
+.shadow-focus-success {
+  box-shadow: $shadow-md, $inner-glow-success;
+}
+
+.shadow-focus-danger {
+  box-shadow: $shadow-md, $inner-glow-danger;
+}
+
+// =============================================================================
+// Gradient Overlays (Hero Sections)
+// =============================================================================
+// 渐变叠加类，用于 hero 区域
+// Requirements: 2.4
+
+.gradient-overlay {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(128, 32, 255, 0.15) 0%,
+      rgba(99, 102, 241, 0.1) 50%,
+      rgba(139, 92, 246, 0.15) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.gradient-overlay-dark {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 20, 0) 0%,
+      rgba(10, 10, 20, 0.8) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.gradient-overlay-radial {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(128, 32, 255, 0.2) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+// Hero gradient with neon accent
+.gradient-hero {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 15, 35, 0.95) 0%,
+    rgba(25, 25, 50, 0.9) 50%,
+    rgba(15, 15, 35, 0.95) 100%
+  );
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(128, 32, 255, 0.5) 50%,
+      transparent 100%
+    );
+  }
+}
+
+// =============================================================================
+// Progress Bar Animated Gradient Fill
+// =============================================================================
+// 进度条动画渐变填充
+// Requirements: 2.6
+
+.progress-gradient {
+  background: linear-gradient(
+    90deg,
+    rgba(128, 32, 255, 0.8) 0%,
+    rgba(99, 102, 241, 0.9) 50%,
+    rgba(139, 92, 246, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes progress-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Success progress gradient
+.progress-gradient-success {
+  background: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.8) 0%,
+    rgba(52, 211, 153, 0.9) 50%,
+    rgba(16, 185, 129, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+// Warning progress gradient
+.progress-gradient-warning {
+  background: linear-gradient(
+    90deg,
+    rgba(245, 158, 11, 0.8) 0%,
+    rgba(251, 191, 36, 0.9) 50%,
+    rgba(245, 158, 11, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+// Danger progress gradient
+.progress-gradient-danger {
+  background: linear-gradient(
+    90deg,
+    rgba(239, 68, 68, 0.8) 0%,
+    rgba(248, 113, 113, 0.9) 50%,
+    rgba(239, 68, 68, 0.8) 100%
+  );
+  background-size: 200% 100%;
+  animation: progress-shimmer 2s ease-in-out infinite;
+}
+
+// =============================================================================
+// Ambient Light Effects
+// =============================================================================
+// 环境光效果，响应主色调
+// Requirements: 2.5
+
+.ambient-glow {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(128, 32, 255, 0.1) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+.ambient-glow-success {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(16, 185, 129, 0.1) 0%,
+      transparent 60%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+// =============================================================================
+// Neon Border Effects
+// =============================================================================
+// 霓虹边框效果
+
+.neon-border {
+  border: 1px solid rgba(128, 32, 255, 0.3);
+  box-shadow: 
+    0 0 5px rgba(128, 32, 255, 0.2),
+    inset 0 0 5px rgba(128, 32, 255, 0.1);
+}
+
+.neon-border-animated {
+  border: 1px solid rgba(128, 32, 255, 0.3);
+  box-shadow: 
+    0 0 5px rgba(128, 32, 255, 0.2),
+    inset 0 0 5px rgba(128, 32, 255, 0.1);
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 5px rgba(128, 32, 255, 0.2),
+      inset 0 0 5px rgba(128, 32, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px rgba(128, 32, 255, 0.4),
+      inset 0 0 10px rgba(128, 32, 255, 0.2);
+  }
+}
+
+// =============================================================================
+// Shadow None Utility
+// =============================================================================
+// 移除阴影的工具类
+
+.shadow-none {
+  box-shadow: none;
+}
+
+// =============================================================================
+// Feature Card Gradients
+// =============================================================================
+// 特性卡片渐变效果
+// Requirements: 2.4
+
+.gradient-card-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(128, 32, 255, 0.1) 0%,
+    rgba(99, 102, 241, 0.05) 100%
+  );
+  border: 1px solid rgba(128, 32, 255, 0.2);
+}
+
+.gradient-card-success {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1) 0%,
+    rgba(52, 211, 153, 0.05) 100%
+  );
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.gradient-card-warning {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.1) 0%,
+    rgba(251, 191, 36, 0.05) 100%
+  );
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.gradient-card-danger {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(248, 113, 113, 0.05) 100%
+  );
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+// =============================================================================
+// Text Gradient Effects
+// =============================================================================
+// 文字渐变效果
+
+.text-gradient-primary {
+  background: linear-gradient(
+    135deg,
+    #8020ff 0%,
+    #6366f1 50%,
+    #8b5cf6 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-success {
+  background: linear-gradient(
+    135deg,
+    #10b981 0%,
+    #34d399 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+// =============================================================================
+// Glassmorphism Utilities (统一玻璃态效果)
+// =============================================================================
+// Requirements: 7.5 - 使用统一的 CSS 变量确保所有玻璃态组件一致
+// 玻璃态效果工具类 - 使用 theme.scss 中定义的语义化变量
+
+// 基础玻璃态效果 - 使用统一变量
+.glass {
+  background: var(--glass-bg, rgba(15, 15, 35, 0.85));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(0, 0, 0, 0.3));
+}
+
+// 浅色玻璃态效果 - 用于亮色背景上的元素
+.glass-light {
+  --glass-bg-light: rgba(255, 255, 255, 0.1);
+  --glass-blur-light: 10px;
+  --glass-border-light: rgba(255, 255, 255, 0.2);
+  
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(var(--glass-blur-light));
+  -webkit-backdrop-filter: blur(var(--glass-blur-light));
+  border: 1px solid var(--glass-border-light);
+}
+
+// 深色玻璃态效果 - 用于需要更强遮罩的场景
+.glass-dark {
+  --glass-bg-dark: rgba(0, 0, 0, 0.5);
+  --glass-blur-dark: 20px;
+  --glass-border-dark: rgba(255, 255, 255, 0.1);
+  
+  background: var(--glass-bg-dark);
+  backdrop-filter: blur(var(--glass-blur-dark));
+  -webkit-backdrop-filter: blur(var(--glass-blur-dark));
+  border: 1px solid var(--glass-border-dark);
+}
+
+// 强调玻璃态效果 - 带有主色调发光
+.glass-accent {
+  background: var(--glass-bg, rgba(15, 15, 35, 0.85));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid var(--color-primary-border, rgba(128, 32, 255, 0.4));
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(0, 0, 0, 0.3)),
+              0 0 20px rgba(128, 32, 255, 0.15);
+}
+
+// 卡片玻璃态效果 - 专用于卡片组件
+.glass-card {
+  background: var(--glass-bg, rgba(15, 15, 35, 0.85));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(0, 0, 0, 0.3));
+  border-radius: 16px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(128, 32, 255, 0.2);
+    border-color: var(--color-border-hover, rgba(99, 102, 241, 0.4));
+  }
+}
+
+// 模态框玻璃态效果 - 专用于对话框和弹窗
+.glass-modal {
+  background: var(--color-surface-3, rgba(15, 15, 35, 0.95));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+}
+
+// 导航栏玻璃态效果 - 专用于顶部导航
+.glass-nav {
+  background: var(--glass-bg, rgba(15, 15, 35, 0.85));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border-bottom: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+}
+
+// 侧边栏玻璃态效果 - 专用于侧边导航
+.glass-sidebar {
+  background: var(--color-surface-1, #121225);
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border-right: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+}
+
+// 玻璃态效果 Mixin - 供其他组件使用
+// 使用方式: @include glass-effect;
+@mixin glass-effect($bg: var(--glass-bg), $blur: var(--glass-blur), $border: var(--glass-border)) {
+  background: $bg;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid $border;
+}
+
+// 玻璃态效果带阴影 Mixin
+@mixin glass-effect-with-shadow($bg: var(--glass-bg), $blur: var(--glass-blur), $border: var(--glass-border), $shadow: var(--glass-shadow)) {
+  @include glass-effect($bg, $blur, $border);
+  box-shadow: $shadow;
+}
+
+// Fallback for browsers without backdrop-filter support
+// 不支持 backdrop-filter 的浏览器回退方案
+@supports not (backdrop-filter: blur(20px)) {
+  .glass,
+  .glass-light,
+  .glass-dark,
+  .glass-accent,
+  .glass-card,
+  .glass-modal,
+  .glass-nav,
+  .glass-sidebar {
+    background: rgba(15, 15, 35, 0.98);
+  }
+}

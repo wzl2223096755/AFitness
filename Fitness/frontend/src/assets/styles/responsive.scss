@@ -3,16 +3,18 @@
 @use './typography' as typography;
 @use './spacing' as spacing;
 @use './grid' as grid;
+@use 'sass:math';
 
 // =============================================================================
 // 响应式断点变量
 // =============================================================================
 // 使用新设计令牌系统的断点，同时保持向后兼容性
-// Requirements: 2.1, 2.2, 4.5
+// Requirements: 2.1, 2.2, 3.1, 3.4, 4.5
 
-// 新断点系统（来自 _tokens.scss）
-$breakpoint-xs: 480px;
-$breakpoint-sm: tokens.$breakpoint-sm;   // 640px
+// 新断点系统（来自 _tokens.scss）- 6 个完整断点
+// Requirements: 3.1
+$breakpoint-xs: tokens.$breakpoint-xs;   // 320px
+$breakpoint-sm: tokens.$breakpoint-sm;   // 480px
 $breakpoint-md: tokens.$breakpoint-md;   // 768px
 $breakpoint-lg: tokens.$breakpoint-lg;   // 1024px
 $breakpoint-xl: tokens.$breakpoint-xl;   // 1280px
@@ -23,7 +25,247 @@ $breakpoint-tablet: $breakpoint-md;      // 768px
 $breakpoint-desktop: $breakpoint-lg;     // 1024px
 
 // =============================================================================
-// 媒体查询混合器
+// 增强响应式 Mixins
+// =============================================================================
+// Requirements: 3.4, 4.5
+
+// Helper function to strip unit from a value
+@function strip-unit($value) {
+  @return math.div($value, ($value * 0 + 1));
+}
+
+// -----------------------------------------------------------------------------
+// xs-only: 仅在 xs 断点 (max-width: 479px)
+// -----------------------------------------------------------------------------
+@mixin xs-only {
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// sm-only: 仅在 sm 断点 (480px - 767px)
+// -----------------------------------------------------------------------------
+@mixin sm-only {
+  @media (min-width: #{$breakpoint-sm}) and (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// md-only: 仅在 md 断点 (768px - 1023px)
+// -----------------------------------------------------------------------------
+@mixin md-only {
+  @media (min-width: #{$breakpoint-md}) and (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// lg-only: 仅在 lg 断点 (1024px - 1279px)
+// -----------------------------------------------------------------------------
+@mixin lg-only {
+  @media (min-width: #{$breakpoint-lg}) and (max-width: #{$breakpoint-xl - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// xl-only: 仅在 xl 断点 (1280px - 1535px)
+// -----------------------------------------------------------------------------
+@mixin xl-only {
+  @media (min-width: #{$breakpoint-xl}) and (max-width: #{$breakpoint-2xl - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// sm-up: sm 断点及以上 (min-width: 480px)
+// -----------------------------------------------------------------------------
+@mixin sm-up {
+  @media (min-width: #{$breakpoint-sm}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// md-up: md 断点及以上 (min-width: 768px)
+// -----------------------------------------------------------------------------
+@mixin md-up {
+  @media (min-width: #{$breakpoint-md}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// lg-up: lg 断点及以上 (min-width: 1024px)
+// -----------------------------------------------------------------------------
+@mixin lg-up {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// xl-up: xl 断点及以上 (min-width: 1280px)
+// -----------------------------------------------------------------------------
+@mixin xl-up {
+  @media (min-width: #{$breakpoint-xl}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// xxl-up: 2xl 断点及以上 (min-width: 1536px)
+// -----------------------------------------------------------------------------
+@mixin xxl-up {
+  @media (min-width: #{$breakpoint-2xl}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// touch-target: 触摸目标优化 mixin
+// Requirements: 4.1, 4.2
+// 确保交互元素最小尺寸为 44x44px
+// 参数:
+//   $size: 最小尺寸 (默认 44px)
+// -----------------------------------------------------------------------------
+@mixin touch-target($size: 44px) {
+  min-width: $size;
+  min-height: $size;
+  
+  // 在触摸设备上强制应用
+  @include touch-device {
+    min-width: $size;
+    min-height: $size;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// touch-target-inline: 内联触摸目标优化
+// 用于内联元素，使用 padding 扩展点击区域
+// -----------------------------------------------------------------------------
+@mixin touch-target-inline($size: 44px) {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: $size;
+    min-height: $size;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// sm-down: sm 断点及以下 (max-width: 479px)
+// -----------------------------------------------------------------------------
+@mixin sm-down {
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// md-down: md 断点及以下 (max-width: 767px)
+// -----------------------------------------------------------------------------
+@mixin md-down {
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// lg-down: lg 断点及以下 (max-width: 1023px)
+// -----------------------------------------------------------------------------
+@mixin lg-down {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// xl-down: xl 断点及以下 (max-width: 1279px)
+// -----------------------------------------------------------------------------
+@mixin xl-down {
+  @media (max-width: #{$breakpoint-xl - 1px}) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// touch-device: 触摸设备检测
+// Requirements: 4.5
+// -----------------------------------------------------------------------------
+@mixin touch-device {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// hover-device: 支持悬停的设备（非触摸设备）
+// -----------------------------------------------------------------------------
+@mixin hover-device {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// fluid-type: 流体排版 mixin
+// Requirements: 3.4
+// 使用 clamp() 实现在断点之间平滑缩放的字号
+// 参数:
+//   $min-size: 最小字号 (px 或 rem)
+//   $max-size: 最大字号 (px 或 rem)
+//   $min-vw: 最小视口宽度 (默认 sm 断点)
+//   $max-vw: 最大视口宽度 (默认 xl 断点)
+// -----------------------------------------------------------------------------
+@mixin fluid-type($min-size, $max-size, $min-vw: $breakpoint-sm, $max-vw: $breakpoint-xl) {
+  // 将 px 值转换为数字用于计算
+  $min-size-val: strip-unit($min-size);
+  $max-size-val: strip-unit($max-size);
+  $min-vw-val: strip-unit($min-vw);
+  $max-vw-val: strip-unit($max-vw);
+  
+  // 计算斜率和截距
+  $slope: math.div(($max-size-val - $min-size-val), ($max-vw-val - $min-vw-val));
+  $intercept: $min-size-val - ($slope * $min-vw-val);
+  
+  // 使用 clamp() 实现流体排版
+  font-size: clamp(
+    #{$min-size},
+    calc(#{$intercept}px + #{$slope * 100}vw),
+    #{$max-size}
+  );
+}
+
+// -----------------------------------------------------------------------------
+// fluid-spacing: 流体间距 mixin
+// 使用 clamp() 实现在断点之间平滑缩放的间距
+// -----------------------------------------------------------------------------
+@mixin fluid-spacing($property, $min-size, $max-size, $min-vw: $breakpoint-sm, $max-vw: $breakpoint-xl) {
+  $min-size-val: strip-unit($min-size);
+  $max-size-val: strip-unit($max-size);
+  $min-vw-val: strip-unit($min-vw);
+  $max-vw-val: strip-unit($max-vw);
+  
+  $slope: math.div(($max-size-val - $min-size-val), ($max-vw-val - $min-vw-val));
+  $intercept: $min-size-val - ($slope * $min-vw-val);
+  
+  #{$property}: clamp(
+    #{$min-size},
+    calc(#{$intercept}px + #{$slope * 100}vw),
+    #{$max-size}
+  );
+}
+
+// =============================================================================
+// 传统媒体查询混合器（保持向后兼容）
 // =============================================================================
 
 @mixin respond-to($breakpoint) {
@@ -498,16 +740,134 @@ body, .body-text {
   }
 }
 
-// 触摸设备优化
-@media (hover: none) and (pointer: coarse) {
-  .btn, button, .el-button {
+// =============================================================================
+// 触摸目标优化
+// =============================================================================
+// Requirements: 4.1, 4.2
+// 确保所有交互元素在触摸设备上有最小 44x44px 的触摸目标
+
+// 触摸目标工具类
+.touch-target {
+  @include touch-target(44px);
+}
+
+.touch-target-sm {
+  @include touch-target(36px);
+}
+
+.touch-target-lg {
+  @include touch-target(48px);
+}
+
+// 触摸设备上的交互元素优化
+@include touch-device {
+  // 按钮元素
+  .btn, 
+  button, 
+  .el-button,
+  [role="button"] {
     min-height: 44px;
     min-width: 44px;
   }
   
-  .clickable {
+  // 链接和可点击元素
+  a,
+  .clickable,
+  [role="link"] {
     min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  // 表单控件
+  input[type="checkbox"],
+  input[type="radio"] {
     min-width: 44px;
+    min-height: 44px;
+  }
+  
+  // Element Plus 组件
+  .el-checkbox,
+  .el-radio,
+  .el-switch {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .el-input__inner,
+  .el-textarea__inner,
+  .el-select .el-input__inner {
+    min-height: 44px;
+  }
+  
+  // 图标按钮
+  .icon-btn,
+  .el-button--text,
+  .el-button.is-circle {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+  
+  // 下拉菜单项
+  .el-dropdown-menu__item,
+  .el-select-dropdown__item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  // 标签页
+  .el-tabs__item {
+    min-height: 44px;
+    padding: 0 16px;
+  }
+  
+  // 分页
+  .el-pagination .btn-prev,
+  .el-pagination .btn-next,
+  .el-pagination .el-pager li {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  // 表格操作按钮
+  .el-table .cell .el-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  // 导航菜单项
+  .el-menu-item,
+  .el-submenu__title {
+    min-height: 44px;
+  }
+  
+  // 卡片可点击区域
+  .card-clickable,
+  .card--interactive {
+    min-height: 44px;
+  }
+}
+
+// 非触摸设备上禁用 hover-only 交互
+// Requirements: 4.5
+@include touch-device {
+  .hover-only {
+    display: none !important;
+  }
+  
+  // 显示触摸设备专用元素
+  .touch-only {
+    display: block !important;
+  }
+}
+
+// 非触摸设备上隐藏触摸专用元素
+@include hover-device {
+  .touch-only {
+    display: none !important;
   }
 }
 

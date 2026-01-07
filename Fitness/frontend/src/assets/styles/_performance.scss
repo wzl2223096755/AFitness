@@ -1,0 +1,421 @@
+// =============================================================================
+// CSS Performance Optimizations
+// =============================================================================
+// 本文件定义 CSS 性能优化相关的工具类和最佳实践
+// Requirements: 8.2, 8.4, 8.5
+
+// =============================================================================
+// CSS Containment Utility Classes
+// =============================================================================
+// CSS containment 允许浏览器隔离 DOM 子树，优化渲染性能
+// Requirements: 8.2
+
+// Layout containment - 元素的布局不会影响外部元素
+.contain-layout {
+  contain: layout;
+}
+
+// Paint containment - 元素的绘制不会影响外部元素
+.contain-paint {
+  contain: paint;
+}
+
+// Size containment - 元素的尺寸不依赖于其子元素
+.contain-size {
+  contain: size;
+}
+
+// Style containment - 元素的样式计算不会影响外部元素
+.contain-style {
+  contain: style;
+}
+
+// Strict containment - 包含 layout, paint, size
+.contain-strict {
+  contain: strict;
+}
+
+// Content containment - 包含 layout, paint, style (不包含 size)
+.contain-content {
+  contain: content;
+}
+
+// =============================================================================
+// Will-Change Hints
+// =============================================================================
+// 提示浏览器元素即将发生变化，允许提前优化
+// 注意：仅在元素即将动画时使用，动画完成后应移除
+// Requirements: 8.4
+
+.will-animate {
+  will-change: transform, opacity;
+}
+
+.will-animate-transform {
+  will-change: transform;
+}
+
+.will-animate-opacity {
+  will-change: opacity;
+}
+
+.will-animate-scroll {
+  will-change: scroll-position;
+}
+
+// 自动清理 will-change (用于动画完成后)
+.will-animate-auto {
+  will-change: auto;
+}
+
+// =============================================================================
+// GPU Acceleration
+// =============================================================================
+// 强制 GPU 加速，用于复杂动画元素
+// Requirements: 8.3
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+// 轻量级 GPU 加速
+.gpu-accelerated-light {
+  transform: translate3d(0, 0, 0);
+}
+
+// =============================================================================
+// Compositor-Friendly Properties
+// =============================================================================
+// 仅使用 transform 和 opacity 的动画类
+// 这些属性可以在合成器线程上运行，不会触发重排或重绘
+// Requirements: 8.3
+
+.compositor-only {
+  // 确保只使用 transform 和 opacity 进行动画
+  transition-property: transform, opacity;
+}
+
+// =============================================================================
+// Efficient Selectors Helpers
+// =============================================================================
+// 避免深层嵌套和复杂选择器的辅助类
+// Requirements: 8.5
+
+// 直接子元素选择器优化
+.direct-children {
+  > * {
+    // 仅影响直接子元素
+  }
+}
+
+// =============================================================================
+// Critical CSS Markers
+// =============================================================================
+// 标记关键 CSS，用于首屏渲染优化
+// Requirements: 8.7
+
+.critical {
+  // 首屏关键内容的样式标记
+  // 这些样式应该内联到 HTML 中
+}
+
+// =============================================================================
+// Lazy-Loaded Styles Markers
+// =============================================================================
+// 标记可延迟加载的样式
+
+.lazy-styles {
+  // 非关键样式，可以延迟加载
+}
+
+// =============================================================================
+// Render Performance Utilities
+// =============================================================================
+// 渲染性能优化工具类
+
+// 隐藏但保留布局空间（比 visibility: hidden 更高效）
+.render-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+// 完全移出渲染树
+.render-none {
+  display: none;
+}
+
+// 减少重绘区域
+.isolate-paint {
+  isolation: isolate;
+}
+
+// =============================================================================
+// Scroll Performance
+// =============================================================================
+// 滚动性能优化
+
+// 优化滚动容器
+.scroll-optimized {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+// 滚动时隐藏滚动条（保持功能）
+.scroll-hidden-bar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// =============================================================================
+// Content Visibility
+// =============================================================================
+// 使用 content-visibility 优化长列表渲染
+
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+.content-hidden {
+  content-visibility: hidden;
+}
+
+.content-visible {
+  content-visibility: visible;
+}
+
+// =============================================================================
+// Animation Performance
+// =============================================================================
+// 动画性能优化类
+
+// 暂停所有动画（用于性能敏感场景）
+.pause-animations {
+  animation-play-state: paused !important;
+  
+  *,
+  *::before,
+  *::after {
+    animation-play-state: paused !important;
+  }
+}
+
+// 禁用所有过渡（用于批量 DOM 操作）
+.no-transitions {
+  transition: none !important;
+  
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
+
+
+// =============================================================================
+// Shared Mixins for Deduplication
+// =============================================================================
+// 共享 mixins 用于减少重复样式
+// Requirements: 8.1
+
+// Focus ring mixin - 统一焦点环样式
+@mixin focus-ring($color: rgba(128, 32, 255, 0.5), $offset: 2px, $width: 2px) {
+  outline: none;
+  box-shadow: 0 0 0 $offset var(--color-surface-0, #0a0a14),
+              0 0 0 ($offset + $width) $color;
+}
+
+// Focus visible mixin - 键盘导航焦点样式
+@mixin focus-visible-ring($color: rgba(128, 32, 255, 0.5)) {
+  &:focus-visible {
+    @include focus-ring($color);
+  }
+}
+
+// Neon glow mixin - 统一霓虹发光效果
+@mixin neon-glow($color: rgba(128, 32, 255, 0.3), $size: 20px) {
+  box-shadow: 0 0 $size $color;
+}
+
+// Neon glow hover mixin - 悬停时增强发光
+@mixin neon-glow-hover($color: rgba(128, 32, 255, 0.5), $size: 30px) {
+  &:hover {
+    box-shadow: 0 0 $size $color;
+  }
+}
+
+// Elevated shadow mixin - 统一悬浮阴影
+@mixin elevated-shadow($level: 'md') {
+  @if $level == 'sm' {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(128, 32, 255, 0.2);
+  } @else if $level == 'md' {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(128, 32, 255, 0.3);
+  } @else if $level == 'lg' {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(128, 32, 255, 0.4);
+  }
+}
+
+// Glass effect mixin - 统一玻璃态效果
+@mixin glass-effect(
+  $bg: var(--glass-bg, rgba(15, 15, 35, 0.85)),
+  $blur: var(--glass-blur, 20px),
+  $border: var(--glass-border, rgba(99, 102, 241, 0.2))
+) {
+  background: $bg;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid $border;
+}
+
+// Interactive element base mixin - 交互元素基础样式
+@mixin interactive-base($transition-duration: 150ms) {
+  cursor: pointer;
+  transition: all $transition-duration cubic-bezier(0, 0, 0.2, 1);
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Touch target mixin - 确保触摸目标最小尺寸
+@mixin touch-target($size: 44px) {
+  min-width: $size;
+  min-height: $size;
+}
+
+// Truncate text mixin - 文本截断
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Scrollbar styling mixin - 统一滚动条样式
+@mixin custom-scrollbar(
+  $width: 8px,
+  $track-color: rgba(15, 15, 35, 0.5),
+  $thumb-color: rgba(99, 102, 241, 0.3),
+  $thumb-hover-color: rgba(99, 102, 241, 0.5)
+) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+    border-radius: calc($width / 2);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: calc($width / 2);
+    
+    &:hover {
+      background: $thumb-hover-color;
+    }
+  }
+}
+
+// =============================================================================
+// Consolidated Color Variables
+// =============================================================================
+// 统一颜色变量，避免硬编码重复
+
+// Primary neon color
+$neon-primary: rgba(128, 32, 255, 1);
+$neon-primary-light: rgba(128, 32, 255, 0.5);
+$neon-primary-lighter: rgba(128, 32, 255, 0.3);
+$neon-primary-subtle: rgba(128, 32, 255, 0.15);
+
+// Surface colors
+$surface-dark: rgba(15, 15, 35, 0.85);
+$surface-darker: rgba(15, 15, 35, 0.95);
+$surface-darkest: rgba(15, 15, 35, 1);
+
+// Border colors
+$border-primary: rgba(99, 102, 241, 0.2);
+$border-primary-hover: rgba(99, 102, 241, 0.4);
+$border-primary-focus: rgba(128, 32, 255, 1);
+
+// =============================================================================
+// Utility Classes for Common Patterns
+// =============================================================================
+
+// Flex center utility
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Flex between utility
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Absolute center utility
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Full size utility
+.full-size {
+  width: 100%;
+  height: 100%;
+}
+
+// Visually hidden (accessible)
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Reset button styles
+.btn-reset {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+// Reset list styles
+.list-reset {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

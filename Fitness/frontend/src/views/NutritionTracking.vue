@@ -1,59 +1,59 @@
 <template>
   <div class="nutrition-page p-5">
     <!-- 页面头部 -->
-    <div class="page-header mb-8">
-      <h1 class="responsive-h1 font-extrabold mb-3">营养追踪</h1>
-      <div class="page-description text-lg leading-relaxed">记录每日饮食，监控营养摄入，助力健身目标</div>
+    <div class="page-header mb-8 animate-fade-in-up">
+      <h1 class="page-header__title">营养追踪</h1>
+      <div class="page-header__subtitle">记录每日饮食，监控营养摄入，助力健身目标</div>
     </div>
     
     <!-- 营养概览卡片 -->
     <div class="overview-cards mb-8">
       <el-row :gutter="20">
         <el-col :span="6">
-          <div class="overview-card calories p-5">
-            <div class="card-icon">
-              <el-icon size="32"><Odometer /></el-icon>
+          <div class="card-unified card-unified--sm card-unified--interactive overview-card calories animate-fade-in-up stagger-1">
+            <div class="card-icon icon-container icon-container--md icon-container--danger">
+              <el-icon size="24"><Odometer /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title text-sm leading-normal">今日卡路里</div>
-              <div class="card-value data-value">{{ todayCalories }}</div>
-              <div class="card-unit data-unit">千卡</div>
+              <div class="card-title">今日卡路里</div>
+              <div class="card-value">{{ todayCalories }}</div>
+              <div class="card-unit">千卡</div>
             </div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="overview-card protein p-5">
-            <div class="card-icon">
-              <el-icon size="32"><KnifeFork /></el-icon>
+          <div class="card-unified card-unified--sm card-unified--interactive overview-card protein animate-fade-in-up stagger-2">
+            <div class="card-icon icon-container icon-container--md icon-container--success">
+              <el-icon size="24"><KnifeFork /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title text-sm leading-normal">蛋白质</div>
-              <div class="card-value data-value">{{ todayProtein }}</div>
-              <div class="card-unit data-unit">克</div>
+              <div class="card-title">蛋白质</div>
+              <div class="card-value">{{ todayProtein }}</div>
+              <div class="card-unit">克</div>
             </div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="overview-card carbs p-5">
-            <div class="card-icon">
-              <el-icon size="32"><Coffee /></el-icon>
+          <div class="card-unified card-unified--sm card-unified--interactive overview-card carbs animate-fade-in-up stagger-3">
+            <div class="card-icon icon-container icon-container--md icon-container--warning">
+              <el-icon size="24"><Coffee /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title text-sm leading-normal">碳水化合物</div>
-              <div class="card-value data-value">{{ todayCarbs }}</div>
-              <div class="card-unit data-unit">克</div>
+              <div class="card-title">碳水化合物</div>
+              <div class="card-value">{{ todayCarbs }}</div>
+              <div class="card-unit">克</div>
             </div>
           </div>
         </el-col>
         <el-col :span="6">
-          <div class="overview-card fat p-5">
-            <div class="card-icon">
-              <el-icon size="32"><IceTea /></el-icon>
+          <div class="card-unified card-unified--sm card-unified--interactive overview-card fat animate-fade-in-up stagger-4">
+            <div class="card-icon icon-container icon-container--md icon-container--primary">
+              <el-icon size="24"><IceTea /></el-icon>
             </div>
             <div class="card-content">
-              <div class="card-title text-sm leading-normal">脂肪</div>
-              <div class="card-value data-value">{{ todayFat }}</div>
-              <div class="card-unit data-unit">克</div>
+              <div class="card-title">脂肪</div>
+              <div class="card-value">{{ todayFat }}</div>
+              <div class="card-unit">克</div>
             </div>
           </div>
         </el-col>
@@ -61,10 +61,10 @@
     </div>
     
     <!-- 营养摄入分布图表 -->
-    <div class="chart-section mb-8">
-      <el-card class="chart-card">
-        <div class="chart-header mb-5">
-          <h3 class="text-xl font-bold">今日营养摄入分布</h3>
+    <div class="card-unified mb-8 animate-fade-in-up stagger-5">
+      <div class="section-header">
+        <h3 class="section-header__title">今日营养摄入分布</h3>
+        <div class="section-header__actions">
           <el-date-picker
             v-model="selectedDate"
             type="date"
@@ -73,16 +73,16 @@
             @change="loadNutritionData"
           />
         </div>
-        <div class="chart-container">
-          <v-chart class="nutrition-chart" :option="nutritionChartOption" />
-        </div>
-      </el-card>
+      </div>
+      <div class="chart-container">
+        <v-chart class="nutrition-chart" :option="nutritionChartOption" />
+      </div>
     </div>
     
     <!-- 饮食记录表单 -->
-    <el-card class="form-card mb-8">
-      <div class="card-header mb-5">
-        <h3 class="text-xl font-bold">添加饮食记录</h3>
+    <div class="card-unified card-unified--primary mb-8 animate-fade-in-up stagger-6">
+      <div class="section-header">
+        <h3 class="section-header__title">添加饮食记录</h3>
       </div>
       <el-form 
         :model="nutritionForm" 
@@ -210,23 +210,25 @@
         </el-form-item>
         
         <el-form-item>
-          <el-button type="primary" @click="submitNutritionRecord" :loading="submitting">
+          <button class="btn-unified btn-unified--primary" @click="submitNutritionRecord" :disabled="submitting">
             <el-icon><Plus /></el-icon>
-            添加记录
-          </el-button>
-          <el-button @click="resetForm">重置</el-button>
+            {{ submitting ? '添加中...' : '添加记录' }}
+          </button>
+          <button class="btn-unified btn-unified--secondary" @click="resetForm">重置</button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
     
     <!-- 今日饮食记录 -->
-    <el-card class="records-card">
-      <div class="card-header mb-5">
-        <h3 class="text-xl font-bold">今日饮食记录</h3>
-        <el-button type="primary" @click="exportNutritionData">
-          <el-icon><Download /></el-icon>
-          导出数据
-        </el-button>
+    <div class="card-unified animate-fade-in-up stagger-7">
+      <div class="section-header">
+        <h3 class="section-header__title">今日饮食记录</h3>
+        <div class="section-header__actions">
+          <button class="btn-unified btn-unified--primary btn-unified--sm" @click="exportNutritionData">
+            <el-icon><Download /></el-icon>
+            导出数据
+          </button>
+        </div>
       </div>
       
       <el-table :data="nutritionRecords" style="width: 100%" stripe>
@@ -240,14 +242,14 @@
         <el-table-column prop="notes" label="备注" />
         <el-table-column label="操作" width="120">
           <template #default="scope">
-            <el-button size="small" type="danger" @click="deleteRecord(scope.row)">
+            <button class="btn-unified btn-unified--danger btn-unified--sm" @click="deleteRecord(scope.row)">
               <el-icon><Delete /></el-icon>
               删除
-            </el-button>
+            </button>
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -480,73 +482,37 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* NutritionTracking - Using design tokens from typography and layout system */
-/* Requirements: 7.1, 7.2, 7.3 - Table and list typography */
-/* 深色主题适配 - Neon Ionized Palette */
+/* NutritionTracking - Using unified component styles */
+/* Requirements: 5.1, 5.2, 5.3, 7.1, 7.2, 7.3 */
 
 .nutrition-page {
   background: linear-gradient(135deg, var(--bg-primary, #0a0a14) 0%, var(--bg-secondary, #121225) 100%);
   min-height: calc(100vh - 60px);
 }
 
+/* Page header using unified styles */
 .page-header {
   text-align: center;
-  color: var(--text-primary, #ffffff);
 }
 
-.page-header h1 {
+.page-header__title {
+  color: var(--text-primary, #ffffff);
+  font-size: var(--font-size-3xl, 1.875rem);
+  font-weight: var(--font-weight-extrabold, 800);
   margin-bottom: var(--spacing-3, 0.75rem);
-  color: var(--text-primary, #ffffff);
 }
 
-.page-description {
-  opacity: 0.9;
+.page-header__subtitle {
   color: var(--text-regular, #e0e0ff);
+  font-size: var(--font-size-lg, 1.125rem);
+  opacity: 0.9;
 }
 
+/* Overview cards layout */
 .overview-card {
   display: flex;
   align-items: center;
-  border-radius: 16px;
-  background: rgba(18, 18, 37, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-  transition: all 0.3s ease;
-}
-
-.overview-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3)), 0 0 25px rgba(128, 32, 255, 0.2);
-}
-
-.card-icon {
-  margin-right: var(--spacing-4, 1rem);
-  padding: var(--spacing-3, 0.75rem);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.calories .card-icon {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-  color: white;
-}
-
-.protein .card-icon {
-  background: linear-gradient(135deg, #4ecdc4, #44a08d);
-  color: white;
-}
-
-.carbs .card-icon {
-  background: linear-gradient(135deg, #f7b731, #e17055);
-  color: white;
-}
-
-.fat .card-icon {
-  background: linear-gradient(135deg, #5f27cd, #341f97);
-  color: white;
+  gap: var(--spacing-4, 1rem);
 }
 
 .card-content {
@@ -555,40 +521,25 @@ onMounted(() => {
 
 .card-title {
   color: var(--text-secondary, #8888aa);
+  font-size: var(--font-size-sm, 0.875rem);
   margin-bottom: var(--spacing-1, 0.25rem);
 }
 
-/* Data value styling using typography system */
 .card-value {
+  font-size: var(--font-size-2xl, 1.5rem);
+  font-weight: var(--font-weight-bold, 700);
   font-variant-numeric: tabular-nums;
-  line-height: var(--line-height-tight, 1.25);
   color: var(--text-primary, #ffffff);
+  line-height: var(--line-height-tight, 1.25);
 }
 
 .card-unit {
-  margin-top: var(--spacing-1, 0.25rem);
+  font-size: var(--font-size-xs, 0.75rem);
   color: var(--text-secondary, #8888aa);
+  margin-top: var(--spacing-1, 0.25rem);
 }
 
-.chart-card {
-  background: rgba(18, 18, 37, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
-}
-
-.chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chart-header h3 {
-  color: var(--text-primary, #ffffff);
-  margin: 0;
-}
-
+/* Chart container */
 .chart-container {
   height: 300px;
 }
@@ -598,48 +549,32 @@ onMounted(() => {
   width: 100%;
 }
 
-.form-card, .records-card {
-  background: rgba(18, 18, 37, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-header h3 {
-  color: var(--text-primary, #ffffff);
-  margin: 0;
-}
-
+/* Form styling */
 .nutrition-form {
   padding: 0 var(--spacing-2, 0.5rem);
 }
 
+/* Food suggestions dropdown */
 .food-suggestions {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--bg-secondary, #121225);
-  border-radius: 8px;
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  background: var(--glass-bg, rgba(15, 15, 35, 0.95));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  border-radius: var(--border-radius-md, 12px);
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  box-shadow: var(--shadow-lg, 0 0 20px rgba(128, 32, 255, 0.3));
   z-index: 1000;
   max-height: 200px;
   overflow-y: auto;
 }
 
 .suggestion-item {
-  padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
+  padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
   cursor: pointer;
-  transition: background-color 0.2s;
-  border-bottom: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
+  transition: background-color var(--duration-fast, 150ms) var(--ease-out, ease-out);
+  border-bottom: 1px solid var(--glass-border, rgba(99, 102, 241, 0.1));
   color: var(--text-primary, #ffffff);
 }
 
@@ -670,27 +605,41 @@ onMounted(() => {
 
 :deep(.el-table th .cell) {
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #1e293b);
+  color: var(--text-primary, #ffffff);
 }
 
+:deep(.el-table) {
+  background-color: transparent;
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(128, 32, 255, 0.1);
+  --el-table-header-text-color: #ffffff;
+  --el-table-text-color: #e0e0ff;
+  --el-table-border-color: rgba(99, 102, 241, 0.2);
+  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15);
+  border-radius: var(--border-radius-md, 12px);
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .nutrition-page {
-    padding: 12px;
+    padding: var(--spacing-3, 0.75rem);
   }
   
-  .page-header h1 {
-    font-size: 1.75rem;
+  .page-header__title {
+    font-size: var(--font-size-xl, 1.25rem);
   }
   
-  .page-header {
-    margin-bottom: 20px;
+  .page-header__subtitle {
+    font-size: var(--font-size-base, 1rem);
   }
   
-  /* 概览卡片响应式 */
+  /* Overview cards responsive */
   .overview-cards .el-row {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--spacing-3, 0.75rem);
   }
   
   .overview-cards .el-col {
@@ -700,26 +649,15 @@ onMounted(() => {
     padding: 0 !important;
   }
   
-  .overview-card {
-    padding: 16px;
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-  }
-  
-  .card-icon {
-    margin-right: 0;
-  }
-  
   .card-value {
-    font-size: 1.5rem;
+    font-size: var(--font-size-xl, 1.25rem);
   }
   
   .chart-container {
     height: 250px;
   }
   
-  /* 表单响应式 */
+  /* Form responsive */
   .nutrition-form .el-row {
     display: flex;
     flex-direction: column;
@@ -733,7 +671,6 @@ onMounted(() => {
     padding: 0 !important;
   }
   
-  /* 表单标签左对齐 */
   :deep(.el-form-item__label) {
     text-align: left !important;
     float: none !important;
@@ -746,79 +683,45 @@ onMounted(() => {
     margin-left: 0 !important;
   }
   
-  /* 输入框全宽 */
   :deep(.el-input),
   :deep(.el-select),
   :deep(.el-input-number) {
     width: 100% !important;
   }
   
-  /* 图表头部响应式 */
-  .chart-header {
+  .section-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--spacing-3, 0.75rem);
   }
   
-  /* 卡片头部响应式 */
-  .card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .card-header .el-button {
+  .section-header__actions {
     width: 100%;
   }
   
-  /* 食物建议列表优化 */
-  .food-suggestions {
-    max-height: 200px;
-  }
-  
-  .suggestion-item {
-    padding: 14px 16px;
-  }
-  
-  .food-name {
-    font-size: 15px;
+  .section-header__actions .btn-unified {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .nutrition-page {
-    padding: 10px;
+    padding: var(--spacing-2, 0.5rem);
     min-height: calc(100vh - 50px);
   }
   
-  .page-header h1 {
-    font-size: 1.5rem;
-  }
-  
-  .page-description {
-    font-size: 0.9rem;
-  }
-  
-  .overview-card {
-    padding: 14px;
+  .page-header__title {
+    font-size: var(--font-size-lg, 1.125rem);
   }
   
   .card-value {
-    font-size: 1.25rem;
-  }
-  
-  .form-card,
-  .records-card,
-  .chart-card {
-    padding: 14px;
-    border-radius: 12px;
+    font-size: var(--font-size-lg, 1.125rem);
   }
   
   .chart-container {
     height: 220px;
   }
   
-  /* 表格紧凑模式 */
   :deep(.el-table) {
     font-size: 12px;
   }

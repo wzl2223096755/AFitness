@@ -1,0 +1,1662 @@
+// =============================================================================
+// Micro-Interactions System - 微交互系统
+// =============================================================================
+// 本文件定义所有微交互效果，包括骨架屏、成功反馈、开关动画、通知动画等
+// Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.7
+
+@use './tokens' as tokens;
+
+// =============================================================================
+// Skeleton Loading Components - 骨架屏组件
+// =============================================================================
+// Requirements: 10.3
+// 数据加载时显示脉冲骨架占位符
+
+// Base skeleton class
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-2, rgba(15, 15, 35, 0.85)) 25%,
+    rgba(99, 102, 241, 0.15) 50%,
+    var(--color-surface-2, rgba(15, 15, 35, 0.85)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  
+  // Prevent content from showing
+  color: transparent !important;
+  
+  // Disable pointer events
+  pointer-events: none;
+  user-select: none;
+  
+  // ==========================================================================
+  // Skeleton Variants - 骨架屏变体
+  // ==========================================================================
+  
+  // Text skeleton - 文本骨架
+  &--text {
+    height: 1em;
+    margin-bottom: 0.5em;
+    border-radius: 4px;
+    
+    // Different text line widths for natural look
+    &:nth-child(1) { width: 100%; }
+    &:nth-child(2) { width: 90%; }
+    &:nth-child(3) { width: 95%; }
+    &:nth-child(4) { width: 85%; }
+    &:nth-child(5) { width: 70%; }
+  }
+  
+  // Avatar skeleton - 头像骨架
+  &--avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    
+    // Size variants
+    &-sm {
+      width: 32px;
+      height: 32px;
+    }
+    
+    &-lg {
+      width: 64px;
+      height: 64px;
+    }
+    
+    &-xl {
+      width: 80px;
+      height: 80px;
+    }
+  }
+  
+  // Card skeleton - 卡片骨架
+  &--card {
+    height: 200px;
+    border-radius: 16px;
+    
+    // Size variants
+    &-sm {
+      height: 120px;
+      border-radius: 12px;
+    }
+    
+    &-lg {
+      height: 280px;
+      border-radius: 20px;
+    }
+  }
+  
+  // Button skeleton - 按钮骨架
+  &--button {
+    height: 44px;
+    width: 120px;
+    border-radius: 12px;
+    
+    &-sm {
+      height: 36px;
+      width: 80px;
+      border-radius: 8px;
+    }
+    
+    &-lg {
+      height: 52px;
+      width: 160px;
+      border-radius: 14px;
+    }
+  }
+  
+  // Image skeleton - 图片骨架
+  &--image {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
+    
+    &-square {
+      aspect-ratio: 1;
+      height: auto;
+    }
+    
+    &-wide {
+      aspect-ratio: 16/9;
+      height: auto;
+    }
+  }
+  
+  // Title skeleton - 标题骨架
+  &--title {
+    height: 1.5em;
+    width: 60%;
+    margin-bottom: 0.75em;
+    border-radius: 6px;
+  }
+  
+  // Paragraph skeleton - 段落骨架
+  &--paragraph {
+    height: 1em;
+    width: 100%;
+    margin-bottom: 0.5em;
+    border-radius: 4px;
+    
+    &:last-child {
+      width: 80%;
+      margin-bottom: 0;
+    }
+  }
+  
+  // Badge skeleton - 徽章骨架
+  &--badge {
+    height: 24px;
+    width: 60px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+  
+  // Icon skeleton - 图标骨架
+  &--icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    
+    &-sm {
+      width: 16px;
+      height: 16px;
+    }
+    
+    &-lg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+  
+  // Input skeleton - 输入框骨架
+  &--input {
+    height: 48px;
+    width: 100%;
+    border-radius: 12px;
+  }
+  
+  // Table row skeleton - 表格行骨架
+  &--table-row {
+    height: 56px;
+    width: 100%;
+    border-radius: 0;
+    margin-bottom: 1px;
+  }
+  
+  // Chart skeleton - 图表骨架
+  &--chart {
+    height: 300px;
+    width: 100%;
+    border-radius: 12px;
+  }
+}
+
+// =============================================================================
+// Skeleton Container - 骨架屏容器
+// =============================================================================
+// 用于组合多个骨架元素
+
+.skeleton-container {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-3;
+  
+  // Horizontal layout
+  &--horizontal {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  // Grid layout
+  &--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: tokens.$spacing-4;
+  }
+}
+
+// =============================================================================
+// Skeleton Card Template - 骨架卡片模板
+// =============================================================================
+// 预定义的骨架卡片布局
+
+.skeleton-card-template {
+  background: var(--glass-bg, rgba(15, 15, 35, 0.85));
+  border-radius: 20px;
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  padding: tokens.$spacing-6;
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-4;
+    margin-bottom: tokens.$spacing-5;
+  }
+  
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.$spacing-2;
+  }
+  
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: tokens.$spacing-3;
+    margin-top: tokens.$spacing-5;
+    padding-top: tokens.$spacing-4;
+    border-top: 1px solid rgba(99, 102, 241, 0.1);
+  }
+}
+
+// =============================================================================
+// Skeleton List Template - 骨架列表模板
+// =============================================================================
+
+.skeleton-list-template {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-3;
+  
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-4;
+    padding: tokens.$spacing-4;
+    background: rgba(15, 15, 35, 0.5);
+    border-radius: 12px;
+  }
+  
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: tokens.$spacing-2;
+  }
+}
+
+
+// =============================================================================
+// Success Checkmark Animation - 成功反馈动画
+// =============================================================================
+// Requirements: 10.2
+// 表单提交成功时显示成功勾选动画
+
+// Keyframe for checkmark stroke animation
+@keyframes drawCheckmark {
+  0% {
+    stroke-dashoffset: 50;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+// Keyframe for circle scale animation
+@keyframes circleScale {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Success checkmark component
+.success-checkmark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-success, #10b981);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: circleScale tokens.$duration-normal tokens.$ease-spring forwards;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  
+  // Checkmark using pseudo-element
+  &::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 28px;
+    width: 12px;
+    height: 24px;
+    border: solid white;
+    border-width: 0 4px 4px 0;
+    transform: rotate(45deg);
+    animation: checkmark tokens.$duration-fast tokens.$ease-out tokens.$duration-fast forwards;
+    opacity: 0;
+  }
+  
+  // ==========================================================================
+  // Size Variants
+  // ==========================================================================
+  
+  &--sm {
+    width: 40px;
+    height: 40px;
+    
+    &::after {
+      left: 13px;
+      top: 20px;
+      width: 8px;
+      height: 16px;
+      border-width: 0 3px 3px 0;
+    }
+  }
+  
+  &--lg {
+    width: 72px;
+    height: 72px;
+    
+    &::after {
+      left: 24px;
+      top: 36px;
+      width: 16px;
+      height: 32px;
+      border-width: 0 5px 5px 0;
+    }
+  }
+  
+  &--xl {
+    width: 96px;
+    height: 96px;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+    
+    &::after {
+      left: 32px;
+      top: 48px;
+      width: 20px;
+      height: 40px;
+      border-width: 0 6px 6px 0;
+    }
+  }
+  
+  // ==========================================================================
+  // Color Variants
+  // ==========================================================================
+  
+  &--primary {
+    background: var(--color-primary, #8020ff);
+    box-shadow: 0 0 20px rgba(128, 32, 255, 0.4);
+  }
+  
+  &--info {
+    background: var(--color-info, #6366f1);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+  }
+  
+  // ==========================================================================
+  // With Ring Animation
+  // ==========================================================================
+  
+  &--with-ring {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 3px solid var(--color-success, #10b981);
+      border-radius: 50%;
+      opacity: 0;
+      animation: ringPulse 0.6s tokens.$ease-out 0.2s forwards;
+    }
+  }
+}
+
+// Ring pulse animation
+@keyframes ringPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+// =============================================================================
+// Success Feedback Container - 成功反馈容器
+// =============================================================================
+// 完整的成功反馈组件，包含图标、标题和描述
+
+.success-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: tokens.$spacing-8;
+  animation: fadeInUp tokens.$duration-normal tokens.$ease-out-expo forwards;
+  
+  &__icon {
+    margin-bottom: tokens.$spacing-5;
+  }
+  
+  &__title {
+    font-size: tokens.$font-size-xl;
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0 0 tokens.$spacing-2 0;
+  }
+  
+  &__description {
+    font-size: tokens.$font-size-sm;
+    color: #94a3b8;
+    margin: 0;
+    max-width: 300px;
+    line-height: tokens.$line-height-relaxed;
+  }
+  
+  &__actions {
+    margin-top: tokens.$spacing-6;
+    display: flex;
+    gap: tokens.$spacing-3;
+  }
+}
+
+
+// =============================================================================
+// Toggle Switch Animation - 开关动画
+// =============================================================================
+// Requirements: 10.4
+// 用户切换开关时显示弹跳效果动画
+
+// Toggle switch component
+.toggle-switch {
+  width: 48px;
+  height: 28px;
+  background: var(--color-surface-2, rgba(15, 15, 35, 0.85));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: background tokens.$duration-fast tokens.$ease-out,
+              border-color tokens.$duration-fast tokens.$ease-out;
+  
+  // Toggle thumb
+  &::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+    background: #94a3b8;
+    border-radius: 50%;
+    transition: transform tokens.$duration-fast tokens.$ease-spring,
+                background tokens.$duration-fast tokens.$ease-out,
+                box-shadow tokens.$duration-fast tokens.$ease-out;
+  }
+  
+  // Hover state
+  &:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+    
+    &::after {
+      background: #e2e8f0;
+    }
+  }
+  
+  // Focus state
+  &:focus-visible {
+    outline: none;
+    box-shadow: 
+      0 0 0 2px rgba(15, 15, 35, 1),
+      0 0 0 4px rgba(128, 32, 255, 0.5);
+  }
+  
+  // ==========================================================================
+  // Active State - 激活状态
+  // ==========================================================================
+  
+  &.active,
+  &--active,
+  &[aria-checked="true"] {
+    background: var(--color-primary, #8020ff);
+    border-color: var(--color-primary, #8020ff);
+    
+    &::after {
+      transform: translateX(20px);
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(128, 32, 255, 0.5);
+    }
+    
+    &:hover::after {
+      background: #ffffff;
+    }
+  }
+  
+  // ==========================================================================
+  // Size Variants
+  // ==========================================================================
+  
+  // Small toggle
+  &--sm {
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    
+    &::after {
+      left: 2px;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+    }
+    
+    &.active::after,
+    &--active::after,
+    &[aria-checked="true"]::after {
+      transform: translateX(16px);
+    }
+  }
+  
+  // Large toggle
+  &--lg {
+    width: 60px;
+    height: 34px;
+    border-radius: 17px;
+    
+    &::after {
+      left: 4px;
+      top: 4px;
+      width: 24px;
+      height: 24px;
+    }
+    
+    &.active::after,
+    &--active::after,
+    &[aria-checked="true"]::after {
+      transform: translateX(26px);
+    }
+  }
+  
+  // ==========================================================================
+  // Color Variants
+  // ==========================================================================
+  
+  &--success {
+    &.active,
+    &--active,
+    &[aria-checked="true"] {
+      background: var(--color-success, #10b981);
+      border-color: var(--color-success, #10b981);
+      
+      &::after {
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+      }
+    }
+  }
+  
+  &--danger {
+    &.active,
+    &--active,
+    &[aria-checked="true"] {
+      background: var(--color-danger, #ef4444);
+      border-color: var(--color-danger, #ef4444);
+      
+      &::after {
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+      }
+    }
+  }
+  
+  &--warning {
+    &.active,
+    &--active,
+    &[aria-checked="true"] {
+      background: var(--color-warning, #f59e0b);
+      border-color: var(--color-warning, #f59e0b);
+      
+      &::after {
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+      }
+    }
+  }
+  
+  // ==========================================================================
+  // Disabled State
+  // ==========================================================================
+  
+  &:disabled,
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      
+      &::after {
+        background: #94a3b8;
+      }
+    }
+  }
+  
+  // ==========================================================================
+  // With Label
+  // ==========================================================================
+  
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-3;
+    cursor: pointer;
+    
+    &__label {
+      font-size: tokens.$font-size-sm;
+      color: #e2e8f0;
+      user-select: none;
+      
+      &--left {
+        order: -1;
+      }
+    }
+    
+    &:hover .toggle-switch-wrapper__label {
+      color: #f8fafc;
+    }
+  }
+  
+  // ==========================================================================
+  // With Icons
+  // ==========================================================================
+  
+  &--with-icons {
+    &::before {
+      content: '✕';
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 10px;
+      color: #64748b;
+      transition: opacity tokens.$duration-fast ease;
+    }
+    
+    &.active::before,
+    &--active::before,
+    &[aria-checked="true"]::before {
+      content: '✓';
+      left: 8px;
+      right: auto;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+// =============================================================================
+// Toggle Switch Group - 开关组
+// =============================================================================
+
+.toggle-switch-group {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-4;
+  
+  &--horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: tokens.$spacing-6;
+  }
+}
+
+
+// =============================================================================
+// Notification Animation - 通知动画
+// =============================================================================
+// Requirements: 10.5
+// 通知出现时从边缘滑入并带有轻微弹跳效果
+
+// Notification enter animation keyframe
+@keyframes notificationEnter {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-8px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Notification leave animation keyframe
+@keyframes notificationLeave {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+// Notification enter from top
+@keyframes notificationEnterTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Notification leave to top
+@keyframes notificationLeaveTop {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+// Notification enter from bottom
+@keyframes notificationEnterBottom {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Notification leave to bottom
+@keyframes notificationLeaveBottom {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+// Notification animation classes
+.notification-enter {
+  animation: notificationEnter tokens.$duration-normal tokens.$ease-spring forwards;
+}
+
+.notification-leave {
+  animation: notificationLeave tokens.$duration-fast tokens.$ease-in forwards;
+}
+
+.notification-enter-top {
+  animation: notificationEnterTop tokens.$duration-normal tokens.$ease-spring forwards;
+}
+
+.notification-leave-top {
+  animation: notificationLeaveTop tokens.$duration-fast tokens.$ease-in forwards;
+}
+
+.notification-enter-bottom {
+  animation: notificationEnterBottom tokens.$duration-normal tokens.$ease-spring forwards;
+}
+
+.notification-leave-bottom {
+  animation: notificationLeaveBottom tokens.$duration-fast tokens.$ease-in forwards;
+}
+
+// =============================================================================
+// Notification Component - 通知组件
+// =============================================================================
+
+.notification {
+  display: flex;
+  align-items: flex-start;
+  gap: tokens.$spacing-3;
+  padding: tokens.$spacing-4 tokens.$spacing-5;
+  background: var(--glass-bg, rgba(15, 15, 35, 0.95));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(128, 32, 255, 0.1);
+  max-width: 400px;
+  min-width: 300px;
+  
+  // ==========================================================================
+  // Notification Icon
+  // ==========================================================================
+  
+  &__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 14px;
+  }
+  
+  // ==========================================================================
+  // Notification Content
+  // ==========================================================================
+  
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  &__title {
+    font-size: tokens.$font-size-sm;
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0 0 tokens.$spacing-1 0;
+    line-height: tokens.$line-height-tight;
+  }
+  
+  &__message {
+    font-size: tokens.$font-size-xs;
+    color: #94a3b8;
+    margin: 0;
+    line-height: tokens.$line-height-normal;
+  }
+  
+  // ==========================================================================
+  // Notification Close Button
+  // ==========================================================================
+  
+  &__close {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all tokens.$duration-fast ease;
+    
+    &:hover {
+      background: rgba(99, 102, 241, 0.1);
+      color: #e2e8f0;
+    }
+    
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(128, 32, 255, 0.5);
+    }
+  }
+  
+  // ==========================================================================
+  // Notification Progress Bar
+  // ==========================================================================
+  
+  &__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(99, 102, 241, 0.2);
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    
+    &-bar {
+      height: 100%;
+      background: var(--color-primary, #8020ff);
+      transition: width linear;
+    }
+  }
+  
+  // ==========================================================================
+  // Notification Variants
+  // ==========================================================================
+  
+  // Success notification
+  &--success {
+    border-color: rgba(16, 185, 129, 0.3);
+    
+    .notification__icon {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    
+    .notification__progress-bar {
+      background: #10b981;
+    }
+  }
+  
+  // Warning notification
+  &--warning {
+    border-color: rgba(245, 158, 11, 0.3);
+    
+    .notification__icon {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+    }
+    
+    .notification__progress-bar {
+      background: #f59e0b;
+    }
+  }
+  
+  // Error notification
+  &--error {
+    border-color: rgba(239, 68, 68, 0.3);
+    
+    .notification__icon {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+    
+    .notification__progress-bar {
+      background: #ef4444;
+    }
+  }
+  
+  // Info notification
+  &--info {
+    border-color: rgba(99, 102, 241, 0.3);
+    
+    .notification__icon {
+      background: rgba(99, 102, 241, 0.15);
+      color: #6366f1;
+    }
+    
+    .notification__progress-bar {
+      background: #6366f1;
+    }
+  }
+  
+  // ==========================================================================
+  // Notification Actions
+  // ==========================================================================
+  
+  &__actions {
+    display: flex;
+    gap: tokens.$spacing-2;
+    margin-top: tokens.$spacing-3;
+  }
+  
+  &__action {
+    font-size: tokens.$font-size-xs;
+    font-weight: tokens.$font-weight-medium;
+    color: #8020ff;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: tokens.$spacing-1 tokens.$spacing-2;
+    border-radius: 4px;
+    transition: all tokens.$duration-fast ease;
+    
+    &:hover {
+      background: rgba(128, 32, 255, 0.1);
+    }
+    
+    &--secondary {
+      color: #94a3b8;
+      
+      &:hover {
+        color: #e2e8f0;
+        background: rgba(99, 102, 241, 0.1);
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Notification Container - 通知容器
+// =============================================================================
+
+.notification-container {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-3;
+  pointer-events: none;
+  
+  .notification {
+    pointer-events: auto;
+  }
+  
+  // Position variants
+  &--top-right {
+    top: tokens.$spacing-6;
+    right: tokens.$spacing-6;
+  }
+  
+  &--top-left {
+    top: tokens.$spacing-6;
+    left: tokens.$spacing-6;
+  }
+  
+  &--top-center {
+    top: tokens.$spacing-6;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+  }
+  
+  &--bottom-right {
+    bottom: tokens.$spacing-6;
+    right: tokens.$spacing-6;
+  }
+  
+  &--bottom-left {
+    bottom: tokens.$spacing-6;
+    left: tokens.$spacing-6;
+  }
+  
+  &--bottom-center {
+    bottom: tokens.$spacing-6;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: tokens.$breakpoint-sm) {
+  .notification-container {
+    left: tokens.$spacing-4;
+    right: tokens.$spacing-4;
+    
+    &--top-right,
+    &--top-left,
+    &--top-center {
+      top: tokens.$spacing-4;
+    }
+    
+    &--bottom-right,
+    &--bottom-left,
+    &--bottom-center {
+      bottom: tokens.$spacing-4;
+    }
+    
+    &--top-center,
+    &--bottom-center {
+      transform: none;
+    }
+  }
+  
+  .notification {
+    max-width: none;
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+
+// =============================================================================
+// Copy Tooltip Animation - 复制提示动画
+// =============================================================================
+// Requirements: 10.7
+// 复制文本到剪贴板时显示简短的"已复制!"提示动画
+
+// Copy tooltip keyframes
+@keyframes copyTooltipEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes copyTooltipLeave {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.9);
+  }
+}
+
+// Copy tooltip component
+.copy-tooltip {
+  position: absolute;
+  background: var(--color-success, #10b981);
+  color: #ffffff;
+  padding: tokens.$spacing-1 tokens.$spacing-3;
+  border-radius: 6px;
+  font-size: tokens.$font-size-xs;
+  font-weight: tokens.$font-weight-medium;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  animation: copyTooltipEnter tokens.$duration-fast tokens.$ease-spring forwards,
+             copyTooltipLeave tokens.$duration-fast tokens.$ease-in 1s forwards;
+  
+  // Arrow
+  &::after {
+    content: '';
+    position: absolute;
+    border: 6px solid transparent;
+  }
+  
+  // ==========================================================================
+  // Position Variants
+  // ==========================================================================
+  
+  // Top position (default)
+  &--top {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: tokens.$spacing-2;
+    
+    &::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: var(--color-success, #10b981);
+    }
+  }
+  
+  // Bottom position
+  &--bottom {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: tokens.$spacing-2;
+    
+    &::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: var(--color-success, #10b981);
+    }
+  }
+  
+  // Left position
+  &--left {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: tokens.$spacing-2;
+    
+    &::after {
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left-color: var(--color-success, #10b981);
+    }
+  }
+  
+  // Right position
+  &--right {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: tokens.$spacing-2;
+    
+    &::after {
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-right-color: var(--color-success, #10b981);
+    }
+  }
+  
+  // ==========================================================================
+  // With Icon
+  // ==========================================================================
+  
+  &--with-icon {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-1;
+    
+    &::before {
+      content: '✓';
+      font-size: 10px;
+    }
+  }
+}
+
+// =============================================================================
+// Copy Button - 复制按钮
+// =============================================================================
+// 带有复制功能的按钮组件
+
+.copy-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all tokens.$duration-fast ease;
+  
+  &:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #e2e8f0;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(128, 32, 255, 0.5);
+  }
+  
+  // Copied state
+  &--copied {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    
+    &:hover {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #10b981;
+    }
+  }
+  
+  // Size variants
+  &--sm {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+  
+  &--lg {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 18px;
+  }
+}
+
+// =============================================================================
+// Copyable Text - 可复制文本
+// =============================================================================
+// 带有复制功能的文本容器
+
+.copyable-text {
+  display: inline-flex;
+  align-items: center;
+  gap: tokens.$spacing-2;
+  padding: tokens.$spacing-2 tokens.$spacing-3;
+  background: rgba(15, 15, 35, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  font-family: tokens.$font-family-mono;
+  font-size: tokens.$font-size-sm;
+  color: #e2e8f0;
+  position: relative;
+  cursor: pointer;
+  transition: all tokens.$duration-fast ease;
+  
+  &:hover {
+    background: rgba(15, 15, 35, 0.8);
+    border-color: rgba(99, 102, 241, 0.4);
+    
+    .copyable-text__icon {
+      opacity: 1;
+    }
+  }
+  
+  &__text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  &__icon {
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity tokens.$duration-fast ease;
+  }
+  
+  // Copied state
+  &--copied {
+    border-color: rgba(16, 185, 129, 0.4);
+    
+    .copyable-text__icon {
+      color: #10b981;
+      opacity: 1;
+    }
+  }
+}
+
+
+// =============================================================================
+// Input Focus Animation - 输入焦点动画
+// =============================================================================
+// Requirements: 10.1
+// 用户聚焦输入字段时，标签和边框带有微妙的发光效果动画
+
+// Focus glow keyframe
+@keyframes inputFocusGlow {
+  0% {
+    box-shadow: 
+      0 0 0 0 rgba(128, 32, 255, 0),
+      inset 0 0 0 rgba(128, 32, 255, 0);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 4px rgba(128, 32, 255, 0.15),
+      inset 0 0 12px rgba(128, 32, 255, 0.1);
+  }
+  100% {
+    box-shadow: 
+      0 0 0 3px rgba(128, 32, 255, 0.2),
+      inset 0 0 10px rgba(128, 32, 255, 0.08);
+  }
+}
+
+// Label float animation
+@keyframes labelFloat {
+  0% {
+    transform: translateY(-50%);
+    font-size: inherit;
+  }
+  100% {
+    transform: translateY(-50%) scale(0.85);
+  }
+}
+
+// Border glow pulse
+@keyframes borderGlowPulse {
+  0%, 100% {
+    border-color: rgba(128, 32, 255, 0.6);
+  }
+  50% {
+    border-color: rgba(128, 32, 255, 0.9);
+  }
+}
+
+// =============================================================================
+// Enhanced Input Focus Styles
+// =============================================================================
+// 增强 .input-unified 焦点状态动画
+
+.input-focus-enhanced {
+  position: relative;
+  
+  // Input element
+  .input-unified,
+  input,
+  textarea {
+    transition: 
+      border-color tokens.$duration-fast tokens.$ease-out,
+      box-shadow tokens.$duration-fast tokens.$ease-out,
+      background tokens.$duration-fast tokens.$ease-out;
+    
+    &:focus {
+      border-color: #8020ff;
+      animation: inputFocusGlow tokens.$duration-normal tokens.$ease-out forwards;
+      background: rgba(15, 15, 35, 0.9);
+    }
+    
+    // Continuous glow pulse on focus
+    &:focus-visible {
+      animation: 
+        inputFocusGlow tokens.$duration-normal tokens.$ease-out forwards,
+        borderGlowPulse 2s ease-in-out infinite 0.3s;
+    }
+  }
+  
+  // Floating label with enhanced animation
+  .input-label-enhanced {
+    position: absolute;
+    left: tokens.$spacing-4;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: tokens.$font-size-base;
+    pointer-events: none;
+    transition: 
+      all tokens.$duration-fast tokens.$ease-out,
+      color tokens.$duration-fast tokens.$ease-out;
+    background: transparent;
+    padding: 0;
+    
+    // Floated state
+    &.floated,
+    .input-unified:focus ~ &,
+    .input-unified:not(:placeholder-shown) ~ &,
+    input:focus ~ &,
+    input:not(:placeholder-shown) ~ &,
+    textarea:focus ~ &,
+    textarea:not(:placeholder-shown) ~ & {
+      top: 0;
+      transform: translateY(-50%) scale(0.85);
+      background: rgba(15, 15, 35, 1);
+      padding: 0 tokens.$spacing-2;
+      color: #8020ff;
+      font-weight: tokens.$font-weight-medium;
+      text-shadow: 0 0 8px rgba(128, 32, 255, 0.3);
+    }
+  }
+  
+  // Focus indicator line
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #8020ff, transparent);
+    transition: all tokens.$duration-normal tokens.$ease-out;
+    transform: translateX(-50%);
+  }
+  
+  &:focus-within::after {
+    width: 100%;
+  }
+}
+
+// =============================================================================
+// Input Glow Variants
+// =============================================================================
+
+// Success glow
+.input-focus-enhanced--success {
+  .input-unified:focus,
+  input:focus,
+  textarea:focus {
+    border-color: #10b981;
+    box-shadow: 
+      0 0 0 3px rgba(16, 185, 129, 0.2),
+      inset 0 0 10px rgba(16, 185, 129, 0.08);
+  }
+  
+  .input-label-enhanced.floated,
+  .input-unified:focus ~ .input-label-enhanced,
+  input:focus ~ .input-label-enhanced {
+    color: #10b981;
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+  }
+  
+  &::after {
+    background: linear-gradient(90deg, transparent, #10b981, transparent);
+  }
+}
+
+// Error glow
+.input-focus-enhanced--error {
+  .input-unified:focus,
+  input:focus,
+  textarea:focus {
+    border-color: #ef4444;
+    box-shadow: 
+      0 0 0 3px rgba(239, 68, 68, 0.2),
+      inset 0 0 10px rgba(239, 68, 68, 0.08);
+  }
+  
+  .input-label-enhanced.floated,
+  .input-unified:focus ~ .input-label-enhanced,
+  input:focus ~ .input-label-enhanced {
+    color: #ef4444;
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
+  }
+  
+  &::after {
+    background: linear-gradient(90deg, transparent, #ef4444, transparent);
+  }
+}
+
+// Warning glow
+.input-focus-enhanced--warning {
+  .input-unified:focus,
+  input:focus,
+  textarea:focus {
+    border-color: #f59e0b;
+    box-shadow: 
+      0 0 0 3px rgba(245, 158, 11, 0.2),
+      inset 0 0 10px rgba(245, 158, 11, 0.08);
+  }
+  
+  .input-label-enhanced.floated,
+  .input-unified:focus ~ .input-label-enhanced,
+  input:focus ~ .input-label-enhanced {
+    color: #f59e0b;
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+  }
+  
+  &::after {
+    background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+  }
+}
+
+// =============================================================================
+// Focus Ring Animation - 焦点环动画
+// =============================================================================
+// 通用焦点环动画，可应用于任何可聚焦元素
+
+.focus-ring-animated {
+  &:focus-visible {
+    outline: none;
+    animation: focusRingPulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes focusRingPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 2px var(--color-surface-0, #0a0a14),
+      0 0 0 4px rgba(128, 32, 255, 0.6);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 2px var(--color-surface-0, #0a0a14),
+      0 0 0 6px rgba(128, 32, 255, 0.3);
+  }
+}
+
+// =============================================================================
+// Reduced Motion Support
+// =============================================================================
+// 为有前庭障碍的用户禁用动画
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none !important;
+    background: var(--color-surface-2, rgba(15, 15, 35, 0.85)) !important;
+  }
+  
+  .success-checkmark {
+    animation: none !important;
+    
+    &::after {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+  }
+  
+  .toggle-switch::after {
+    transition: transform 0.01ms !important;
+  }
+  
+  .notification-enter,
+  .notification-leave,
+  .notification-enter-top,
+  .notification-leave-top,
+  .notification-enter-bottom,
+  .notification-leave-bottom {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  .copy-tooltip {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  
+  .input-focus-enhanced {
+    .input-unified:focus,
+    input:focus,
+    textarea:focus {
+      animation: none !important;
+    }
+    
+    &::after {
+      transition: none !important;
+    }
+  }
+  
+  .focus-ring-animated:focus-visible {
+    animation: none !important;
+    box-shadow: 
+      0 0 0 2px var(--color-surface-0, #0a0a14),
+      0 0 0 4px rgba(128, 32, 255, 0.6) !important;
+  }
+}

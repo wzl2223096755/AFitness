@@ -1,15 +1,15 @@
 <template>
   <div class="training-data-page p-5">
     <!-- 页面头部 -->
-    <div class="page-header mb-6">
-      <h1 class="responsive-h1 font-bold mb-2">训练数据</h1>
-      <div class="page-description text-sm leading-relaxed">记录每次训练的详细数据，追踪您的进步</div>
+    <div class="page-header mb-6 animate-fade-in-up">
+      <h1 class="page-header__title">训练数据</h1>
+      <div class="page-header__subtitle">记录每次训练的详细数据，追踪您的进步</div>
     </div>
     
     <!-- 数据录入表单卡片 -->
-    <div class="form-card p-6 mb-6">
-      <div class="card-header mb-5">
-        <h3 class="text-lg font-semibold">训练数据录入</h3>
+    <div class="card-unified card-unified--primary mb-6 animate-fade-in-up stagger-1">
+      <div class="section-header">
+        <h3 class="section-header__title">训练数据录入</h3>
       </div>
       <el-form 
         :model="trainingForm" 
@@ -184,24 +184,24 @@
         
         <el-row>
           <el-col :span="24" class="form-actions">
-            <el-button type="primary" @click="saveTrainingData" :loading="saving">
+            <button class="btn-unified btn-unified--primary" @click="saveTrainingData" :disabled="saving">
               <el-icon><Check /></el-icon>
-              保存数据
-            </el-button>
-            <el-button @click="resetForm">
+              {{ saving ? '保存中...' : '保存数据' }}
+            </button>
+            <button class="btn-unified btn-unified--secondary" @click="resetForm">
               <el-icon><Refresh /></el-icon>
               重置
-            </el-button>
+            </button>
           </el-col>
         </el-row>
       </el-form>
     </div>
     
     <!-- 最近训练记录 -->
-    <div class="recent-records p-6">
-      <div class="card-header mb-5">
-        <h3 class="text-lg font-semibold">最近训练记录</h3>
-        <div class="record-actions gap-3">
+    <div class="card-unified animate-fade-in-up stagger-2">
+      <div class="section-header">
+        <h3 class="section-header__title">最近训练记录</h3>
+        <div class="section-header__actions">
           <el-select v-model="filterOptions.exerciseType" placeholder="筛选训练类型" @change="handleFilterChange">
             <el-option label="全部" value="" />
             <el-option label="上肢" value="上肢" />
@@ -210,10 +210,10 @@
             <el-option label="有氧" value="有氧" />
             <el-option label="全身" value="全身" />
           </el-select>
-          <el-button type="primary" size="small" @click="refreshRecords">
+          <button class="btn-unified btn-unified--primary btn-unified--sm" @click="refreshRecords">
             <el-icon><Refresh /></el-icon>
             刷新
-          </el-button>
+          </button>
         </div>
       </div>
       
@@ -249,16 +249,16 @@
             <el-rate v-model="scope.row.fatigueLevel" disabled show-score />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column label="操作" width="180" fixed="right">
           <template #default="scope">
-            <el-button size="small" @click="editRecord(scope?.row)">
+            <button class="btn-unified btn-unified--secondary btn-unified--sm" @click="editRecord(scope?.row)">
               <el-icon><Edit /></el-icon>
               编辑
-            </el-button>
-            <el-button size="small" type="danger" @click="deleteRecord(scope?.row?.id)">
+            </button>
+            <button class="btn-unified btn-unified--danger btn-unified--sm" @click="deleteRecord(scope?.row?.id)">
               <el-icon><Delete /></el-icon>
               删除
-            </el-button>
+            </button>
           </template>
         </el-table-column>
       </el-table>
@@ -396,8 +396,12 @@
       </el-form>
       
       <template #footer>
-        <el-button @click="handleDialogClose">取消</el-button>
-        <el-button type="primary" @click="updateRecord" :loading="updating">保存修改</el-button>
+        <div class="dialog-footer">
+          <button class="btn-unified btn-unified--secondary" @click="handleDialogClose">取消</button>
+          <button class="btn-unified btn-unified--primary" @click="updateRecord" :disabled="updating">
+            {{ updating ? '保存中...' : '保存修改' }}
+          </button>
+        </div>
       </template>
     </el-dialog>
   </div>
@@ -959,94 +963,73 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* TrainingData - Using design tokens from typography and layout system */
-/* Requirements: 7.1, 7.2, 7.3 - Table and list typography */
+/* TrainingData - Using unified component styles */
+/* Requirements: 5.1, 5.2, 5.3, 7.1, 7.2, 7.3 */
 
 .training-data-page {
   background: var(--bg-secondary, #121225);
   min-height: 100vh;
 }
 
-.page-header h1 {
+/* Page header using unified styles */
+.page-header__title {
   color: var(--text-primary, #ffffff);
+  font-size: var(--font-size-2xl, 1.5rem);
+  font-weight: var(--font-weight-bold, 700);
+  margin-bottom: var(--spacing-2, 0.5rem);
 }
 
-.page-description {
+.page-header__subtitle {
   color: var(--text-secondary, #8888aa);
+  font-size: var(--font-size-sm, 0.875rem);
 }
 
-.form-card {
-  background: var(--bg-card, rgba(255, 255, 255, 0.03));
-  border-radius: var(--border-radius-lg, 16px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-header h3 {
-  color: var(--text-primary, #ffffff);
-  margin: 0;
-}
-
-.record-actions {
-  display: flex;
-  align-items: center;
-}
-
+/* Form styling */
 .training-form {
   max-width: 100%;
 }
 
 .form-actions {
   display: flex;
-  gap: 10px;
-  padding: 10px 0;
+  gap: var(--spacing-3, 0.75rem);
+  padding: var(--spacing-3, 0.75rem) 0;
 }
 
+/* Exercise suggestions dropdown */
 .exercise-suggestions {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   margin-top: 4px;
-  background: var(--bg-secondary, #121225);
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-  border-radius: var(--border-radius-base, 4px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  background: var(--glass-bg, rgba(15, 15, 35, 0.95));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  border-radius: var(--border-radius-md, 12px);
+  box-shadow: var(--shadow-lg, 0 0 20px rgba(128, 32, 255, 0.3));
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
 }
 
 .suggestion-item {
-  padding: 10px 15px;
+  padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
   cursor: pointer;
   color: var(--text-regular, #e0e0ff);
-  transition: background-color 0.3s;
+  transition: all var(--duration-fast, 150ms) var(--ease-out, ease-out);
 }
 
 .suggestion-item:hover {
-  background-color: rgba(112, 0, 255, 0.2);
+  background-color: rgba(128, 32, 255, 0.15);
 }
 
 .suggestion-item-active {
-  background-color: rgba(112, 0, 255, 0.3);
+  background-color: rgba(128, 32, 255, 0.25);
   color: var(--color-accent, #00f2fe);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium, 500);
 }
 
-.recent-records {
-  background: var(--bg-card, rgba(255, 255, 255, 0.03));
-  border-radius: var(--border-radius-lg, 16px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-}
-
+/* Pagination container */
 .pagination-container {
   margin-top: var(--spacing-5, 1.25rem);
   display: flex;
@@ -1054,7 +1037,6 @@ onUnmounted(() => {
 }
 
 /* Table styling - Requirements: 7.1, 7.2, 7.3 */
-/* Using tabular-nums for numeric data */
 .weight-value {
   font-weight: var(--font-weight-medium, 500);
   font-variant-numeric: tabular-nums;
@@ -1067,33 +1049,33 @@ onUnmounted(() => {
   font-variant-numeric: tabular-nums;
 }
 
-/* Table cell padding - Requirements: 7.3 - 12-16px vertical padding */
 :deep(.el-table .cell) {
   padding: var(--table-cell-padding-y, 0.75rem) var(--table-cell-padding-x, 1rem);
   font-variant-numeric: tabular-nums;
   color: var(--text-regular, #e0e0ff);
 }
 
-/* Table header styling - Requirements: 7.2 */
 :deep(.el-table th .cell) {
   font-weight: var(--font-weight-semibold, 600);
   color: var(--text-primary, #ffffff);
 }
 
-/* 深色主题表格样式 */
+/* Deep dark theme table styles */
 :deep(.el-table) {
   background-color: transparent;
   --el-table-bg-color: transparent;
   --el-table-tr-bg-color: transparent;
-  --el-table-header-bg-color: rgba(112, 0, 255, 0.1);
+  --el-table-header-bg-color: rgba(128, 32, 255, 0.1);
   --el-table-header-text-color: #ffffff;
   --el-table-text-color: #e0e0ff;
-  --el-table-border-color: rgba(112, 0, 255, 0.2);
-  --el-table-row-hover-bg-color: rgba(112, 0, 255, 0.15);
+  --el-table-border-color: rgba(99, 102, 241, 0.2);
+  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15);
+  border-radius: var(--border-radius-md, 12px);
+  overflow: hidden;
 }
 
 :deep(.el-table__header-wrapper) {
-  background-color: rgba(112, 0, 255, 0.1);
+  background-color: rgba(128, 32, 255, 0.1);
 }
 
 :deep(.el-table__body-wrapper) {
@@ -1112,393 +1094,58 @@ onUnmounted(() => {
   background-color: transparent;
 }
 
-.training-volume .el-input__wrapper {
-  background-color: var(--disabled-bg-color);
-}
-
-/* 响应式调整 */
-@media (max-width: 992px) {
-  .el-row {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-  
-  .el-col {
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .training-data-page {
-    padding: 12px;
-  }
-  
-  .page-header {
-    margin-bottom: 16px;
-  }
-  
-  .page-header h1 {
-    font-size: 20px;
-  }
-  
-  .el-form-item {
-    margin-bottom: 20px;
-  }
-  
-  .card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .record-actions {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-  
-  .record-actions .el-select {
-    flex: 1;
-    min-width: 120px;
-  }
-  
-  .form-actions {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  
-  .form-actions .el-button {
-    flex: 1;
-    min-width: 120px;
-  }
-  
-  .pagination-container {
-    justify-content: center;
-  }
-  
-  /* 表单列响应式 */
-  .el-col {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  
-  .el-col[class*="el-col-8"],
-  .el-col[class*="el-col-12"],
-  .el-col[class*="el-col-24"] {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: 0 0 100% !important;
-  }
-  
-  /* 表单标签左对齐 */
-  :deep(.el-form-item__label) {
-    text-align: left !important;
-    float: none !important;
-    display: block !important;
-    width: 100% !important;
-    padding-bottom: 8px;
-  }
-  
-  :deep(.el-form-item__content) {
-    margin-left: 0 !important;
-  }
-  
-  /* 输入框全宽 */
-  :deep(.el-input),
-  :deep(.el-select),
-  :deep(.el-date-editor),
-  :deep(.el-input-number) {
-    width: 100% !important;
-  }
-  
-  /* 表格操作按钮 */
-  :deep(.el-table .el-button) {
-    padding: 6px 10px;
-    font-size: 12px;
-  }
-  
-  /* 建议列表优化 */
-  .exercise-suggestions {
-    max-height: 180px;
-  }
-  
-  .suggestion-item {
-    padding: 12px 16px;
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .training-data-page {
-    padding: 10px;
-  }
-  
-  .form-card,
-  .recent-records {
-    padding: 16px;
-    border-radius: 12px;
-  }
-  
-  .page-header h1 {
-    font-size: 18px;
-  }
-  
-  .card-header h3 {
-    font-size: 16px;
-  }
-  
-  /* 表格紧凑模式 */
-  :deep(.el-table) {
-    font-size: 12px;
-  }
-  
-  :deep(.el-table .cell) {
-    padding: 8px 6px;
-  }
-  
-  /* 隐藏次要列 */
-  :deep(.el-table-column--duration),
-  :deep(.el-table [data-column="duration"]) {
-    display: none;
-  }
-}
-
-/* 按钮样式优化 */
-:deep(.el-button--primary) {
-  background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-  border: none;
-  color: white;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-}
-
-:deep(.el-button--primary:hover) {
-  background: linear-gradient(135deg, #059669 0%, #2563eb 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
-}
-
-:deep(.el-button--primary:active) {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-}
-
-:deep(.el-button--default) {
-  background: white;
-  border: 1px solid #e5e7eb;
-  color: #6b7280;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-:deep(.el-button--default:hover) {
-  background: #f9fafb;
-  border-color: #10b981;
-  color: #10b981;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
-}
-
-:deep(.el-button--small) {
-  padding: 8px 16px;
-  font-size: 14px;
-}
-
-:deep(.el-button.is-loading) {
-  opacity: 0.8;
-}
-
-/* 表单输入框样式优化 */
-:deep(.el-input__wrapper) {
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-:deep(.el-input__wrapper:hover) {
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
-}
-
-:deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-}
-
-:deep(.el-select .el-input__wrapper) {
-  border-radius: 8px;
-}
-
-:deep(.el-date-editor .el-input__wrapper) {
-  border-radius: 8px;
-}
-
-:deep(.el-textarea__inner) {
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-:deep(.el-textarea__inner:focus) {
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-}
-
-/* 数字输入框样式 */
-:deep(.el-input-number) {
-  width: 100%;
-}
-
-:deep(.el-input-number .el-input__wrapper) {
-  border-radius: 8px;
-}
-
-/* 评分组件样式 */
-:deep(.el-rate) {
-  height: 24px;
-}
-
-:deep(.el-rate__item) {
-  margin-right: 4px;
-}
-
-:deep(.el-rate__icon) {
-  font-size: 18px;
-  transition: all 0.3s ease;
-}
-
-:deep(.el-rate__icon:hover) {
-  transform: scale(1.1);
-}
-
-/* 表格样式优化 - 深色主题 */
-:deep(.el-table) {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
-}
-
-:deep(.el-table__header-wrapper) {
-  background: rgba(128, 32, 255, 0.15) !important;
-}
-
-:deep(.el-table th) {
-  background: transparent !important;
-  color: var(--text-primary, #ffffff) !important;
-  font-weight: 600;
-  border-bottom: 2px solid var(--border-color, rgba(112, 0, 255, 0.2)) !important;
-}
-
-:deep(.el-table th .cell) {
-  color: var(--text-primary, #ffffff) !important;
-}
-
-:deep(.el-table tr:hover > td) {
-  background-color: rgba(128, 32, 255, 0.15) !important;
-}
-
-:deep(.el-table td) {
-  border-bottom: 1px solid var(--border-light, rgba(112, 0, 255, 0.1)) !important;
-  color: var(--text-regular, #e0e0ff) !important;
-}
-
-:deep(.el-table td .cell) {
-  color: var(--text-regular, #e0e0ff) !important;
-}
-
-/* 分页器样式 - 深色主题 */
-:deep(.el-pagination) {
+/* Dialog footer */
+.dialog-footer {
+  display: flex;
   justify-content: flex-end;
+  gap: var(--spacing-3, 0.75rem);
 }
 
-:deep(.el-pagination .el-pager li) {
-  border-radius: 6px;
-  margin: 0 2px;
-  transition: all 0.3s ease;
-  background: transparent;
-  color: var(--text-secondary, #8888aa);
-}
-
-:deep(.el-pagination .el-pager li:hover) {
-  background-color: rgba(128, 32, 255, 0.15);
-  color: var(--color-primary, #8020ff);
-}
-
-:deep(.el-pagination .el-pager li.is-active) {
-  background: linear-gradient(135deg, var(--color-primary, #8020ff) 0%, var(--color-accent, #00f2fe) 100%);
-  color: white;
-}
-
-:deep(.el-pagination button:hover) {
-  color: var(--color-primary, #8020ff);
-}
-
-/* 选择器样式 - 深色主题 */
-:deep(.el-select-dropdown) {
-  border-radius: 8px;
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
-  background: var(--bg-secondary, #121225);
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-}
-
-:deep(.el-select-dropdown__item) {
-  color: var(--text-primary, #ffffff);
-}
-
-:deep(.el-select-dropdown__item:hover) {
-  background-color: rgba(128, 32, 255, 0.15);
-  color: var(--color-primary, #8020ff);
-}
-
-:deep(.el-select-dropdown__item.selected) {
-  background-color: rgba(128, 32, 255, 0.2);
-  color: var(--color-primary, #8020ff);
-  font-weight: 500;
-}
-
-/* 训练项目复选框样式 */
+/* Training checkbox group */
 .exercise-checkbox-group {
-  padding: 16px;
+  padding: var(--spacing-4, 1rem);
   background: rgba(128, 32, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  border-radius: var(--border-radius-md, 12px);
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
 }
 
 .checkbox-group-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  margin-bottom: var(--spacing-4, 1rem);
+  padding-bottom: var(--spacing-3, 0.75rem);
+  border-bottom: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
 }
 
 .group-title {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-semibold, 600);
   color: var(--text-primary, #ffffff);
 }
 
 .selected-count {
-  font-size: 13px;
+  font-size: var(--font-size-xs, 0.75rem);
   color: var(--color-accent, #00f2fe);
   background: rgba(0, 242, 254, 0.1);
-  padding: 4px 12px;
+  padding: var(--spacing-1, 0.25rem) var(--spacing-3, 0.75rem);
   border-radius: 20px;
 }
 
 .exercise-checkbox-group :deep(.el-checkbox-group) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
+  gap: var(--spacing-3, 0.75rem);
 }
 
 .exercise-checkbox {
   display: flex;
   flex-direction: column;
-  padding: 12px 16px;
+  padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
+  border-radius: var(--border-radius-sm, 10px);
   border: 1px solid transparent;
-  transition: all 0.3s ease;
+  transition: all var(--duration-fast, 150ms) var(--ease-out, ease-out);
   margin-right: 0 !important;
 }
 
@@ -1506,17 +1153,6 @@ onUnmounted(() => {
   background: rgba(128, 32, 255, 0.1);
   border-color: var(--color-primary, #8020ff);
   transform: translateY(-2px);
-}
-
-:deep(.exercise-checkbox .el-checkbox__input) {
-  margin-top: 2px;
-}
-
-:deep(.exercise-checkbox .el-checkbox__label) {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-left: 8px;
 }
 
 :deep(.exercise-checkbox.is-checked) {
@@ -1538,56 +1174,102 @@ onUnmounted(() => {
   border-color: transparent;
 }
 
-:deep(.exercise-checkbox .el-checkbox__inner::after) {
-  border-width: 2px;
-  left: 5px;
-  top: 2px;
-}
-
 .exercise-label {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-semibold, 600);
   color: var(--text-primary, #ffffff);
 }
 
 .exercise-desc {
-  font-size: 12px;
+  font-size: var(--font-size-xs, 0.75rem);
   color: var(--text-secondary, #8888aa);
 }
 
-/* 响应式复选框 */
+/* Pagination dark theme */
+:deep(.el-pagination .el-pager li) {
+  border-radius: 6px;
+  margin: 0 2px;
+  transition: all var(--duration-fast, 150ms) var(--ease-out, ease-out);
+  background: transparent;
+  color: var(--text-secondary, #8888aa);
+}
+
+:deep(.el-pagination .el-pager li:hover) {
+  background-color: rgba(128, 32, 255, 0.15);
+  color: var(--color-primary, #8020ff);
+}
+
+:deep(.el-pagination .el-pager li.is-active) {
+  background: linear-gradient(135deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
+  color: white;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+  .training-data-page {
+    padding: var(--spacing-3, 0.75rem);
+  }
+  
+  .page-header__title {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn-unified {
+    width: 100%;
+  }
+  
+  .el-col[class*="el-col-8"],
+  .el-col[class*="el-col-12"],
+  .el-col[class*="el-col-24"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+  
+  :deep(.el-form-item__label) {
+    text-align: left !important;
+    float: none !important;
+    display: block !important;
+    width: 100% !important;
+    padding-bottom: 8px;
+  }
+  
+  :deep(.el-form-item__content) {
+    margin-left: 0 !important;
+  }
+  
+  :deep(.el-input),
+  :deep(.el-select),
+  :deep(.el-date-editor),
+  :deep(.el-input-number) {
+    width: 100% !important;
+  }
+  
   .exercise-checkbox-group :deep(.el-checkbox-group) {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
   
-  .exercise-checkbox-group {
-    padding: 12px;
-  }
-  
-  .checkbox-group-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
-  .exercise-checkbox {
-    padding: 10px 12px;
-  }
-  
-  .exercise-label {
-    font-size: 13px;
-  }
-  
-  .exercise-desc {
-    font-size: 11px;
+  .pagination-container {
+    justify-content: center;
   }
 }
 
 @media (max-width: 480px) {
   .exercise-checkbox-group :deep(.el-checkbox-group) {
     grid-template-columns: 1fr;
+  }
+  
+  :deep(.el-table) {
+    font-size: 12px;
+  }
+  
+  :deep(.el-table .cell) {
+    padding: 8px 6px;
   }
 }
 </style>

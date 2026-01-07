@@ -1,29 +1,32 @@
 <template>
-  <div class="dashboard-page">
-    <!-- 欢迎区域 -->
-    <section class="welcome-section">
+  <div class="dashboard-page animate-fade-in-up">
+    <!-- 欢迎区域 - 使用统一玻璃态效果 -->
+    <section class="welcome-section glass-card">
       <div class="welcome-content">
         <h1 class="welcome-title">
-          <span class="greeting">{{ greeting }}</span>，
+          <span class="greeting text-gradient-primary">{{ greeting }}</span>，
           <span class="username">{{ currentUser?.username || '运动员' }}</span>
           <span class="emoji">{{ timeEmoji }}</span>
         </h1>
         <p class="welcome-subtitle">{{ motivationalText }}</p>
       </div>
       <div class="welcome-visual">
-        <div class="daily-quote">
-          <div class="quote-icon">💪</div>
+        <div class="daily-quote card-unified card-unified--sm card-unified--primary">
+          <div class="quote-icon icon-lg">💪</div>
           <div class="quote-text">{{ currentQuote }}</div>
           <div class="quote-date">{{ formattedDate }}</div>
         </div>
       </div>
     </section>
 
-    <!-- 快速统计卡片 -->
+    <!-- 快速统计卡片 - 使用统一卡片组件 -->
     <section class="stats-section">
       <div class="stats-grid">
-        <div class="stat-card primary" @click="navigateTo('/training-data')">
-          <div class="stat-icon">🏋️</div>
+        <div 
+          class="card-unified card-unified--interactive card-unified--primary stagger-1" 
+          @click="navigateTo('/training-data')"
+        >
+          <div class="stat-icon icon-lg">🏋️</div>
           <div class="stat-info">
             <div class="stat-value">{{ stats.weeklyTrainingCount }}</div>
             <div class="stat-label">本周训练</div>
@@ -33,8 +36,11 @@
           </div>
         </div>
 
-        <div class="stat-card success" @click="navigateTo('/load-analysis')">
-          <div class="stat-icon">📊</div>
+        <div 
+          class="card-unified card-unified--interactive card-unified--success stagger-2" 
+          @click="navigateTo('/load-analysis')"
+        >
+          <div class="stat-icon icon-lg">📊</div>
           <div class="stat-info">
             <div class="stat-value">{{ formatNumber(stats.totalVolume) }}</div>
             <div class="stat-label">总训练量(kg)</div>
@@ -42,8 +48,11 @@
           </div>
         </div>
 
-        <div class="stat-card warning" @click="navigateTo('/recovery-status')">
-          <div class="stat-icon">💚</div>
+        <div 
+          class="card-unified card-unified--interactive card-unified--warning stagger-3" 
+          @click="navigateTo('/recovery-status')"
+        >
+          <div class="stat-icon icon-lg">💚</div>
           <div class="stat-info">
             <div class="stat-value">{{ stats.recoveryScore }}</div>
             <div class="stat-label">恢复评分</div>
@@ -53,8 +62,11 @@
           </div>
         </div>
 
-        <div class="stat-card danger" @click="navigateTo('/fitness-planner')">
-          <div class="stat-icon">🎯</div>
+        <div 
+          class="card-unified card-unified--interactive card-unified--danger stagger-4" 
+          @click="navigateTo('/fitness-planner')"
+        >
+          <div class="stat-icon icon-lg">🎯</div>
           <div class="stat-info">
             <div class="stat-value">{{ stats.goalCompletionRate }}%</div>
             <div class="stat-label">目标完成</div>
@@ -66,66 +78,76 @@
       </div>
     </section>
 
-    <!-- 快捷操作 -->
+    <!-- 快捷操作 - 使用统一 section header -->
     <section class="quick-actions-section">
-      <h2 class="section-title">
-        <span class="title-icon">⚡</span>
-        快捷操作
-      </h2>
+      <div class="section-header section-header--sm">
+        <h2 class="section-header__title">
+          <span class="title-icon icon-md">⚡</span>
+          快捷操作
+        </h2>
+      </div>
       <div class="actions-grid">
-        <div class="action-card" @click="navigateTo('/training-data')">
-          <div class="action-icon">📝</div>
+        <div class="action-card card-unified card-unified--sm card-unified--interactive stagger-1" @click="navigateTo('/training-data')">
+          <div class="action-icon icon-lg">📝</div>
           <div class="action-text">记录训练</div>
         </div>
-        <div class="action-card" @click="navigateTo('/fitness-planner')">
-          <div class="action-icon">📋</div>
+        <div class="action-card card-unified card-unified--sm card-unified--interactive stagger-2" @click="navigateTo('/fitness-planner')">
+          <div class="action-icon icon-lg">📋</div>
           <div class="action-text">训练计划</div>
         </div>
-        <div class="action-card" @click="navigateTo('/nutrition-tracking')">
-          <div class="action-icon">🥗</div>
+        <div class="action-card card-unified card-unified--sm card-unified--interactive stagger-3" @click="navigateTo('/nutrition-tracking')">
+          <div class="action-icon icon-lg">🥗</div>
           <div class="action-text">营养记录</div>
         </div>
-        <div class="action-card" @click="navigateTo('/training-suggestions')">
-          <div class="action-icon">💡</div>
+        <div class="action-card card-unified card-unified--sm card-unified--interactive stagger-4" @click="navigateTo('/training-suggestions')">
+          <div class="action-icon icon-lg">💡</div>
           <div class="action-text">训练建议</div>
         </div>
-        <div class="action-card" @click="navigateTo('/history-stats')">
-          <div class="action-icon">📈</div>
+        <div class="action-card card-unified card-unified--sm card-unified--interactive stagger-5" @click="navigateTo('/history-stats')">
+          <div class="action-icon icon-lg">📈</div>
           <div class="action-text">历史统计</div>
         </div>
-        <div class="action-card" @click="navigateTo('/data-visualization')">
-          <div class="action-icon">📊</div>
+        <div class="action-card card-unified card-unified--sm card-unified--interactive stagger-6" @click="navigateTo('/data-visualization')">
+          <div class="action-icon icon-lg">📊</div>
           <div class="action-text">数据可视化</div>
         </div>
       </div>
     </section>
 
-    <!-- 最近训练记录 -->
+    <!-- 最近训练记录 - 使用统一组件 -->
     <section class="recent-section">
       <div class="section-header">
-        <h2 class="section-title">
-          <span class="title-icon">🕒</span>
+        <h2 class="section-header__title">
+          <span class="title-icon icon-md">🕒</span>
           最近训练
         </h2>
-        <el-button type="primary" size="small" @click="navigateTo('/training-records')">
-          查看全部
-        </el-button>
-      </div>
-      
-      <div class="records-list" v-loading="loading">
-        <div v-if="recentRecords.length === 0 && !loading" class="empty-state">
-          <div class="empty-icon">📭</div>
-          <p>还没有训练记录</p>
-          <el-button type="primary" @click="navigateTo('/training-data')">
-            开始记录
+        <div class="section-header__actions">
+          <el-button class="btn-unified btn-unified--primary btn-unified--sm" @click="navigateTo('/training-records')">
+            查看全部
           </el-button>
         </div>
+      </div>
+      
+      <div class="records-list card-unified" v-loading="loading">
+        <!-- 空状态 - 使用统一空状态组件 -->
+        <div v-if="recentRecords.length === 0 && !loading" class="empty-state empty-state--compact">
+          <div class="empty-state__icon">📭</div>
+          <h3 class="empty-state__title">还没有训练记录</h3>
+          <p class="empty-state__description">开始记录你的第一次训练吧</p>
+          <div class="empty-state__actions">
+            <el-button class="btn-unified btn-unified--primary" @click="navigateTo('/training-data')">
+              开始记录
+            </el-button>
+          </div>
+        </div>
         
+        <!-- 训练记录卡片 -->
         <div v-else class="record-cards">
           <div 
-            v-for="record in recentRecords" 
+            v-for="(record, index) in recentRecords" 
             :key="record.id" 
-            class="record-card"
+            class="record-card card-unified card-unified--sm card-unified--interactive"
+            :class="`stagger-${index + 1}`"
             @click="navigateTo('/training-records')"
           >
             <div class="record-date">{{ formatDate(record.trainingDate) }}</div>
@@ -143,14 +165,16 @@
       </div>
     </section>
 
-    <!-- 今日目标 -->
+    <!-- 今日目标 - 使用统一组件 -->
     <section class="goals-section" v-if="todayGoals.length > 0">
-      <h2 class="section-title">
-        <span class="title-icon">🎯</span>
-        今日目标
-      </h2>
-      <div class="goals-list">
-        <div v-for="goal in todayGoals" :key="goal.id" class="goal-item">
+      <div class="section-header section-header--sm">
+        <h2 class="section-header__title">
+          <span class="title-icon icon-md">🎯</span>
+          今日目标
+        </h2>
+      </div>
+      <div class="goals-list card-unified">
+        <div v-for="(goal, index) in todayGoals" :key="goal.id" class="goal-item" :class="`stagger-${index + 1}`">
           <div class="goal-info">
             <span class="goal-name">{{ goal.name }}</span>
             <span class="goal-progress">{{ goal.progress }}/{{ goal.target }}</span>
@@ -159,6 +183,7 @@
             :percentage="Math.min((goal.progress / goal.target) * 100, 100)" 
             :color="goal.progress >= goal.target ? '#10b981' : '#8020ff'"
             :show-text="false"
+            class="progress-gradient"
           />
         </div>
       </div>
@@ -314,124 +339,131 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Dashboard 页面 - 使用统一组件样式 */
 .dashboard-page {
-  padding: 20px;
+  padding: var(--spacing-6, 24px);
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* 欢迎区域 */
+/* 欢迎区域 - 增强玻璃态效果 */
 .welcome-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
-  padding: 30px;
-  background: linear-gradient(135deg, rgba(128, 32, 255, 0.15), rgba(0, 242, 254, 0.1));
-  border-radius: 20px;
-  border: 1px solid rgba(128, 32, 255, 0.2);
-  margin-bottom: 24px;
+  gap: var(--spacing-8, 32px);
+  padding: var(--spacing-9, 36px);
+  margin-bottom: var(--spacing-7, 28px);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5), transparent);
+}
+
+.welcome-section::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .welcome-content {
   flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .welcome-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 12px 0;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #ffffff);
+  margin: 0 0 var(--spacing-4, 14px) 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-3, 10px);
   flex-wrap: wrap;
+  letter-spacing: -0.02em;
 }
 
-.greeting {
-  background: linear-gradient(135deg, #8020ff, #00f2fe);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.username {
+  color: var(--color-text-primary, #f8fafc);
 }
 
 .emoji {
-  font-size: 1.8rem;
+  font-size: 2rem;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
 }
 
 .welcome-subtitle {
-  color: #8888aa;
-  font-size: 1rem;
+  color: var(--color-text-secondary, #94a3b8);
+  font-size: 1.05rem;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.7;
+  max-width: 500px;
 }
 
 .welcome-visual {
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .daily-quote {
-  background: rgba(18, 18, 37, 0.8);
-  border-radius: 16px;
-  padding: 24px;
   text-align: center;
-  border: 1px solid rgba(128, 32, 255, 0.2);
-  min-width: 280px;
+  min-width: 300px;
 }
 
 .quote-icon {
-  font-size: 2.5rem;
-  margin-bottom: 12px;
+  margin-bottom: var(--spacing-4, 14px);
+  filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.5));
 }
 
 .quote-text {
-  color: #ffffff;
-  font-size: 1rem;
+  color: var(--color-text-primary, #f1f5f9);
+  font-size: 1.05rem;
   font-style: italic;
-  margin-bottom: 12px;
-  line-height: 1.5;
+  margin-bottom: var(--spacing-4, 14px);
+  line-height: 1.6;
 }
 
 .quote-date {
-  color: #8888aa;
+  color: var(--color-text-tertiary, #64748b);
   font-size: 0.85rem;
+  font-weight: 500;
 }
 
-/* 统计卡片 */
+/* 统计卡片区域 */
 .stats-section {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-7, 28px);
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-5, 20px);
 }
 
-.stat-card {
-  background: rgba(18, 18, 37, 0.9);
-  border-radius: 16px;
-  padding: 24px;
+/* 统计卡片内部布局 */
+.stats-grid .card-unified {
   display: flex;
   align-items: center;
-  gap: 16px;
-  border: 1px solid rgba(128, 32, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.3s ease;
+  gap: var(--spacing-5, 18px);
 }
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(128, 32, 255, 0.3);
-}
-
-.stat-card.primary { border-top: 3px solid #3b82f6; }
-.stat-card.success { border-top: 3px solid #10b981; }
-.stat-card.warning { border-top: 3px solid #f59e0b; }
-.stat-card.danger { border-top: 3px solid #ef4444; }
 
 .stat-icon {
-  font-size: 2.5rem;
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.4));
 }
 
 .stat-info {
@@ -439,227 +471,212 @@ onMounted(() => {
 }
 
 .stat-value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #ffffff);
   line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .stat-label {
-  color: #8888aa;
+  color: var(--color-text-secondary, #94a3b8);
   font-size: 0.9rem;
-  margin: 4px 0;
+  margin: var(--spacing-2, 6px) 0;
+  font-weight: 500;
 }
 
 .stat-change {
   font-size: 0.8rem;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: var(--spacing-1, 4px) var(--spacing-3, 10px);
+  border-radius: 12px;
   display: inline-block;
 }
 
 .stat-change.positive {
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-success, #10b981);
+  background: var(--color-success-bg, rgba(16, 185, 129, 0.15));
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .stat-change.negative {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger, #ef4444);
+  background: var(--color-danger-bg, rgba(239, 68, 68, 0.15));
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .stat-change.neutral {
-  color: #f59e0b;
-  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-warning, #f59e0b);
+  background: var(--color-warning-bg, rgba(245, 158, 11, 0.15));
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-/* 快捷操作 */
+/* 快捷操作区域 */
 .quick-actions-section {
-  margin-bottom: 24px;
-}
-
-.section-title {
-  color: #ffffff;
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin: 0 0 16px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.title-icon {
-  font-size: 1.2rem;
+  margin-bottom: var(--spacing-7, 28px);
 }
 
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-4, 14px);
 }
 
 .action-card {
-  background: rgba(18, 18, 37, 0.8);
-  border-radius: 12px;
-  padding: 20px 16px;
   text-align: center;
-  border: 1px solid rgba(128, 32, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.action-card:hover {
-  background: rgba(128, 32, 255, 0.2);
-  border-color: #8020ff;
-  transform: translateY(-2px);
+  padding: var(--spacing-6, 24px) var(--spacing-5, 18px) !important;
 }
 
 .action-icon {
-  font-size: 2rem;
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-3, 10px);
+  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+  transition: transform 0.3s ease;
+}
+
+.action-card:hover .action-icon {
+  transform: scale(1.15);
 }
 
 .action-text {
-  color: #e0e0ff;
-  font-size: 0.9rem;
-  font-weight: 500;
+  color: var(--color-text-primary, #e2e8f0);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-/* 最近训练 */
+/* 最近训练区域 */
 .recent-section {
-  margin-bottom: 24px;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-7, 28px);
 }
 
 .records-list {
-  background: rgba(18, 18, 37, 0.8);
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid rgba(128, 32, 255, 0.2);
-  min-height: 150px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #8888aa;
-}
-
-.empty-icon {
-  font-size: 3rem;
-  margin-bottom: 12px;
+  min-height: 160px;
 }
 
 .record-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-4, 14px);
 }
 
 .record-card {
-  background: rgba(18, 18, 37, 0.9);
-  border-radius: 12px;
-  padding: 16px;
-  border: 1px solid rgba(128, 32, 255, 0.15);
-  cursor: pointer;
-  transition: all 0.2s ease;
+  position: relative;
 }
 
-.record-card:hover {
-  border-color: #8020ff;
-  background: rgba(128, 32, 255, 0.1);
+.record-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #6366f1, #8b5cf6);
+  border-radius: 4px 0 0 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.record-card:hover::before {
+  opacity: 1;
 }
 
 .record-date {
-  color: #8888aa;
+  color: var(--color-text-tertiary, #64748b);
   font-size: 0.8rem;
-  margin-bottom: 6px;
+  margin-bottom: var(--spacing-2, 8px);
+  font-weight: 500;
 }
 
 .record-name {
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 8px;
+  color: var(--color-text-primary, #f8fafc);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-3, 10px);
 }
 
 .record-details {
   display: flex;
-  gap: 12px;
-  margin-bottom: 8px;
+  gap: var(--spacing-3, 10px);
+  margin-bottom: var(--spacing-3, 10px);
+  flex-wrap: wrap;
 }
 
 .detail-item {
-  color: #00f2fe;
+  color: #06b6d4;
   font-size: 0.85rem;
-  background: rgba(0, 242, 254, 0.1);
-  padding: 2px 8px;
-  border-radius: 6px;
+  font-weight: 600;
+  background: rgba(6, 182, 212, 0.12);
+  padding: var(--spacing-1, 4px) var(--spacing-3, 10px);
+  border-radius: 8px;
+  border: 1px solid rgba(6, 182, 212, 0.25);
 }
 
 .record-volume {
-  color: #8888aa;
+  color: var(--color-text-secondary, #94a3b8);
   font-size: 0.8rem;
+  font-weight: 500;
 }
 
-/* 今日目标 */
+/* 今日目标区域 */
 .goals-section {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-7, 28px);
 }
 
 .goals-list {
-  background: rgba(18, 18, 37, 0.8);
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid rgba(128, 32, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4, 16px);
 }
 
 .goal-item {
-  margin-bottom: 16px;
+  padding: var(--spacing-4, 16px);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  transition: all 0.3s ease;
 }
 
-.goal-item:last-child {
-  margin-bottom: 0;
+.goal-item:hover {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.25);
 }
 
 .goal-info {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-3, 12px);
 }
 
 .goal-name {
-  color: #ffffff;
-  font-size: 0.95rem;
+  color: var(--color-text-primary, #f8fafc);
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .goal-progress {
-  color: #8888aa;
-  font-size: 0.85rem;
+  color: var(--color-text-secondary, #94a3b8);
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-/* 响应式 */
+/* 响应式优化 */
 @media (max-width: 768px) {
   .dashboard-page {
-    padding: 16px;
+    padding: var(--spacing-4, 16px);
   }
   
   .welcome-section {
     flex-direction: column;
     text-align: center;
-    padding: 24px 20px;
+    padding: var(--spacing-7, 28px) var(--spacing-5, 20px);
   }
   
   .welcome-title {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     justify-content: center;
+  }
+  
+  .welcome-subtitle {
+    max-width: 100%;
   }
   
   .daily-quote {
@@ -671,12 +688,12 @@ onMounted(() => {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .stat-card {
-    padding: 16px;
+  .stats-grid .card-unified {
+    padding: var(--spacing-5, 20px);
   }
   
   .stat-value {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
   
   .actions-grid {
@@ -684,15 +701,11 @@ onMounted(() => {
   }
   
   .action-card {
-    padding: 16px 12px;
+    padding: var(--spacing-5, 18px) var(--spacing-4, 14px) !important;
   }
-  
-  .action-icon {
-    font-size: 1.6rem;
-  }
-  
+
   .action-text {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 }
 

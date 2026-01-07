@@ -1,0 +1,552 @@
+// =============================================================================
+// Animation System - Keyframes, Transitions, and Micro-interactions
+// =============================================================================
+// 本文件定义所有动画效果、过渡和微交互
+// Requirements: 1.3, 1.4, 1.5, 1.6, 8.4, 9.2
+
+@use './tokens' as *;
+
+// =============================================================================
+// Keyframe Animations - Entrance Animations
+// =============================================================================
+// 入场动画：fadeInUp, fadeInLeft, fadeInRight, scaleIn, bounceIn
+// Requirements: 1.3, 1.6
+
+// 淡入上移动画
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 淡入左移动画
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// 淡入右移动画
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// 缩放进入动画
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// 弹跳进入动画
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// =============================================================================
+// Keyframe Animations - Loading and Feedback
+// =============================================================================
+// 加载和反馈动画：shimmer, ripple, pulseGlow
+// Requirements: 1.4, 1.5
+
+// 骨架屏闪烁动画 (Shimmer)
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// 涟漪效果动画 (Ripple)
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+// 脉冲发光动画 (Pulse Glow)
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(128, 32, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(128, 32, 255, 0.5);
+  }
+}
+
+// =============================================================================
+// Keyframe Animations - Notification and Slide
+// =============================================================================
+// 通知和滑动动画：slideInRight
+// Requirements: 1.6
+
+// 滑入通知动画 (从右侧滑入)
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// 滑出通知动画 (向右滑出)
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+// =============================================================================
+// Additional Utility Keyframes
+// =============================================================================
+// 额外的工具动画
+
+// 基础淡入
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// 淡入下移
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 淡出
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+// 旋转动画
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 脉冲缩放动画
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+// 摇摆动画
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+// 成功勾选动画
+@keyframes checkmark {
+  from {
+    opacity: 0;
+    transform: rotate(45deg) scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+// 焦点脉冲动画
+@keyframes focusPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 2px var(--color-surface-0, #0a0a14),
+      0 0 0 4px var(--color-primary, #8020ff);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 2px var(--color-surface-0, #0a0a14),
+      0 0 0 6px rgba(128, 32, 255, 0.5);
+  }
+}
+
+
+// =============================================================================
+// Animation Utility Classes
+// =============================================================================
+// 动画工具类，用于应用各种动画效果
+// Requirements: 1.3, 8.4
+
+// Entrance animation classes
+.animate-fade-in {
+  animation: fadeIn $duration-normal $ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp $duration-normal $ease-out-expo forwards;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown $duration-normal $ease-out-expo forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft $duration-normal $ease-out-expo forwards;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight $duration-normal $ease-out-expo forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn $duration-normal $ease-spring forwards;
+}
+
+.animate-bounce-in {
+  animation: bounceIn $duration-slow $ease-spring forwards;
+}
+
+// Loading animation classes
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.animate-rotate {
+  animation: rotate 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease infinite;
+}
+
+// Notification animation classes
+.animate-slide-in-right {
+  animation: slideInRight $duration-normal $ease-spring forwards;
+}
+
+.animate-slide-out-right {
+  animation: slideOutRight $duration-fast $ease-in forwards;
+}
+
+// =============================================================================
+// Stagger Animation Delay Classes
+// =============================================================================
+// 交错动画延迟类（50ms 间隔）
+// Requirements: 1.3
+
+@for $i from 1 through 10 {
+  .stagger-#{$i} {
+    animation-delay: #{$i * 50}ms;
+  }
+}
+
+// =============================================================================
+// Performance Optimization Classes
+// =============================================================================
+// 性能优化类：will-change 和 GPU 加速
+// Requirements: 8.4
+
+// Will-change hint for elements about to animate
+.will-animate {
+  will-change: transform, opacity;
+}
+
+// GPU acceleration for smooth animations
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// Combined performance optimization
+.animate-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// =============================================================================
+// Legacy Animation Classes (Backward Compatibility)
+// =============================================================================
+// 保持向后兼容的旧动画类
+
+.fade-in {
+  animation: fadeIn $duration-normal ease;
+}
+
+.fade-in-up {
+  animation: fadeInUp $duration-normal ease;
+}
+
+.fade-in-down {
+  animation: fadeInDown $duration-normal ease;
+}
+
+.scale-in {
+  animation: scaleIn $duration-normal ease;
+}
+
+.rotate-infinite {
+  animation: rotate 1s linear infinite;
+}
+
+.shake {
+  animation: shake 0.5s ease;
+}
+
+// =============================================================================
+// Vue Transition Classes
+// =============================================================================
+// Vue 过渡动画类
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity $duration-normal ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: transform $duration-normal ease, opacity $duration-normal ease;
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform $duration-normal $ease-spring, opacity $duration-normal ease;
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+// =============================================================================
+// Hover Effect Classes
+// =============================================================================
+// 悬停效果类
+
+.hover-lift {
+  transition: transform $duration-normal ease, box-shadow $duration-normal ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated-sm, #{$shadow-elevated-sm});
+  }
+}
+
+.hover-scale {
+  transition: transform $duration-normal ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.hover-glow {
+  transition: box-shadow $duration-normal ease;
+  
+  &:hover {
+    box-shadow: var(--shadow-md, #{$shadow-md});
+  }
+}
+
+// =============================================================================
+// Loading Components
+// =============================================================================
+// 加载组件样式
+
+.loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(128, 32, 255, 0.2);
+  border-top-color: var(--color-primary, #8020ff);
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+}
+
+// Skeleton loading base class
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-2, rgba(15, 15, 35, 0.85)) 25%,
+    rgba(99, 102, 241, 0.1) 50%,
+    var(--color-surface-2, rgba(15, 15, 35, 0.85)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+  
+  &--text {
+    height: 1em;
+    margin-bottom: 0.5em;
+  }
+  
+  &--avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+  }
+  
+  &--card {
+    height: 200px;
+  }
+}
+
+
+// =============================================================================
+// Reduced Motion Support (Accessibility)
+// =============================================================================
+// 减少动画偏好支持，为有前庭障碍的用户提供无障碍体验
+// Requirements: 9.2
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    // 禁用所有动画
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    // 禁用所有过渡
+    transition-duration: 0.01ms !important;
+    // 禁用平滑滚动
+    scroll-behavior: auto !important;
+  }
+  
+  // 确保动画类不产生视觉效果
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-fade-in-left,
+  .animate-fade-in-right,
+  .animate-scale-in,
+  .animate-bounce-in,
+  .animate-shimmer,
+  .animate-pulse-glow,
+  .animate-rotate,
+  .animate-pulse,
+  .animate-slide-in-right,
+  .animate-slide-out-right,
+  .fade-in,
+  .fade-in-up,
+  .fade-in-down,
+  .scale-in,
+  .rotate-infinite,
+  .shake {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  // 禁用悬停动画效果
+  .hover-lift,
+  .hover-scale,
+  .hover-glow {
+    &:hover {
+      transform: none !important;
+    }
+  }
+  
+  // 骨架屏使用静态背景
+  .skeleton {
+    animation: none !important;
+    background: var(--color-surface-2, rgba(15, 15, 35, 0.85)) !important;
+  }
+  
+  // 加载动画使用静态显示
+  .loading-spinner {
+    animation: none !important;
+    border-color: var(--color-primary, #8020ff) !important;
+  }
+}

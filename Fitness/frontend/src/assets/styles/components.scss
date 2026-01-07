@@ -3,6 +3,2010 @@
 @use './spacing' as spacing;
 
 // =============================================================================
+// 统一卡片组件 (Unified Card Component)
+// =============================================================================
+// Requirements: 5.1
+// 卡片内边距在 20-28px 范围内，border-radius 在 16-24px 范围内
+// 提供尺寸变体 (--sm, --lg)、交互变体 (--interactive)、颜色变体 (--primary, --success, --warning, --danger)
+
+.card-unified {
+  // Base styles - 基础样式
+  // 使用统一的玻璃态效果变量 (Requirements: 7.5)
+  background: var(--glass-bg, rgba(15, 15, 35, 0.85));
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+  border-radius: 20px; // 在 16-24px 范围内
+  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  padding: 24px; // 在 20-28px 范围内
+  transition: all tokens.$duration-normal tokens.$ease-out;
+  position: relative;
+  overflow: hidden;
+  
+  // ==========================================================================
+  // Size Variants - 尺寸变体
+  // ==========================================================================
+  
+  // Small variant - 小尺寸
+  &--sm {
+    padding: 20px; // 20px - 在 20-28px 范围内的最小值
+    border-radius: 16px; // 16px - 在 16-24px 范围内的最小值
+  }
+  
+  // Large variant - 大尺寸
+  &--lg {
+    padding: 28px; // 28px - 在 20-28px 范围内的最大值
+    border-radius: 24px; // 24px - 在 16-24px 范围内的最大值
+  }
+  
+  // ==========================================================================
+  // Interactive Variant - 交互变体
+  // ==========================================================================
+  
+  &--interactive {
+    cursor: pointer;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: tokens.$shadow-elevated-md;
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+    
+    &:active {
+      transform: translateY(-2px);
+    }
+    
+    // Focus state for accessibility
+    &:focus-visible {
+      outline: none;
+      box-shadow: 
+        0 0 0 2px rgba(15, 15, 35, 1),
+        0 0 0 4px rgba(128, 32, 255, 0.5);
+    }
+  }
+  
+  // ==========================================================================
+  // Color Variants - 颜色变体
+  // ==========================================================================
+  // 使用顶部渐变条来标识不同类型的卡片
+  
+  // Primary variant - 主色调
+  &--primary {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #8020ff, #6366f1);
+      border-radius: 20px 20px 0 0;
+    }
+  }
+  
+  // Success variant - 成功状态
+  &--success {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 20px 20px 0 0;
+    }
+  }
+  
+  // Warning variant - 警告状态
+  &--warning {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      border-radius: 20px 20px 0 0;
+    }
+  }
+  
+  // Danger variant - 危险状态
+  &--danger {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ef4444, #f87171);
+      border-radius: 20px 20px 0 0;
+    }
+  }
+  
+  // ==========================================================================
+  // Combined Variants - 组合变体
+  // ==========================================================================
+  // 当同时使用尺寸变体和颜色变体时，调整顶部渐变条的圆角
+  
+  &--sm {
+    &.card-unified--primary::before,
+    &.card-unified--success::before,
+    &.card-unified--warning::before,
+    &.card-unified--danger::before {
+      border-radius: 16px 16px 0 0;
+    }
+  }
+  
+  &--lg {
+    &.card-unified--primary::before,
+    &.card-unified--success::before,
+    &.card-unified--warning::before,
+    &.card-unified--danger::before {
+      border-radius: 24px 24px 0 0;
+    }
+  }
+  
+  // ==========================================================================
+  // Card Content Slots - 卡片内容插槽
+  // ==========================================================================
+  
+  // Card header
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: tokens.$spacing-normal;
+  }
+  
+  // Card title
+  &__title {
+    font-size: tokens.$font-size-lg;
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0;
+  }
+  
+  // Card subtitle
+  &__subtitle {
+    font-size: tokens.$font-size-sm;
+    color: #94a3b8;
+    margin-top: tokens.$spacing-1;
+  }
+  
+  // Card body
+  &__body {
+    color: #e2e8f0;
+  }
+  
+  // Card footer
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: tokens.$spacing-3;
+    margin-top: tokens.$spacing-normal;
+    padding-top: tokens.$spacing-normal;
+    border-top: 1px solid rgba(99, 102, 241, 0.15);
+  }
+  
+  // Card icon
+  &__icon {
+    font-size: tokens.$font-size-2xl;
+    color: #8020ff;
+  }
+}
+
+// =============================================================================
+// Responsive Adjustments for Unified Card
+// =============================================================================
+
+@media (max-width: tokens.$breakpoint-md) {
+  .card-unified {
+    padding: 20px;
+    border-radius: 16px;
+    
+    &--sm {
+      padding: 16px;
+      border-radius: 12px;
+    }
+    
+    &--lg {
+      padding: 24px;
+      border-radius: 20px;
+    }
+    
+    &__title {
+      font-size: tokens.$font-size-base;
+    }
+  }
+}
+
+// =============================================================================
+// 统一按钮组件 (Unified Button Component)
+// =============================================================================
+// Requirements: 5.2
+// 提供按钮变体 (--primary, --secondary, --ghost, --danger)
+// 提供尺寸变体 (--sm, --lg)
+// 包含涟漪效果
+
+.btn-unified {
+  // Base styles - 基础样式
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: tokens.$spacing-2;
+  padding: tokens.$spacing-3 tokens.$spacing-6; // 12px 24px
+  border-radius: 12px;
+  font-weight: tokens.$font-weight-semibold;
+  font-size: tokens.$font-size-sm; // 14px
+  font-family: tokens.$font-family-sans;
+  border: none;
+  cursor: pointer;
+  transition: all tokens.$duration-fast tokens.$ease-out;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  line-height: tokens.$line-height-normal;
+  
+  // Touch target - 确保最小触摸目标 44x44px
+  min-width: 44px;
+  min-height: 44px;
+  
+  // ==========================================================================
+  // Ripple Effect - 涟漪效果
+  // ==========================================================================
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  &:active::after {
+    animation: ripple tokens.$duration-slow tokens.$ease-out;
+  }
+  
+  // ==========================================================================
+  // Color Variants - 颜色变体
+  // ==========================================================================
+  
+  // Primary variant - 主色调按钮
+  &--primary {
+    background: linear-gradient(135deg, #8020ff, #6366f1);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(128, 32, 255, 0.3);
+    
+    &:hover {
+      box-shadow: 0 0 30px rgba(128, 32, 255, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 0 15px rgba(128, 32, 255, 0.4);
+    }
+    
+    &:focus-visible {
+      outline: none;
+      box-shadow: 
+        0 0 0 2px rgba(15, 15, 35, 1),
+        0 0 0 4px rgba(128, 32, 255, 0.5),
+        0 0 20px rgba(128, 32, 255, 0.3);
+    }
+  }
+  
+  // Secondary variant - 次要按钮
+  &--secondary {
+    background: rgba(99, 102, 241, 0.15);
+    color: #e2e8f0;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    
+    &:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: rgba(99, 102, 241, 0.5);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+      background: rgba(99, 102, 241, 0.3);
+    }
+    
+    &:focus-visible {
+      outline: none;
+      box-shadow: 
+        0 0 0 2px rgba(15, 15, 35, 1),
+        0 0 0 4px rgba(99, 102, 241, 0.5);
+    }
+  }
+  
+  // Ghost variant - 幽灵按钮
+  &--ghost {
+    background: transparent;
+    color: #94a3b8;
+    
+    &:hover {
+      background: rgba(99, 102, 241, 0.1);
+      color: #e2e8f0;
+    }
+    
+    &:active {
+      background: rgba(99, 102, 241, 0.15);
+    }
+    
+    &:focus-visible {
+      outline: none;
+      box-shadow: 
+        0 0 0 2px rgba(15, 15, 35, 1),
+        0 0 0 4px rgba(99, 102, 241, 0.3);
+    }
+  }
+  
+  // Danger variant - 危险按钮
+  &--danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+    
+    &:hover {
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+    }
+    
+    &:focus-visible {
+      outline: none;
+      box-shadow: 
+        0 0 0 2px rgba(15, 15, 35, 1),
+        0 0 0 4px rgba(239, 68, 68, 0.5);
+    }
+  }
+  
+  // ==========================================================================
+  // Size Variants - 尺寸变体
+  // ==========================================================================
+  
+  // Small variant - 小尺寸
+  &--sm {
+    padding: tokens.$spacing-2 tokens.$spacing-4; // 8px 16px
+    font-size: tokens.$font-size-xs; // 12px
+    border-radius: 8px;
+    min-height: 36px;
+    gap: tokens.$spacing-1;
+  }
+  
+  // Large variant - 大尺寸
+  &--lg {
+    padding: tokens.$spacing-4 tokens.$spacing-8; // 16px 32px
+    font-size: tokens.$font-size-base; // 16px
+    border-radius: 14px;
+    min-height: 52px;
+    gap: tokens.$spacing-3;
+  }
+  
+  // ==========================================================================
+  // States - 状态
+  // ==========================================================================
+  
+  // Disabled state - 禁用状态
+  &:disabled,
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+    
+    &:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    &::after {
+      display: none;
+    }
+  }
+  
+  // Loading state - 加载状态
+  &--loading {
+    pointer-events: none;
+    position: relative;
+    color: transparent !important;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: rotate 1s linear infinite;
+    }
+  }
+  
+  // ==========================================================================
+  // Icon Support - 图标支持
+  // ==========================================================================
+  
+  // Icon only button
+  &--icon-only {
+    padding: tokens.$spacing-3;
+    min-width: 44px;
+    width: 44px;
+    
+    &.btn-unified--sm {
+      padding: tokens.$spacing-2;
+      min-width: 36px;
+      width: 36px;
+    }
+    
+    &.btn-unified--lg {
+      padding: tokens.$spacing-4;
+      min-width: 52px;
+      width: 52px;
+    }
+  }
+  
+  // Button icon
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    
+    &--left {
+      margin-right: tokens.$spacing-1;
+    }
+    
+    &--right {
+      margin-left: tokens.$spacing-1;
+    }
+  }
+  
+  // ==========================================================================
+  // Full Width - 全宽按钮
+  // ==========================================================================
+  
+  &--block {
+    width: 100%;
+    display: flex;
+  }
+}
+
+// =============================================================================
+// Button Group - 按钮组
+// =============================================================================
+
+.btn-group {
+  display: inline-flex;
+  gap: tokens.$spacing-2;
+  
+  // Attached buttons (no gap)
+  &--attached {
+    gap: 0;
+    
+    .btn-unified {
+      border-radius: 0;
+      
+      &:first-child {
+        border-radius: 12px 0 0 12px;
+      }
+      
+      &:last-child {
+        border-radius: 0 12px 12px 0;
+      }
+      
+      &:not(:first-child) {
+        margin-left: -1px;
+      }
+    }
+    
+    &.btn-group--sm .btn-unified {
+      &:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+      
+      &:last-child {
+        border-radius: 0 8px 8px 0;
+      }
+    }
+  }
+  
+  // Vertical button group
+  &--vertical {
+    flex-direction: column;
+    
+    &.btn-group--attached {
+      .btn-unified {
+        &:first-child {
+          border-radius: 12px 12px 0 0;
+        }
+        
+        &:last-child {
+          border-radius: 0 0 12px 12px;
+        }
+        
+        &:not(:first-child) {
+          margin-left: 0;
+          margin-top: -1px;
+        }
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Responsive Adjustments for Unified Button
+// =============================================================================
+
+@media (max-width: tokens.$breakpoint-md) {
+  .btn-unified {
+    // 移动端增加触摸目标
+    min-height: 48px;
+    
+    &--sm {
+      min-height: 40px;
+    }
+    
+    &--lg {
+      min-height: 56px;
+    }
+  }
+  
+  // 移动端按钮组垂直排列
+  .btn-group--mobile-vertical {
+    flex-direction: column;
+    width: 100%;
+    
+    .btn-unified {
+      width: 100%;
+    }
+  }
+}
+
+// Touch device optimizations
+@media (hover: none) and (pointer: coarse) {
+  .btn-unified {
+    // 禁用悬停效果在触摸设备上
+    &:hover {
+      transform: none;
+    }
+    
+    // 保持 active 状态反馈
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &--primary:active,
+    &--danger:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+// =============================================================================
+// 统一表单输入组件 (Unified Form Input Component)
+// =============================================================================
+// Requirements: 5.3
+// 提供焦点环、错误状态、成功状态
+// 包含浮动标签动画
+
+.input-unified {
+  // Base styles - 基础样式
+  width: 100%;
+  padding: tokens.$spacing-3 tokens.$spacing-4; // 12px 16px
+  background: rgba(15, 15, 35, 0.8);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  color: #f8fafc;
+  font-size: tokens.$font-size-base; // 16px - 防止 iOS 缩放
+  font-family: tokens.$font-family-sans;
+  line-height: tokens.$line-height-normal;
+  transition: all tokens.$duration-fast tokens.$ease-out;
+  
+  // Placeholder styles
+  &::placeholder {
+    color: #64748b;
+    opacity: 1;
+  }
+  
+  // ==========================================================================
+  // Focus State - 焦点状态（焦点环）
+  // ==========================================================================
+  
+  &:focus {
+    outline: none;
+    border-color: #8020ff;
+    box-shadow: 
+      0 0 0 3px rgba(128, 32, 255, 0.2),
+      tokens.$inner-glow-primary;
+  }
+  
+  // Focus-visible for keyboard navigation
+  &:focus-visible {
+    outline: none;
+    border-color: #8020ff;
+    box-shadow: 
+      0 0 0 3px rgba(128, 32, 255, 0.3),
+      tokens.$inner-glow-primary;
+  }
+  
+  // ==========================================================================
+  // Hover State - 悬停状态
+  // ==========================================================================
+  
+  &:hover:not(:focus):not(:disabled) {
+    border-color: rgba(99, 102, 241, 0.4);
+  }
+  
+  // ==========================================================================
+  // Error State - 错误状态
+  // ==========================================================================
+  
+  &--error,
+  &.error {
+    border-color: #ef4444;
+    
+    &:focus {
+      box-shadow: 
+        0 0 0 3px rgba(239, 68, 68, 0.2),
+        tokens.$inner-glow-danger;
+    }
+    
+    &:hover:not(:focus) {
+      border-color: #f87171;
+    }
+  }
+  
+  // ==========================================================================
+  // Success State - 成功状态
+  // ==========================================================================
+  
+  &--success,
+  &.success {
+    border-color: #10b981;
+    
+    &:focus {
+      box-shadow: 
+        0 0 0 3px rgba(16, 185, 129, 0.2),
+        tokens.$inner-glow-success;
+    }
+    
+    &:hover:not(:focus) {
+      border-color: #34d399;
+    }
+  }
+  
+  // ==========================================================================
+  // Disabled State - 禁用状态
+  // ==========================================================================
+  
+  &:disabled,
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(15, 15, 35, 0.5);
+  }
+  
+  // ==========================================================================
+  // Size Variants - 尺寸变体
+  // ==========================================================================
+  
+  // Small variant
+  &--sm {
+    padding: tokens.$spacing-2 tokens.$spacing-3; // 8px 12px
+    font-size: tokens.$font-size-sm;
+    border-radius: 8px;
+  }
+  
+  // Large variant
+  &--lg {
+    padding: tokens.$spacing-4 tokens.$spacing-5; // 16px 20px
+    font-size: tokens.$font-size-lg;
+    border-radius: 14px;
+  }
+}
+
+// =============================================================================
+// Textarea Unified - 统一文本域
+// =============================================================================
+
+.textarea-unified {
+  @extend .input-unified;
+  min-height: 100px;
+  resize: vertical;
+  line-height: tokens.$line-height-relaxed;
+  
+  // Auto-resize variant
+  &--auto-resize {
+    resize: none;
+    overflow: hidden;
+  }
+}
+
+// =============================================================================
+// Select Unified - 统一选择框
+// =============================================================================
+
+.select-unified {
+  @extend .input-unified;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right tokens.$spacing-4 center;
+  padding-right: tokens.$spacing-10;
+  cursor: pointer;
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// =============================================================================
+// Input Group Unified - 统一输入组（浮动标签）
+// =============================================================================
+
+.input-group-unified {
+  position: relative;
+  
+  // ==========================================================================
+  // Floating Label - 浮动标签
+  // ==========================================================================
+  
+  .input-label {
+    position: absolute;
+    left: tokens.$spacing-4;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: tokens.$font-size-base;
+    font-family: tokens.$font-family-sans;
+    pointer-events: none;
+    transition: all tokens.$duration-fast tokens.$ease-out;
+    background: transparent;
+    padding: 0;
+  }
+  
+  // Label animation when input is focused or has value
+  .input-unified:focus ~ .input-label,
+  .input-unified:not(:placeholder-shown) ~ .input-label,
+  .input-unified.has-value ~ .input-label {
+    top: 0;
+    transform: translateY(-50%) scale(0.85);
+    background: rgba(15, 15, 35, 1);
+    padding: 0 tokens.$spacing-2;
+    color: #8020ff;
+    font-weight: tokens.$font-weight-medium;
+  }
+  
+  // Error state label
+  .input-unified--error:focus ~ .input-label,
+  .input-unified--error:not(:placeholder-shown) ~ .input-label,
+  .input-unified.error:focus ~ .input-label,
+  .input-unified.error:not(:placeholder-shown) ~ .input-label {
+    color: #ef4444;
+  }
+  
+  // Success state label
+  .input-unified--success:focus ~ .input-label,
+  .input-unified--success:not(:placeholder-shown) ~ .input-label,
+  .input-unified.success:focus ~ .input-label,
+  .input-unified.success:not(:placeholder-shown) ~ .input-label {
+    color: #10b981;
+  }
+  
+  // ==========================================================================
+  // Input with Icon - 带图标的输入框
+  // ==========================================================================
+  
+  &--with-icon-left {
+    .input-unified {
+      padding-left: tokens.$spacing-11; // 44px
+    }
+    
+    .input-label {
+      left: tokens.$spacing-11;
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: tokens.$spacing-4;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: tokens.$font-size-xl;
+      pointer-events: none;
+    }
+  }
+  
+  &--with-icon-right {
+    .input-unified {
+      padding-right: tokens.$spacing-11; // 44px
+    }
+    
+    .input-icon {
+      position: absolute;
+      right: tokens.$spacing-4;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: tokens.$font-size-xl;
+      pointer-events: none;
+    }
+  }
+  
+  // ==========================================================================
+  // Helper Text and Error Message
+  // ==========================================================================
+  
+  .input-helper {
+    font-size: tokens.$font-size-xs;
+    color: #64748b;
+    margin-top: tokens.$spacing-1;
+    line-height: tokens.$line-height-normal;
+  }
+  
+  .input-error-message {
+    font-size: tokens.$font-size-xs;
+    color: #ef4444;
+    margin-top: tokens.$spacing-1;
+    line-height: tokens.$line-height-normal;
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-1;
+    
+    &::before {
+      content: '⚠';
+      font-size: tokens.$font-size-sm;
+    }
+  }
+  
+  .input-success-message {
+    font-size: tokens.$font-size-xs;
+    color: #10b981;
+    margin-top: tokens.$spacing-1;
+    line-height: tokens.$line-height-normal;
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-1;
+    
+    &::before {
+      content: '✓';
+      font-size: tokens.$font-size-sm;
+    }
+  }
+  
+  // ==========================================================================
+  // Character Counter
+  // ==========================================================================
+  
+  .input-counter {
+    font-size: tokens.$font-size-xs;
+    color: #64748b;
+    text-align: right;
+    margin-top: tokens.$spacing-1;
+    
+    &--warning {
+      color: #f59e0b;
+    }
+    
+    &--error {
+      color: #ef4444;
+    }
+  }
+}
+
+// =============================================================================
+// Checkbox and Radio Unified - 统一复选框和单选框
+// =============================================================================
+
+.checkbox-unified,
+.radio-unified {
+  display: flex;
+  align-items: center;
+  gap: tokens.$spacing-3;
+  cursor: pointer;
+  user-select: none;
+  
+  input {
+    width: 20px;
+    height: 20px;
+    accent-color: #8020ff;
+    cursor: pointer;
+    
+    &:focus-visible {
+      outline: 2px solid rgba(128, 32, 255, 0.5);
+      outline-offset: 2px;
+    }
+  }
+  
+  span {
+    font-size: tokens.$font-size-sm;
+    color: #e2e8f0;
+    line-height: tokens.$line-height-normal;
+  }
+  
+  &:hover span {
+    color: #f8fafc;
+  }
+  
+  // Disabled state
+  &--disabled,
+  &:has(input:disabled) {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    input {
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Checkbox/Radio group
+.checkbox-group-unified,
+.radio-group-unified {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.$spacing-3;
+  
+  // Horizontal layout
+  &--horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: tokens.$spacing-4;
+  }
+}
+
+// =============================================================================
+// Form Field Unified - 统一表单字段
+// =============================================================================
+
+.form-field-unified {
+  margin-bottom: tokens.$spacing-5; // 20px
+  
+  &--compact {
+    margin-bottom: tokens.$spacing-3;
+  }
+  
+  &--relaxed {
+    margin-bottom: tokens.$spacing-6;
+  }
+}
+
+// =============================================================================
+// Responsive Adjustments for Unified Form Inputs
+// =============================================================================
+
+@media (max-width: tokens.$breakpoint-md) {
+  .input-unified {
+    // 移动端增加触摸目标高度
+    min-height: 48px;
+    
+    &--sm {
+      min-height: 40px;
+    }
+    
+    &--lg {
+      min-height: 56px;
+    }
+  }
+  
+  .input-group-unified {
+    .input-label {
+      font-size: tokens.$font-size-sm;
+    }
+  }
+  
+  .checkbox-unified,
+  .radio-unified {
+    input {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+// Touch device optimizations for form inputs
+@media (hover: none) and (pointer: coarse) {
+  .input-unified,
+  .textarea-unified,
+  .select-unified {
+    // 增加触摸设备上的内边距
+    padding-top: tokens.$spacing-4;
+    padding-bottom: tokens.$spacing-4;
+  }
+}
+
+// =============================================================================
+// 统一图标尺寸 (Unified Icon Sizes)
+// =============================================================================
+// Requirements: 5.4
+// 定义图标尺寸类（16px, 20px, 24px, 32px）
+
+// Icon size classes
+.icon-xs {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.icon-sm {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.icon-md {
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.icon-lg {
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+  line-height: 1;
+}
+
+// Icon color variants
+.icon-primary {
+  color: #8020ff;
+}
+
+.icon-secondary {
+  color: #94a3b8;
+}
+
+.icon-success {
+  color: #10b981;
+}
+
+.icon-warning {
+  color: #f59e0b;
+}
+
+.icon-danger {
+  color: #ef4444;
+}
+
+.icon-muted {
+  color: #64748b;
+}
+
+// Icon container - 用于包裹图标并提供背景
+.icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  
+  // Size variants
+  &--xs {
+    width: 28px;
+    height: 28px;
+    
+    .icon-xs {
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+  }
+  
+  &--sm {
+    width: 36px;
+    height: 36px;
+  }
+  
+  &--md {
+    width: 44px;
+    height: 44px;
+  }
+  
+  &--lg {
+    width: 56px;
+    height: 56px;
+  }
+  
+  // Color variants with background
+  &--primary {
+    background: rgba(128, 32, 255, 0.15);
+    color: #8020ff;
+  }
+  
+  &--success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+  
+  &--warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+  }
+  
+  &--danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+  
+  &--info {
+    background: rgba(99, 102, 241, 0.15);
+    color: #6366f1;
+  }
+}
+
+// =============================================================================
+// 统一 Section Header 样式 (Unified Section Headers)
+// =============================================================================
+// Requirements: 5.5
+// 统一 section header 样式，包含一致的排版和间距
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: tokens.$spacing-loose; // 24px
+  
+  // ==========================================================================
+  // Title Area
+  // ==========================================================================
+  
+  &__title-area {
+    display: flex;
+    flex-direction: column;
+    gap: tokens.$spacing-1;
+  }
+  
+  &__title {
+    font-size: tokens.$font-size-xl; // 20px
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0;
+    line-height: tokens.$line-height-tight;
+    
+    // With icon
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-3;
+  }
+  
+  &__subtitle {
+    font-size: tokens.$font-size-sm;
+    color: #94a3b8;
+    margin: 0;
+    line-height: tokens.$line-height-normal;
+  }
+  
+  // ==========================================================================
+  // Actions Area
+  // ==========================================================================
+  
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-3;
+  }
+  
+  // ==========================================================================
+  // Size Variants
+  // ==========================================================================
+  
+  // Small section header
+  &--sm {
+    margin-bottom: tokens.$spacing-normal; // 16px
+    
+    .section-header__title {
+      font-size: tokens.$font-size-lg; // 18px
+    }
+    
+    .section-header__subtitle {
+      font-size: tokens.$font-size-xs;
+    }
+  }
+  
+  // Large section header
+  &--lg {
+    margin-bottom: tokens.$spacing-section; // 32px
+    
+    .section-header__title {
+      font-size: tokens.$font-size-2xl; // 24px
+    }
+    
+    .section-header__subtitle {
+      font-size: tokens.$font-size-base;
+    }
+  }
+  
+  // ==========================================================================
+  // Style Variants
+  // ==========================================================================
+  
+  // With bottom border
+  &--bordered {
+    padding-bottom: tokens.$spacing-normal;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  }
+  
+  // With accent line
+  &--accent {
+    .section-header__title {
+      position: relative;
+      padding-left: tokens.$spacing-4;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #8020ff, #6366f1);
+        border-radius: 2px;
+      }
+    }
+  }
+  
+  // Centered header
+  &--centered {
+    flex-direction: column;
+    text-align: center;
+    
+    .section-header__title-area {
+      align-items: center;
+    }
+    
+    .section-header__actions {
+      margin-top: tokens.$spacing-normal;
+    }
+  }
+}
+
+// =============================================================================
+// Page Header - 页面标题
+// =============================================================================
+
+.page-header {
+  margin-bottom: tokens.$spacing-section; // 32px
+  
+  &__title {
+    font-size: tokens.$font-size-3xl; // 30px
+    font-weight: tokens.$font-weight-bold;
+    color: #f8fafc;
+    margin: 0 0 tokens.$spacing-2 0;
+    line-height: tokens.$line-height-tight;
+  }
+  
+  &__description {
+    font-size: tokens.$font-size-base;
+    color: #94a3b8;
+    margin: 0;
+    line-height: tokens.$line-height-relaxed;
+    max-width: 600px;
+  }
+  
+  &__breadcrumb {
+    font-size: tokens.$font-size-sm;
+    color: #64748b;
+    margin-bottom: tokens.$spacing-3;
+    
+    a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color tokens.$duration-fast ease;
+      
+      &:hover {
+        color: #8020ff;
+      }
+    }
+    
+    .separator {
+      margin: 0 tokens.$spacing-2;
+      color: #475569;
+    }
+    
+    .current {
+      color: #e2e8f0;
+    }
+  }
+}
+
+// =============================================================================
+// Card Header - 卡片标题（用于卡片内部）
+// =============================================================================
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: tokens.$spacing-normal; // 16px
+  
+  &__title {
+    font-size: tokens.$font-size-lg; // 18px
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-2;
+  }
+  
+  &__icon {
+    font-size: tokens.$font-size-xl;
+    color: #8020ff;
+  }
+  
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: tokens.$spacing-2;
+  }
+  
+  // Compact variant
+  &--compact {
+    margin-bottom: tokens.$spacing-3;
+    
+    .card-header__title {
+      font-size: tokens.$font-size-base;
+    }
+  }
+}
+
+// =============================================================================
+// Responsive Adjustments for Headers
+// =============================================================================
+
+@media (max-width: tokens.$breakpoint-md) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: tokens.$spacing-3;
+    
+    &__actions {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    
+    &__title {
+      font-size: tokens.$font-size-lg;
+    }
+    
+    &--lg .section-header__title {
+      font-size: tokens.$font-size-xl;
+    }
+  }
+  
+  .page-header {
+    margin-bottom: tokens.$spacing-loose;
+    
+    &__title {
+      font-size: tokens.$font-size-2xl;
+    }
+    
+    &__description {
+      font-size: tokens.$font-size-sm;
+    }
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: tokens.$spacing-2;
+    
+    &__actions {
+      width: 100%;
+    }
+  }
+}
+
+// =============================================================================
+// 统一数据表格样式 (Unified Data Table)
+// =============================================================================
+// Requirements: 5.6
+// 统一数据表格样式，包含表头、行、单元格样式
+
+.table-unified {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(15, 15, 35, 0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  
+  // ==========================================================================
+  // Table Header
+  // ==========================================================================
+  
+  thead {
+    background: rgba(99, 102, 241, 0.1);
+    
+    th {
+      padding: tokens.$spacing-4 tokens.$spacing-5; // 16px 20px
+      text-align: left;
+      font-size: tokens.$font-size-sm;
+      font-weight: tokens.$font-weight-semibold;
+      color: #f8fafc;
+      text-transform: uppercase;
+      letter-spacing: tokens.$letter-spacing-wide;
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+      white-space: nowrap;
+      
+      // Sortable header
+      &.sortable {
+        cursor: pointer;
+        user-select: none;
+        transition: background tokens.$duration-fast ease;
+        
+        &:hover {
+          background: rgba(99, 102, 241, 0.15);
+        }
+        
+        &.sorted-asc::after,
+        &.sorted-desc::after {
+          content: '';
+          display: inline-block;
+          margin-left: tokens.$spacing-2;
+          border: 4px solid transparent;
+        }
+        
+        &.sorted-asc::after {
+          border-bottom-color: #8020ff;
+          transform: translateY(-2px);
+        }
+        
+        &.sorted-desc::after {
+          border-top-color: #8020ff;
+          transform: translateY(2px);
+        }
+      }
+    }
+  }
+  
+  // ==========================================================================
+  // Table Body
+  // ==========================================================================
+  
+  tbody {
+    tr {
+      transition: background tokens.$duration-fast ease;
+      
+      &:hover {
+        background: rgba(99, 102, 241, 0.08);
+      }
+      
+      &:not(:last-child) td {
+        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+      }
+      
+      // Selected row
+      &.selected {
+        background: rgba(128, 32, 255, 0.15);
+      }
+      
+      // Clickable row
+      &.clickable {
+        cursor: pointer;
+        
+        &:hover {
+          background: rgba(99, 102, 241, 0.12);
+        }
+      }
+    }
+    
+    td {
+      padding: tokens.$spacing-4 tokens.$spacing-5; // 16px 20px
+      font-size: tokens.$font-size-sm;
+      color: #e2e8f0;
+      vertical-align: middle;
+      
+      // Numeric column
+      &.numeric {
+        font-variant-numeric: tabular-nums;
+        font-family: tokens.$font-family-mono;
+        text-align: right;
+      }
+      
+      // Actions column
+      &.actions {
+        text-align: right;
+        white-space: nowrap;
+      }
+    }
+  }
+  
+  // ==========================================================================
+  // Table Footer
+  // ==========================================================================
+  
+  tfoot {
+    background: rgba(99, 102, 241, 0.05);
+    
+    td {
+      padding: tokens.$spacing-4 tokens.$spacing-5;
+      font-size: tokens.$font-size-sm;
+      color: #94a3b8;
+      border-top: 1px solid rgba(99, 102, 241, 0.2);
+    }
+  }
+  
+  // ==========================================================================
+  // Size Variants
+  // ==========================================================================
+  
+  // Compact table
+  &--compact {
+    thead th,
+    tbody td,
+    tfoot td {
+      padding: tokens.$spacing-3 tokens.$spacing-4; // 12px 16px
+    }
+  }
+  
+  // Relaxed table
+  &--relaxed {
+    thead th,
+    tbody td,
+    tfoot td {
+      padding: tokens.$spacing-5 tokens.$spacing-6; // 20px 24px
+    }
+  }
+  
+  // ==========================================================================
+  // Style Variants
+  // ==========================================================================
+  
+  // Striped rows
+  &--striped {
+    tbody tr:nth-child(even) {
+      background: rgba(99, 102, 241, 0.04);
+    }
+  }
+  
+  // Bordered table
+  &--bordered {
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    
+    th, td {
+      border: 1px solid rgba(99, 102, 241, 0.1);
+    }
+  }
+  
+  // Borderless table
+  &--borderless {
+    thead th,
+    tbody td {
+      border: none;
+    }
+  }
+}
+
+// =============================================================================
+// Table Wrapper - 表格容器（支持滚动）
+// =============================================================================
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(15, 15, 35, 0.5);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(99, 102, 241, 0.5);
+    }
+  }
+}
+
+// =============================================================================
+// 统一空状态样式 (Unified Empty State)
+// =============================================================================
+// Requirements: 5.7
+// 统一空状态展示样式
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: tokens.$spacing-12 tokens.$spacing-6; // 48px 24px
+  text-align: center;
+  
+  // ==========================================================================
+  // Icon
+  // ==========================================================================
+  
+  &__icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: tokens.$spacing-6;
+    color: #64748b;
+    opacity: 0.6;
+    
+    // Icon container with background
+    &--contained {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 100px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 50%;
+      
+      svg, i {
+        width: 48px;
+        height: 48px;
+        font-size: 48px;
+      }
+    }
+  }
+  
+  // ==========================================================================
+  // Title and Description
+  // ==========================================================================
+  
+  &__title {
+    font-size: tokens.$font-size-xl;
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0 0 tokens.$spacing-2 0;
+  }
+  
+  &__description {
+    font-size: tokens.$font-size-sm;
+    color: #94a3b8;
+    margin: 0 0 tokens.$spacing-6 0;
+    max-width: 400px;
+    line-height: tokens.$line-height-relaxed;
+  }
+  
+  // ==========================================================================
+  // Actions
+  // ==========================================================================
+  
+  &__actions {
+    display: flex;
+    gap: tokens.$spacing-3;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  // ==========================================================================
+  // Size Variants
+  // ==========================================================================
+  
+  // Compact empty state
+  &--compact {
+    padding: tokens.$spacing-8 tokens.$spacing-4;
+    
+    .empty-state__icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: tokens.$spacing-4;
+      
+      &--contained {
+        width: 72px;
+        height: 72px;
+        
+        svg, i {
+          width: 32px;
+          height: 32px;
+          font-size: 32px;
+        }
+      }
+    }
+    
+    .empty-state__title {
+      font-size: tokens.$font-size-lg;
+    }
+    
+    .empty-state__description {
+      font-size: tokens.$font-size-xs;
+      margin-bottom: tokens.$spacing-4;
+    }
+  }
+  
+  // Large empty state
+  &--lg {
+    padding: tokens.$spacing-16 tokens.$spacing-8;
+    
+    .empty-state__icon {
+      width: 120px;
+      height: 120px;
+      margin-bottom: tokens.$spacing-8;
+      
+      &--contained {
+        width: 140px;
+        height: 140px;
+        
+        svg, i {
+          width: 64px;
+          height: 64px;
+          font-size: 64px;
+        }
+      }
+    }
+    
+    .empty-state__title {
+      font-size: tokens.$font-size-2xl;
+    }
+    
+    .empty-state__description {
+      font-size: tokens.$font-size-base;
+      max-width: 500px;
+    }
+  }
+}
+
+// =============================================================================
+// 统一加载状态样式 (Unified Loading State)
+// =============================================================================
+// Requirements: 5.7
+// 统一加载状态展示样式
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: tokens.$spacing-12 tokens.$spacing-6;
+  text-align: center;
+  
+  // ==========================================================================
+  // Spinner
+  // ==========================================================================
+  
+  &__spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(128, 32, 255, 0.2);
+    border-top-color: #8020ff;
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+    margin-bottom: tokens.$spacing-4;
+  }
+  
+  // ==========================================================================
+  // Text
+  // ==========================================================================
+  
+  &__text {
+    font-size: tokens.$font-size-sm;
+    color: #94a3b8;
+    margin: 0;
+  }
+  
+  // ==========================================================================
+  // Size Variants
+  // ==========================================================================
+  
+  // Compact loading state
+  &--compact {
+    padding: tokens.$spacing-6 tokens.$spacing-4;
+    
+    .loading-state__spinner {
+      width: 32px;
+      height: 32px;
+      border-width: 3px;
+      margin-bottom: tokens.$spacing-3;
+    }
+    
+    .loading-state__text {
+      font-size: tokens.$font-size-xs;
+    }
+  }
+  
+  // Inline loading state
+  &--inline {
+    flex-direction: row;
+    padding: tokens.$spacing-3;
+    gap: tokens.$spacing-3;
+    
+    .loading-state__spinner {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+      margin-bottom: 0;
+    }
+  }
+  
+  // Overlay loading state
+  &--overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 15, 35, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 10;
+  }
+}
+
+// =============================================================================
+// 统一错误状态样式 (Unified Error State)
+// =============================================================================
+// Requirements: 5.7
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: tokens.$spacing-12 tokens.$spacing-6;
+  text-align: center;
+  
+  &__icon {
+    width: 64px;
+    height: 64px;
+    color: #ef4444;
+    margin-bottom: tokens.$spacing-4;
+  }
+  
+  &__title {
+    font-size: tokens.$font-size-xl;
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0 0 tokens.$spacing-2 0;
+  }
+  
+  &__description {
+    font-size: tokens.$font-size-sm;
+    color: #94a3b8;
+    margin: 0 0 tokens.$spacing-6 0;
+    max-width: 400px;
+    line-height: tokens.$line-height-relaxed;
+  }
+  
+  &__actions {
+    display: flex;
+    gap: tokens.$spacing-3;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  // Compact variant
+  &--compact {
+    padding: tokens.$spacing-6 tokens.$spacing-4;
+    
+    .error-state__icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: tokens.$spacing-3;
+    }
+    
+    .error-state__title {
+      font-size: tokens.$font-size-lg;
+    }
+    
+    .error-state__description {
+      font-size: tokens.$font-size-xs;
+      margin-bottom: tokens.$spacing-4;
+    }
+  }
+}
+
+// =============================================================================
+// 统一成功状态样式 (Unified Success State)
+// =============================================================================
+// Requirements: 5.7
+
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: tokens.$spacing-12 tokens.$spacing-6;
+  text-align: center;
+  
+  &__icon {
+    width: 64px;
+    height: 64px;
+    color: #10b981;
+    margin-bottom: tokens.$spacing-4;
+    
+    // Animated checkmark
+    &--animated {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #10b981;
+      position: relative;
+      animation: scaleIn tokens.$duration-normal tokens.$ease-spring;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        left: 24px;
+        top: 36px;
+        width: 16px;
+        height: 32px;
+        border: solid white;
+        border-width: 0 5px 5px 0;
+        transform: rotate(45deg);
+        animation: checkmark tokens.$duration-fast tokens.$ease-out tokens.$duration-fast forwards;
+        opacity: 0;
+      }
+    }
+  }
+  
+  &__title {
+    font-size: tokens.$font-size-xl;
+    font-weight: tokens.$font-weight-semibold;
+    color: #f8fafc;
+    margin: 0 0 tokens.$spacing-2 0;
+  }
+  
+  &__description {
+    font-size: tokens.$font-size-sm;
+    color: #94a3b8;
+    margin: 0 0 tokens.$spacing-6 0;
+    max-width: 400px;
+    line-height: tokens.$line-height-relaxed;
+  }
+  
+  &__actions {
+    display: flex;
+    gap: tokens.$spacing-3;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+// =============================================================================
+// Responsive Adjustments for Tables and States
+// =============================================================================
+
+@media (max-width: tokens.$breakpoint-md) {
+  .table-unified {
+    thead th,
+    tbody td,
+    tfoot td {
+      padding: tokens.$spacing-3 tokens.$spacing-4;
+      font-size: tokens.$font-size-xs;
+    }
+    
+    // Hide less important columns on mobile
+    .hide-mobile {
+      display: none;
+    }
+  }
+  
+  .empty-state,
+  .loading-state,
+  .error-state,
+  .success-state {
+    padding: tokens.$spacing-8 tokens.$spacing-4;
+    
+    &__title {
+      font-size: tokens.$font-size-lg;
+    }
+    
+    &__description {
+      font-size: tokens.$font-size-xs;
+    }
+  }
+}
+
+// =============================================================================
 // 统计卡片组件
 // =============================================================================
 // Requirements: 6.1, 6.2, 6.4, 6.5

@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AnalyticsSection: typeof import('./components/AnalyticsSection.vue')['default']
     CalorieCalculator: typeof import('./components/CalorieCalculator.vue')['default']
+    ConnectionStatusIndicator: typeof import('./components/ConnectionStatusIndicator.vue')['default']
     DataVisualization: typeof import('./components/DataVisualization.vue')['default']
     DynamicDashboard: typeof import('./components/DynamicDashboard.vue')['default']
     DynamicLayout: typeof import('./components/DynamicLayout.vue')['default']

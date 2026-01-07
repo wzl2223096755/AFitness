@@ -136,7 +136,7 @@ export const adminApi = {
    * 获取系统健康状态
    * @returns {Promise<any>}
    */
-  getSystemHealth: () => get('/api/v1/admin/health'),
+  getSystemHealth: () => get('/api/v1/health'),
   
   /**
    * 清除系统缓存

@@ -1,7 +1,14 @@
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
 import { authApi } from '@/api/auth'
-import { ADMIN_FRONTEND_URL, redirectToAdminFrontend } from '@/router'
+
+// 管理端前端URL
+const ADMIN_FRONTEND_URL = 'http://localhost:3002'
+
+// 重定向到管理端前端
+const redirectToAdminFrontend = () => {
+  window.location.href = ADMIN_FRONTEND_URL
+}
 
 export const useUserStore = defineStore('user', {
   state: () => ({
