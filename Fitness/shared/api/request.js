@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from '../utils/message.js'
+import { ElMessage, ElMessageBox } from '../utils/message.js'
 import { PerformanceUtils } from '../utils/performance.js'
 
 // 创建axios实例
@@ -11,6 +11,9 @@ const service = axios.create({
 
 // 请求取消控制器映射
 const pendingRequests = new Map()
+
+// 会话过期状态标志（防止重复弹窗）
+let isSessionExpiredHandled = false
 
 // 生成请求唯一标识
 const generateRequestKey = (config) => {
@@ -60,6 +63,87 @@ const onRefreshed = (newToken) => {
   refreshSubscribers = []
 }
 
+/**
+ * 清除登录状态
+ */
+const clearAuthState = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('refreshToken')
+  localStorage.removeItem('userInfo')
+  localStorage.removeItem('isLoggedIn')
+}
+
+/**
+ * 获取登录页面URL
+ * 支持hash路由和history路由
+ */
+const getLoginUrl = () => {
+  // 检测当前使用的路由模式
+  if (window.location.hash) {
+    return '/#/login'
+  }
+  return '/login'
+}
+
+/**
+ * 检查是否在登录页面
+ */
+const isOnLoginPage = () => {
+  const path = window.location.pathname
+  const hash = window.location.hash
+  return path.includes('/login') || hash.includes('/login')
+}
+
+/**
+ * 处理会话过期
+ * @param {boolean} showDialog - 是否显示确认对话框
+ */
+const handleSessionExpired = async (showDialog = true) => {
+  // 防止重复处理
+  if (isSessionExpiredHandled) {
+    return
+  }
+  
+  // 如果已经在登录页，不需要处理
+  if (isOnLoginPage()) {
+    return
+  }
+  
+  isSessionExpiredHandled = true
+  
+  // 清除登录状态
+  clearAuthState()
+  
+  // 取消所有待处理请求
+  cancelAllRequests()
+  
+  if (showDialog) {
+    try {
+      await ElMessageBox.alert(
+        '您的登录已过期，请重新登录以继续使用。',
+        '会话已过期',
+        {
+          confirmButtonText: '重新登录',
+          type: 'warning',
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false
+        }
+      )
+    } catch (e) {
+      // 用户关闭对话框
+    }
+  } else {
+    ElMessage.warning('登录已过期，正在跳转到登录页...')
+  }
+  
+  // 跳转到登录页
+  setTimeout(() => {
+    isSessionExpiredHandled = false
+    window.location.href = getLoginUrl()
+  }, showDialog ? 0 : 1500)
+}
+
 // 刷新token的函数
 const refreshToken = async () => {
   const refreshTokenValue = localStorage.getItem('refreshToken')
@@ -75,14 +159,18 @@ const refreshToken = async () => {
     if (response.data.code === 200 && response.data.data.accessToken) {
       const newToken = response.data.data.accessToken
       localStorage.setItem('token', newToken)
+      
+      // 如果返回了新的refreshToken，也更新它
+      if (response.data.data.refreshToken) {
+        localStorage.setItem('refreshToken', response.data.data.refreshToken)
+      }
+      
       return newToken
     }
     throw new Error('刷新token失败')
   } catch (error) {
     // 刷新失败，清除登录状态
-    localStorage.removeItem('token')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('isLoggedIn')
+    clearAuthState()
     throw error
   }
 }
@@ -174,7 +262,7 @@ service.interceptors.response.use(
           const originalRequest = error.config
           
           // 避免在登录页面或刷新请求中重复处理
-          if (window.location.hash.includes('/login') || originalRequest.url.includes('/auth/refresh')) {
+          if (isOnLoginPage() || originalRequest.url.includes('/auth/refresh')) {
             break
           }
           
@@ -200,22 +288,14 @@ service.interceptors.response.use(
               originalRequest.headers['Authorization'] = `Bearer ${newToken}`
               return service(originalRequest)
             } catch (refreshError) {
-              // 刷新失败，跳转登录页
-              ElMessage.error('登录已过期，请重新登录')
-              setTimeout(() => {
-                window.location.href = '/#/login'
-              }, 1500)
+              // 刷新失败，处理会话过期
+              await handleSessionExpired(true)
             } finally {
               isRefreshing = false
             }
           } else {
-            ElMessage.error('未授权，请重新登录')
-            localStorage.removeItem('token')
-            localStorage.removeItem('userInfo')
-            localStorage.removeItem('isLoggedIn')
-            setTimeout(() => {
-              window.location.href = '/#/login'
-            }, 1500)
+            // 没有refreshToken或已经重试过，直接处理会话过期
+            await handleSessionExpired(true)
           }
           break
         }

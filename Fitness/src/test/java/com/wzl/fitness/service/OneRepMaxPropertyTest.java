@@ -71,9 +71,12 @@ public class OneRepMaxPropertyTest {
         
         String[] models = {"Epley", "Brzycki", "Lombardi", "OConner", "Mayhew"};
         
+        // 允许微小的浮点误差（0.001%）
+        double tolerance = weight * 0.00001;
+        
         for (String model : models) {
             Double oneRepMax = loadRecoveryService.calculateOneRepMax(weight, reps, model);
-            assertTrue(oneRepMax >= weight,
+            assertTrue(oneRepMax >= weight - tolerance,
                     String.format("1RM应大于等于重量: model=%s, weight=%.1f, reps=%d, 1RM=%.2f", 
                             model, weight, reps, oneRepMax));
         }

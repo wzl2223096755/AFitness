@@ -22,6 +22,9 @@ import com.wzl.fitness.service.LoadRecoveryService;
 import com.wzl.fitness.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -43,7 +46,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/training")
-@Tag(name = "训练管理", description = "训练记录和恢复指标管理")
+@Tag(name = "训练管理", description = "训练记录和恢复指标管理，包括训练数据CRUD、训练分析等")
 public class TrainingController extends BaseController {
 
     @Autowired
@@ -97,7 +100,70 @@ public class TrainingController extends BaseController {
      */
     @PostMapping("/record")
     @RequireUser
-    @Operation(summary = "创建训练记录", description = "创建新的训练记录，包含训练动作详情")
+    @Operation(
+            summary = "创建训练记录", 
+            description = "创建新的训练记录，包含训练动作详情。系统会自动计算训练量和训练压力。"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "创建成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "创建训练记录成功示例",
+                                    value = """
+                                            {
+                                              "code": 200,
+                                              "message": "训练记录创建成功",
+                                              "data": {
+                                                "id": 1,
+                                                "exerciseName": "深蹲",
+                                                "sets": 4,
+                                                "reps": 8,
+                                                "weight": 100.0,
+                                                "trainingDate": "2024-01-01",
+                                                "totalVolume": 5600.0,
+                                                "trainingStress": 75.0,
+                                                "calculatedTotalVolume": 5600.0,
+                                                "createdAt": "2024-01-01T12:00:00",
+                                                "exerciseDetails": [...]
+                                              },
+                                              "timestamp": "2024-01-01 12:00:00",
+                                              "success": true
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "训练记录请求参数",
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(
+                            name = "训练记录请求示例",
+                            value = """
+                                    {
+                                      "trainingDate": "2024-01-01",
+                                      "totalVolume": 5600,
+                                      "trainingStress": 75,
+                                      "exerciseDetails": [
+                                        {
+                                          "exerciseName": "深蹲",
+                                          "weight": 100.0,
+                                          "sets": 4,
+                                          "reps": 8,
+                                          "rpe": 8,
+                                          "exerciseType": "COMPOUND"
+                                        }
+                                      ]
+                                    }
+                                    """
+                    )
+            )
+    )
     public ResponseEntity<ApiResponse<TrainingRecordResponse>> createTrainingRecord(
             @Valid @RequestBody TrainingRecordRequest trainingRecordRequest,
             HttpServletRequest request) {
@@ -158,7 +224,42 @@ public class TrainingController extends BaseController {
      */
     @GetMapping("/records")
     @RequireUser
-    @Operation(summary = "获取当前用户的训练记录", description = "获取当前登录用户的所有训练记录")
+    @Operation(
+            summary = "获取当前用户的训练记录", 
+            description = "获取当前登录用户的所有训练记录，按训练日期倒序排列"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "获取成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "训练记录列表示例",
+                                    value = """
+                                            {
+                                              "code": 200,
+                                              "message": "获取训练记录成功",
+                                              "data": [
+                                                {
+                                                  "id": 1,
+                                                  "exerciseName": "深蹲",
+                                                  "sets": 4,
+                                                  "reps": 8,
+                                                  "weight": 100.0,
+                                                  "trainingDate": "2024-01-01",
+                                                  "totalVolume": 3200.0,
+                                                  "createdAt": "2024-01-01T12:00:00"
+                                                }
+                                              ],
+                                              "timestamp": "2024-01-01 12:00:00",
+                                              "success": true
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
     public ResponseEntity<ApiResponse<List<TrainingRecord>>> getMyTrainingRecords(HttpServletRequest request) {
         
         User user = getUser(request);
@@ -173,7 +274,37 @@ public class TrainingController extends BaseController {
      */
     @GetMapping("/records/page")
     @RequireUser
-    @Operation(summary = "获取当前用户的训练记录（分页）", description = "获取当前登录用户的训练记录，支持分页和排序")
+    @Operation(
+            summary = "获取当前用户的训练记录（分页）", 
+            description = "获取当前登录用户的训练记录，支持分页和排序"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "获取成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "分页训练记录示例",
+                                    value = """
+                                            {
+                                              "code": 200,
+                                              "message": "操作成功",
+                                              "data": {
+                                                "content": [...],
+                                                "page": 0,
+                                                "size": 10,
+                                                "totalElements": 25,
+                                                "totalPages": 3
+                                              },
+                                              "timestamp": "2024-01-01 12:00:00",
+                                              "success": true
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
     public ResponseEntity<ApiResponse<PageResponse<TrainingRecordResponse>>> getMyTrainingRecordsPaged(
             @Parameter(description = "页码（从0开始）") 
             @RequestParam(defaultValue = "0") @Min(0) int page,

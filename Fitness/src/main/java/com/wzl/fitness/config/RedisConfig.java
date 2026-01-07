@@ -21,6 +21,9 @@ import java.util.Map;
  * 配置Redis缓存管理器和序列化方式
  * 仅在Redis可用时启用
  * 
+ * 注意：Caffeine 缓存管理器是主缓存管理器（@Primary）
+ * Redis 缓存管理器作为可选的分布式缓存方案
+ * 
  * 缓存策略优化:
  * - 不同数据类型使用不同TTL
  * - 热点数据使用较长TTL
@@ -55,9 +58,12 @@ public class RedisConfig {
     /**
      * 配置Redis缓存管理器
      * 使用分层缓存策略，不同缓存区域使用不同TTL
+     * 
+     * 注意：此缓存管理器不是主缓存管理器，Caffeine 是主缓存管理器
+     * 如需使用 Redis 缓存，请在 @Cacheable 注解中指定 cacheManager = "redisCacheManager"
      */
-    @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
+    @Bean(name = "redisCacheManager")
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory factory) {
         // 默认缓存配置 - 10分钟TTL
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))

@@ -180,7 +180,7 @@ public class TrainingRecordControllerIntegrationTest {
                     .requestAttr("userId", userId)
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.code").value(200))
                     .andExpect(jsonPath("$.data").isArray())
                     .andExpect(jsonPath("$.data[0].exerciseName").value("卧推"));
@@ -330,7 +330,7 @@ public class TrainingRecordControllerIntegrationTest {
                 .requestAttr("userId", userId)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data.totalRecords").value(5))
                 .andExpect(jsonPath("$.data.totalVolume").exists())

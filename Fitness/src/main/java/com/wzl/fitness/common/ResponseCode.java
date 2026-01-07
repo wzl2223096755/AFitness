@@ -11,6 +11,7 @@ public enum ResponseCode {
     // 客户端错误状态码
     ERROR(400, "操作失败"),
     PARAM_ERROR(400, "参数错误"),
+    VALIDATION_ERROR(400, "请求参数验证失败"),
     NOT_FOUND(404, "资源不存在"),
     UNAUTHORIZED(401, "未授权"),
     FORBIDDEN(403, "权限不足"),

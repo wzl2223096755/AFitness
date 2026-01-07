@@ -1,5 +1,6 @@
 package com.wzl.fitness.dto.request;
 
+import com.wzl.fitness.validation.NoXss;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -13,6 +14,7 @@ public class ExerciseDetailRequest {
 
     @NotBlank(message = "动作名称不能为空")
     @Size(min = 1, max = 100, message = "动作名称长度必须在1-100之间")
+    @NoXss
     @Schema(description = "动作名称", example = "深蹲")
     private String exerciseName;
 
@@ -37,6 +39,7 @@ public class ExerciseDetailRequest {
     private Integer rpe;
 
     @Size(max = 50, message = "动作类型长度不能超过50")
+    @NoXss
     @Schema(description = "动作类型", example = "力量训练")
     private String exerciseType;
     

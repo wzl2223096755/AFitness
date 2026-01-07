@@ -1,14 +1,16 @@
 package com.wzl.fitness;
 
-import com.wzl.fitness.config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Import(TestSecurityConfig.class)
+@TestPropertySource(properties = {
+    "spring.cache.type=simple",
+    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration,org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration"
+})
 class FitnessApplicationTests {
 
 	@Test

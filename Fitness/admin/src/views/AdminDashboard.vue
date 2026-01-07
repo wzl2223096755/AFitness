@@ -67,6 +67,14 @@
           <div class="action-icon">📈</div>
           <div class="action-text">系统统计</div>
         </div>
+        <div class="action-card" @click="navigateTo('/training-stats')">
+          <div class="action-icon">🏋️</div>
+          <div class="action-text">训练统计</div>
+        </div>
+        <div class="action-card" @click="navigateTo('/monitor')">
+          <div class="action-icon">💻</div>
+          <div class="action-text">系统监控</div>
+        </div>
         <div class="action-card" @click="navigateTo('/audit-logs')">
           <div class="action-icon">📋</div>
           <div class="action-text">审计日志</div>

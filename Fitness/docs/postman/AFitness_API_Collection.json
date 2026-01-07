@@ -1,0 +1,432 @@
+{
+  "info": {
+    "_postman_id": "afitness-api-collection",
+    "name": "AFitness API Collection",
+    "description": "AFitness 健身管理系统 API 接口集合\n\n## 使用说明\n\n1. 导入此集合到 Postman\n2. 设置环境变量 `baseUrl` 为 `http://localhost:8080`\n3. 先调用登录接口获取 token\n4. token 会自动保存到环境变量中\n\n## 环境变量\n\n- `baseUrl`: API 基础地址\n- `accessToken`: JWT 访问令牌\n- `refreshToken`: JWT 刷新令牌",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "认证管理",
+      "description": "用户认证相关接口",
+      "item": [
+        {
+          "name": "用户登录",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data) {",
+                  "        pm.collectionVariables.set('accessToken', jsonData.data.accessToken);",
+                  "        pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "用户注册",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"fitness_user\",\n  \"password\": \"Password123\",\n  \"email\": \"user@example.com\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "register"] }
+          }
+        },
+        {
+          "name": "刷新令牌",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/refresh", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "refresh"] }
+          }
+        },
+        {
+          "name": "获取当前用户",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "me"] }
+          }
+        },
+        {
+          "name": "用户登出",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/logout", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "logout"] }
+          }
+        },
+        {
+          "name": "检查用户名",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/check-username?username=admin", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "check-username"], "query": [{ "key": "username", "value": "admin" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "训练管理",
+      "description": "训练记录相关接口",
+      "item": [
+        {
+          "name": "创建训练记录",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trainingDate\": \"2024-01-01\",\n  \"totalVolume\": 5600,\n  \"trainingStress\": 75,\n  \"exerciseDetails\": [\n    {\n      \"exerciseName\": \"深蹲\",\n      \"weight\": 100.0,\n      \"sets\": 4,\n      \"reps\": 8,\n      \"rpe\": 8,\n      \"exerciseType\": \"COMPOUND\"\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/training/record", "host": ["{{baseUrl}}"], "path": ["api", "v1", "training", "record"] }
+          }
+        },
+        {
+          "name": "获取训练记录",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/training/records", "host": ["{{baseUrl}}"], "path": ["api", "v1", "training", "records"] }
+          }
+        },
+        {
+          "name": "分页获取训练记录",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/training/records/page?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "training", "records", "page"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "负荷恢复",
+      "description": "负荷计算和恢复评估接口",
+      "item": [
+        {
+          "name": "计算1RM",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/load-recovery/one-rep-max?weight=100&reps=8&model=Epley", "host": ["{{baseUrl}}"], "path": ["api", "v1", "load-recovery", "one-rep-max"], "query": [{ "key": "weight", "value": "100" }, { "key": "reps", "value": "8" }, { "key": "model", "value": "Epley" }] }
+          }
+        },
+        {
+          "name": "获取支持的1RM模型",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/load-recovery/one-rep-max/models", "host": ["{{baseUrl}}"], "path": ["api", "v1", "load-recovery", "one-rep-max", "models"] }
+          }
+        },
+        {
+          "name": "恢复状态评估",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sleepHours\": 7,\n  \"stressLevel\": 3\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/load-recovery/recovery-assessment", "host": ["{{baseUrl}}"], "path": ["api", "v1", "load-recovery", "recovery-assessment"] }
+          }
+        },
+        {
+          "name": "获取训练建议",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/load-recovery/training-suggestions", "host": ["{{baseUrl}}"], "path": ["api", "v1", "load-recovery", "training-suggestions"] }
+          }
+        },
+        {
+          "name": "获取负荷趋势",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/load-recovery/load-trend?startDate=2024-01-01&endDate=2024-01-07", "host": ["{{baseUrl}}"], "path": ["api", "v1", "load-recovery", "load-trend"], "query": [{ "key": "startDate", "value": "2024-01-01" }, { "key": "endDate", "value": "2024-01-07" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "营养记录",
+      "description": "营养记录相关接口",
+      "item": [
+        {
+          "name": "获取营养记录",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/nutrition/records/2024-01-01", "host": ["{{baseUrl}}"], "path": ["api", "v1", "nutrition", "records", "2024-01-01"] }
+          }
+        },
+        {
+          "name": "添加营养记录",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recordDate\": \"2024-01-01\",\n  \"mealType\": \"午餐\",\n  \"foodName\": \"鸡胸肉\",\n  \"calories\": 300,\n  \"protein\": 50.0,\n  \"carbs\": 0.0,\n  \"fat\": 8.0,\n  \"amount\": 200\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/nutrition/records", "host": ["{{baseUrl}}"], "path": ["api", "v1", "nutrition", "records"] }
+          }
+        },
+        {
+          "name": "获取营养统计",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/nutrition/stats/2024-01-01", "host": ["{{baseUrl}}"], "path": ["api", "v1", "nutrition", "stats", "2024-01-01"] }
+          }
+        },
+        {
+          "name": "获取营养建议",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/nutrition/recommendation?trainingGoal=muscle_gain&activityLevel=active", "host": ["{{baseUrl}}"], "path": ["api", "v1", "nutrition", "recommendation"], "query": [{ "key": "trainingGoal", "value": "muscle_gain" }, { "key": "activityLevel", "value": "active" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "仪表盘",
+      "description": "仪表盘数据接口",
+      "item": [
+        {
+          "name": "获取指标概览",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/metrics-overview?timeRange=week", "host": ["{{baseUrl}}"], "path": ["api", "v1", "dashboard", "metrics-overview"], "query": [{ "key": "timeRange", "value": "week" }] }
+          }
+        },
+        {
+          "name": "获取用户统计",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/user-stats-overview", "host": ["{{baseUrl}}"], "path": ["api", "v1", "dashboard", "user-stats-overview"] }
+          }
+        },
+        {
+          "name": "获取分析数据",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/analytics?timeRange=week", "host": ["{{baseUrl}}"], "path": ["api", "v1", "dashboard", "analytics"], "query": [{ "key": "timeRange", "value": "week" }] }
+          }
+        },
+        {
+          "name": "获取最近训练记录",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/dashboard/recent-training-records", "host": ["{{baseUrl}}"], "path": ["api", "v1", "dashboard", "recent-training-records"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "用户管理",
+      "description": "用户资料相关接口",
+      "item": [
+        {
+          "name": "获取用户资料",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/user/profile", "host": ["{{baseUrl}}"], "path": ["api", "v1", "user", "profile"] }
+          }
+        },
+        {
+          "name": "获取用户设置",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/user/settings", "host": ["{{baseUrl}}"], "path": ["api", "v1", "user", "settings"] }
+          }
+        },
+        {
+          "name": "获取身体数据",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/user/body-records", "host": ["{{baseUrl}}"], "path": ["api", "v1", "user", "body-records"] }
+          }
+        },
+        {
+          "name": "获取用户成就",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/user/achievements", "host": ["{{baseUrl}}"], "path": ["api", "v1", "user", "achievements"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "训练计划",
+      "description": "训练计划相关接口",
+      "item": [
+        {
+          "name": "获取所有计划",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/training-plans", "host": ["{{baseUrl}}"], "path": ["api", "v1", "training-plans"] }
+          }
+        },
+        {
+          "name": "分页获取计划",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/training-plans/page?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "training-plans", "page"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] }
+          }
+        },
+        {
+          "name": "按状态获取计划",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/training-plans/status/active", "host": ["{{baseUrl}}"], "path": ["api", "v1", "training-plans", "status", "active"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "健康检查",
+      "description": "系统健康检查接口",
+      "item": [
+        {
+          "name": "健康检查",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/health", "host": ["{{baseUrl}}"], "path": ["api", "v1", "health"] }
+          }
+        },
+        {
+          "name": "存活检查",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/health/live", "host": ["{{baseUrl}}"], "path": ["api", "v1", "health", "live"] }
+          }
+        },
+        {
+          "name": "就绪检查",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/health/ready", "host": ["{{baseUrl}}"], "path": ["api", "v1", "health", "ready"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "管理员接口",
+      "description": "管理员专用接口（需要管理员权限）",
+      "item": [
+        {
+          "name": "获取系统信息",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/monitor/system-info", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "monitor", "system-info"] }
+          }
+        },
+        {
+          "name": "获取JVM指标",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/monitor/jvm-metrics", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "monitor", "jvm-metrics"] }
+          }
+        },
+        {
+          "name": "获取数据库统计",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/monitor/database-stats", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "monitor", "database-stats"] }
+          }
+        },
+        {
+          "name": "获取用户活跃度",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/monitor/user-activity", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "monitor", "user-activity"] }
+          }
+        },
+        {
+          "name": "获取缓存统计",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/cache/stats", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "cache", "stats"] }
+          }
+        },
+        {
+          "name": "清除所有缓存",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/cache/evict-all", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "cache", "evict-all"] }
+          }
+        },
+        {
+          "name": "导出用户数据",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/export/users", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "export", "users"] }
+          }
+        },
+        {
+          "name": "导出系统统计",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/admin/export/system-stats", "host": ["{{baseUrl}}"], "path": ["api", "v1", "admin", "export", "system-stats"] }
+          }
+        },
+        {
+          "name": "获取所有用户",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/users", "host": ["{{baseUrl}}"], "path": ["api", "v1", "users"] }
+          }
+        }
+      ]
+    }
+  ]
+}

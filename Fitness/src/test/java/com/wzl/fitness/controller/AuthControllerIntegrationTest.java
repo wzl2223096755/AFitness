@@ -124,10 +124,10 @@ public class AuthControllerIntegrationTest {
         @Test
         @DisplayName("有效信息注册成功")
         void testRegisterWithValidInfo() throws Exception {
-            // Given - 密码需要包含大写、小写和数字
+            // Given - 密码需要包含大写、小写、数字和特殊符号
             RegisterRequest request = new RegisterRequest();
             request.setUsername("newuser");
-            request.setPassword("Password123");  // 符合密码规则
+            request.setPassword("Password123!");  // 符合密码规则：大写、小写、数字、特殊符号
             request.setEmail("newuser@example.com");
 
             doNothing().when(authenticationService).register(any(RegisterRequest.class));
@@ -146,10 +146,10 @@ public class AuthControllerIntegrationTest {
         @Test
         @DisplayName("用户名已存在注册失败")
         void testRegisterWithExistingUsername() throws Exception {
-            // Given - 密码需要包含大写、小写和数字
+            // Given - 密码需要包含大写、小写、数字和特殊符号
             RegisterRequest request = new RegisterRequest();
             request.setUsername("existinguser");
-            request.setPassword("Password123");  // 符合密码规则
+            request.setPassword("Password123!");  // 符合密码规则：大写、小写、数字、特殊符号
             request.setEmail("new@example.com");
 
             doThrow(new RuntimeException("用户名已存在"))

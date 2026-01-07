@@ -1,5 +1,6 @@
 package com.wzl.fitness.dto.request;
 
+import com.wzl.fitness.validation.NoXss;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class RegisterRequest {
     @NotBlank(message = "用户名不能为空")
     @Size(min = 3, max = 50, message = "用户名长度必须在3-50之间")
     @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "用户名只能包含字母、数字和下划线")
+    @NoXss
     @Schema(description = "用户名", example = "fitness_user")
     private String username;
 
@@ -26,6 +28,7 @@ public class RegisterRequest {
 
     @Email(message = "邮箱格式不正确")
     @Size(max = 100, message = "邮箱长度不能超过100")
+    @NoXss
     @Schema(description = "邮箱", example = "user@example.com")
     private String email;
     

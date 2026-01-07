@@ -1,5 +1,6 @@
 package com.wzl.fitness.dto.request;
 
+import com.wzl.fitness.validation.NoXss;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -22,9 +23,11 @@ public class NutritionRecordRequest {
     private LocalDate recordDate;
     
     @NotBlank(message = "餐次不能为空")
+    @NoXss
     private String mealType; // 早餐、午餐、晚餐、加餐
     
     @NotBlank(message = "食物名称不能为空")
+    @NoXss
     private String foodName;
     
     @NotNull(message = "卡路里不能为空")
@@ -54,6 +57,7 @@ public class NutritionRecordRequest {
     @Max(value = 1000, message = "份量不能超过1000克")
     private Double amount;
     
+    @NoXss
     private String notes;
     
     // Explicit getter and setter methods to fix compilation errors

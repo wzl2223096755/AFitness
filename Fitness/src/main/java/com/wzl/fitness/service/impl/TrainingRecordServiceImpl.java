@@ -1,5 +1,6 @@
 package com.wzl.fitness.service.impl;
 
+import com.wzl.fitness.config.CaffeineCacheConfig;
 import com.wzl.fitness.entity.TrainingRecord;
 import com.wzl.fitness.entity.User;
 import com.wzl.fitness.repository.TrainingRecordRepository;
@@ -8,6 +9,9 @@ import com.wzl.fitness.dto.response.TrainingStatsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +26,7 @@ import java.util.Optional;
 /**
  * 训练记录服务实现
  * 支持软删除和数据恢复功能
+ * 使用 Caffeine 缓存提升查询性能
  */
 @Service
 @Transactional
@@ -33,14 +38,18 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     private TrainingRecordRepository trainingRecordRepository;
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public TrainingRecord createTrainingRecord(TrainingRecord record) {
         // 确保新记录未被标记为删除
         record.setDeleted(false);
+        logger.debug("创建训练记录，清除缓存");
         return trainingRecordRepository.save(record);
     }
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public Optional<TrainingRecord> updateTrainingRecord(Long id, TrainingRecord record) {
+        logger.debug("更新训练记录 ID: {}，清除缓存", id);
         return trainingRecordRepository.findById(id)
             .map(existingRecord -> {
                 // 更新字段
@@ -56,20 +65,23 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     }
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public boolean deleteTrainingRecord(Long id) {
         if (trainingRecordRepository.existsById(id)) {
             trainingRecordRepository.deleteById(id);
+            logger.debug("删除训练记录 ID: {}，清除缓存", id);
             return true;
         }
         return false;
     }
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public boolean softDeleteTrainingRecord(Long id, Long userId) {
         logger.info("软删除训练记录，ID: {}, 操作用户: {}", id, userId);
         int updated = trainingRecordRepository.softDelete(id, LocalDateTime.now(), userId);
         if (updated > 0) {
-            logger.info("训练记录软删除成功，ID: {}", id);
+            logger.info("训练记录软删除成功，ID: {}，清除缓存", id);
             return true;
         }
         logger.warn("训练记录软删除失败，ID: {} 不存在", id);
@@ -77,11 +89,12 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     }
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public boolean restoreTrainingRecord(Long id) {
         logger.info("恢复训练记录，ID: {}", id);
         int updated = trainingRecordRepository.restore(id);
         if (updated > 0) {
-            logger.info("训练记录恢复成功，ID: {}", id);
+            logger.info("训练记录恢复成功，ID: {}，清除缓存", id);
             return true;
         }
         logger.warn("训练记录恢复失败，ID: {} 不存在或未被删除", id);
@@ -89,10 +102,11 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     }
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public int restoreAllByUserId(Long userId) {
         logger.info("批量恢复用户训练记录，用户ID: {}", userId);
         int restored = trainingRecordRepository.restoreAllByUserId(userId);
-        logger.info("批量恢复完成，用户ID: {}, 恢复记录数: {}", userId, restored);
+        logger.info("批量恢复完成，用户ID: {}, 恢复记录数: {}，清除缓存", userId, restored);
         return restored;
     }
     
@@ -110,26 +124,35 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, key = "'record:' + #id")
     public Optional<TrainingRecord> findById(Long id) {
+        logger.debug("从数据库查询训练记录 ID: {}", id);
         return trainingRecordRepository.findById(id);
     }
     
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, key = "'user:' + #userId")
     public List<TrainingRecord> findByUserId(Long userId) {
+        logger.debug("从数据库查询用户 {} 的训练记录", userId);
         return trainingRecordRepository.findByUserId(userId);
     }
     
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, key = "'user:' + #userId + ':page:' + #page + ':size:' + #size")
     public Page<TrainingRecord> findByUserId(Long userId, int page, int size) {
+        logger.debug("从数据库分页查询用户 {} 的训练记录，页码: {}, 大小: {}", userId, page, size);
         Pageable pageable = PageRequest.of(page, size);
         return trainingRecordRepository.findByUserIdOrderByTrainingDateDesc(userId, pageable);
     }
     
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, 
+               key = "'user:' + #userId + ':range:' + #startDate.toString() + ':' + #endDate.toString()")
     public List<TrainingRecord> findByUserIdAndDateRange(Long userId, LocalDate startDate, LocalDate endDate) {
+        logger.debug("从数据库查询用户 {} 在 {} 到 {} 的训练记录", userId, startDate, endDate);
         return trainingRecordRepository.findByUserIdAndTrainingDateBetweenOrderByTrainingDateDesc(userId, startDate, endDate);
     }
     
@@ -142,7 +165,11 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, 
+               key = "'stats:' + #userId + ':' + #startDate.toString() + ':' + #endDate.toString()")
     public TrainingStatsResponse getTrainingStats(Long userId, LocalDate startDate, LocalDate endDate) {
+        logger.debug("从数据库计算用户 {} 在 {} 到 {} 的训练统计", userId, startDate, endDate);
+        
         // 获取指定时间范围内的训练记录总数
         Long totalRecords = trainingRecordRepository.countByUserIdAndTrainingDateBetween(userId, startDate, endDate);
         
@@ -161,13 +188,17 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, key = "'recent:' + #userId")
     public List<TrainingRecord> getRecentTrainingRecords(Long userId) {
+        logger.debug("从数据库查询用户 {} 的最近训练记录", userId);
         return trainingRecordRepository.findTop10ByUserIdOrderByTrainingDateDesc(userId);
     }
     
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, key = "'count:' + #userId")
     public long countByUserId(Long userId) {
+        logger.debug("从数据库统计用户 {} 的训练记录数量", userId);
         return trainingRecordRepository.countByUserId(userId);
     }
     
@@ -185,13 +216,16 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     }
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public void deleteByUserAndId(User user, Long id) {
+        logger.debug("删除用户 {} 的训练记录 ID: {}，清除缓存", user.getId(), id);
         trainingRecordRepository.deleteByUserAndId(user, id);
     }
     
     @Override
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public void deleteAllByUserId(Long userId) {
-        logger.info("删除用户所有训练记录，用户ID: {}", userId);
+        logger.info("删除用户所有训练记录，用户ID: {}，清除缓存", userId);
         trainingRecordRepository.deleteAllByUserId(userId);
         logger.info("用户训练记录删除完成，用户ID: {}", userId);
     }

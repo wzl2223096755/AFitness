@@ -1,5 +1,6 @@
 package com.wzl.fitness.dto.request;
 
+import com.wzl.fitness.validation.NoXss;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,6 +15,7 @@ public class LoginRequest {
 
     @NotBlank(message = "用户名不能为空")
     @Size(min = 3, max = 50, message = "用户名长度必须在3-50个字符之间")
+    @NoXss
     @Schema(description = "用户名", example = "admin")
     private String username;
 

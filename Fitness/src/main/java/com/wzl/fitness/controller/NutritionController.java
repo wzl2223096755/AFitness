@@ -17,6 +17,9 @@ import com.wzl.fitness.common.ApiResponse;
 import com.wzl.fitness.exception.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -41,7 +44,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/nutrition")
 @RequiredArgsConstructor
-@Tag(name = "营养记录管理", description = "营养记录相关接口")
+@Tag(name = "营养记录管理", description = "营养记录相关接口，包括营养记录CRUD、营养统计、营养建议等")
 public class NutritionController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(NutritionController.class);
@@ -66,7 +69,44 @@ public class NutritionController extends BaseController {
      */
     @GetMapping("/records/{date}")
     @RequireUser
-    @Operation(summary = "获取指定日期的营养记录", description = "根据日期获取用户当天的所有营养记录")
+    @Operation(
+            summary = "获取指定日期的营养记录", 
+            description = "根据日期获取用户当天的所有营养记录"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "获取成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "营养记录列表示例",
+                                    value = """
+                                            {
+                                              "code": 200,
+                                              "message": "操作成功",
+                                              "data": [
+                                                {
+                                                  "id": 1,
+                                                  "recordDate": "2024-01-01",
+                                                  "mealType": "早餐",
+                                                  "foodName": "鸡蛋",
+                                                  "calories": 150,
+                                                  "protein": 12.0,
+                                                  "carbs": 1.0,
+                                                  "fat": 10.0,
+                                                  "amount": 2,
+                                                  "createdAt": "2024-01-01T08:00:00"
+                                                }
+                                              ],
+                                              "timestamp": "2024-01-01 12:00:00",
+                                              "success": true
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
     public ResponseEntity<ApiResponse<List<NutritionRecordDTO>>> getNutritionRecordsByDate(
             @Parameter(description = "日期，格式：yyyy-MM-dd") @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             HttpServletRequest request) {
@@ -86,7 +126,66 @@ public class NutritionController extends BaseController {
      */
     @PostMapping("/records")
     @RequireUser
-    @Operation(summary = "添加营养记录", description = "添加一条新的营养记录")
+    @Operation(
+            summary = "添加营养记录", 
+            description = "添加一条新的营养记录"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "201",
+                    description = "添加成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "添加营养记录成功示例",
+                                    value = """
+                                            {
+                                              "code": 200,
+                                              "message": "操作成功",
+                                              "data": {
+                                                "id": 1,
+                                                "recordDate": "2024-01-01",
+                                                "mealType": "午餐",
+                                                "foodName": "鸡胸肉",
+                                                "calories": 300,
+                                                "protein": 50.0,
+                                                "carbs": 0.0,
+                                                "fat": 8.0,
+                                                "amount": 200,
+                                                "notes": "水煮",
+                                                "createdAt": "2024-01-01T12:00:00"
+                                              },
+                                              "timestamp": "2024-01-01 12:00:00",
+                                              "success": true
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "营养记录请求参数",
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(
+                            name = "营养记录请求示例",
+                            value = """
+                                    {
+                                      "recordDate": "2024-01-01",
+                                      "mealType": "午餐",
+                                      "foodName": "鸡胸肉",
+                                      "calories": 300,
+                                      "protein": 50.0,
+                                      "carbs": 0.0,
+                                      "fat": 8.0,
+                                      "amount": 200,
+                                      "notes": "水煮"
+                                    }
+                                    """
+                    )
+            )
+    )
     public ResponseEntity<ApiResponse<NutritionRecordDTO>> addNutritionRecord(
             @Valid @RequestBody NutritionRecordRequest recordDTO,
             HttpServletRequest request) {

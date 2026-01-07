@@ -23,6 +23,12 @@ import com.wzl.fitness.service.FileService;
 import com.wzl.fitness.service.TrainingRecordService;
 import com.wzl.fitness.service.UserService;
 import com.wzl.fitness.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +45,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
+@Tag(name = "用户管理", description = "用户信息管理，包括用户资料、用户设置、身体数据等")
 public class UserProfileController extends BaseController {
 
     private final UserService userService;
@@ -65,6 +72,40 @@ public class UserProfileController extends BaseController {
      */
     @GetMapping("/profile")
     @RequireUser
+    @Operation(
+            summary = "获取用户资料", 
+            description = "获取当前登录用户的详细资料信息"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "获取成功",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "用户资料示例",
+                                    value = """
+                                            {
+                                              "code": 200,
+                                              "message": "操作成功",
+                                              "data": {
+                                                "id": 1,
+                                                "username": "fitness_user",
+                                                "email": "user@example.com",
+                                                "age": 25,
+                                                "gender": "male",
+                                                "height": 175.0,
+                                                "weight": 70.0,
+                                                "experienceLevel": "intermediate"
+                                              },
+                                              "timestamp": "2024-01-01 12:00:00",
+                                              "success": true
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
     public ResponseEntity<ApiResponse<User>> getUserProfile(HttpServletRequest request) {
         try {
             User user = getUser(request);
@@ -83,6 +124,20 @@ public class UserProfileController extends BaseController {
      */
     @PutMapping("/profile")
     @RequireUser
+    @Operation(
+            summary = "更新用户资料", 
+            description = "更新当前登录用户的资料信息"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "更新成功"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400",
+                    description = "参数验证失败"
+            )
+    })
     public ResponseEntity<ApiResponse<User>> updateUserProfile(
             @Valid @RequestBody UserProfileRequest profileRequest,
             BindingResult bindingResult,
@@ -125,6 +180,20 @@ public class UserProfileController extends BaseController {
      */
     @PostMapping("/change-password")
     @RequireUser
+    @Operation(
+            summary = "修改密码", 
+            description = "修改当前登录用户的密码，需要提供旧密码验证"
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "密码修改成功"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400",
+                    description = "旧密码不正确或新密码不符合要求"
+            )
+    })
     public ResponseEntity<ApiResponse<String>> changePassword(
             @Valid @RequestBody ChangePasswordRequest passwordRequest,
             BindingResult bindingResult,
@@ -184,6 +253,7 @@ public class UserProfileController extends BaseController {
      */
     @GetMapping("/settings")
     @RequireUser
+    @Operation(summary = "获取用户设置", description = "获取当前用户的个性化设置")
     public ResponseEntity<ApiResponse<UserSetting>> getUserSettings(HttpServletRequest request) {
         User user = getUser(request);
         UserSetting settings = userSettingRepository.findByUser(user)
@@ -199,6 +269,7 @@ public class UserProfileController extends BaseController {
      */
     @PutMapping("/settings")
     @RequireUser
+    @Operation(summary = "更新用户设置", description = "更新当前用户的个性化设置")
     public ResponseEntity<ApiResponse<UserSetting>> updateUserSettings(
             @RequestBody UserSetting settingsRequest,
             HttpServletRequest request) {
@@ -220,6 +291,7 @@ public class UserProfileController extends BaseController {
      */
     @GetMapping("/stats")
     @RequireUser
+    @Operation(summary = "获取用户统计数据", description = "获取当前用户的训练统计数据")
     public ResponseEntity<ApiResponse<Object>> getUserStats(HttpServletRequest request) {
         Long userId = getUserIdFromRequest(request);
         return ResponseEntity.ok(ApiResponse.success(dashboardService.getUserStatsOverview(userId)));
@@ -230,9 +302,10 @@ public class UserProfileController extends BaseController {
      */
     @GetMapping("/training-history")
     @RequireUser
+    @Operation(summary = "获取用户训练历史", description = "获取当前用户的训练历史记录，支持分页")
     public ResponseEntity<ApiResponse<List<TrainingRecord>>> getTrainingHistory(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "页码（从0开始）") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "每页大小") @RequestParam(defaultValue = "10") int size,
             HttpServletRequest request) {
         Long userId = getUserIdFromRequest(request);
         Page<TrainingRecord> history = trainingRecordService.findByUserId(userId, page, size);
@@ -244,6 +317,7 @@ public class UserProfileController extends BaseController {
      */
     @GetMapping("/body-records")
     @RequireUser
+    @Operation(summary = "获取身体数据记录", description = "获取当前用户的身体数据记录列表")
     public ResponseEntity<ApiResponse<List<BodyRecord>>> getBodyRecords(HttpServletRequest request) {
         Long userId = getUserIdFromRequest(request);
         User user = userService.getUserById(userId).orElseThrow(() -> new BusinessException("用户不存在"));
@@ -256,6 +330,7 @@ public class UserProfileController extends BaseController {
      */
     @PostMapping("/body-records")
     @RequireUser
+    @Operation(summary = "添加身体数据记录", description = "添加一条新的身体数据记录")
     public ResponseEntity<ApiResponse<BodyRecord>> addBodyRecord(
             @RequestBody BodyRecordRequest recordRequest,
             HttpServletRequest request) {
@@ -282,8 +357,9 @@ public class UserProfileController extends BaseController {
      */
     @PutMapping("/body-records/{id}")
     @RequireUser
+    @Operation(summary = "更新身体数据记录", description = "更新指定的身体数据记录")
     public ResponseEntity<ApiResponse<BodyRecord>> updateBodyRecord(
-            @PathVariable Long id,
+            @Parameter(description = "记录ID") @PathVariable Long id,
             @RequestBody BodyRecordRequest recordRequest,
             HttpServletRequest request) {
         Long userId = getUserIdFromRequest(request);
@@ -313,8 +389,9 @@ public class UserProfileController extends BaseController {
      */
     @DeleteMapping("/body-records/{id}")
     @RequireUser
+    @Operation(summary = "删除身体数据记录", description = "删除指定的身体数据记录")
     public ResponseEntity<ApiResponse<Void>> deleteBodyRecord(
-            @PathVariable Long id,
+            @Parameter(description = "记录ID") @PathVariable Long id,
             HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         BodyRecord record = bodyRecordRepository.findById(id)
@@ -338,6 +415,7 @@ public class UserProfileController extends BaseController {
      */
     @PostMapping("/avatar")
     @RequireUser
+    @Operation(summary = "上传头像", description = "上传用户头像图片")
     public ResponseEntity<ApiResponse<String>> uploadAvatar(
             @RequestParam("file") MultipartFile file,
             HttpServletRequest request) {
@@ -361,6 +439,7 @@ public class UserProfileController extends BaseController {
      */
     @GetMapping("/achievements")
     @RequireUser
+    @Operation(summary = "获取用户成就", description = "获取当前用户已解锁的成就列表")
     public ResponseEntity<ApiResponse<List<UserAchievement>>> getAchievements(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         User user = userService.getUserById(userId).orElseThrow(() -> new BusinessException("用户不存在"));
@@ -374,6 +453,7 @@ public class UserProfileController extends BaseController {
     @GetMapping("/export")
     @RequireUser
     @Auditable(action = AuditAction.DATA_EXPORT, resourceType = "用户数据")
+    @Operation(summary = "导出用户数据", description = "导出当前用户的所有数据，包括资料、训练记录、身体数据等")
     public ResponseEntity<ApiResponse<Map<String, Object>>> exportUserData(HttpServletRequest request) {
         try {
             User user = getUser(request);
@@ -436,6 +516,7 @@ public class UserProfileController extends BaseController {
     @PostMapping("/reset-data")
     @RequireUser
     @Auditable(action = AuditAction.DATA_DELETE, resourceType = "用户训练数据")
+    @Operation(summary = "重置用户数据", description = "删除当前用户的所有训练数据，保留账户信息")
     public ResponseEntity<ApiResponse<String>> resetUserData(
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
@@ -486,6 +567,7 @@ public class UserProfileController extends BaseController {
     @PostMapping("/delete-account")
     @RequireUser
     @Auditable(action = AuditAction.DATA_DELETE, resourceType = "用户账户")
+    @Operation(summary = "删除用户账户", description = "永久删除当前用户的账户及所有相关数据")
     public ResponseEntity<ApiResponse<String>> deleteAccount(
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {

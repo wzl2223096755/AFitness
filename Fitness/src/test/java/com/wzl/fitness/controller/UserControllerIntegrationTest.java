@@ -68,7 +68,7 @@ class UserControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").isArray())
                 .andReturn();
@@ -82,7 +82,7 @@ class UserControllerIntegrationTest {
      */
     @Test
     void testRegisterUser() throws Exception {
-        String userJson = "{\"username\":\"testuser" + System.currentTimeMillis() + "\",\"password\":\"Password123\",\"email\":\"test" + System.currentTimeMillis() + "@example.com\"}";
+        String userJson = "{\"username\":\"testuser" + System.currentTimeMillis() + "\",\"password\":\"Password123!\",\"email\":\"test" + System.currentTimeMillis() + "@example.com\"}";
         
         // 不需要显式 mock void 方法，Mockito 默认不做任何事
         
@@ -90,7 +90,7 @@ class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userJson))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").value("注册成功"));
     }

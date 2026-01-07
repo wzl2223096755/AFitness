@@ -39,6 +39,12 @@ const routes = [
     meta: { title: '系统统计', requiresAuth: true, requiresAdmin: true }
   },
   {
+    path: '/training-stats',
+    name: 'TrainingStats',
+    component: () => import('../views/TrainingStats.vue'),
+    meta: { title: '训练数据统计', requiresAuth: true, requiresAdmin: true }
+  },
+  {
     path: '/audit-logs',
     name: 'AuditLogs',
     component: () => import('../views/AuditLogs.vue'),
@@ -49,6 +55,12 @@ const routes = [
     name: 'SystemSettings',
     component: () => import('../views/SystemSettings.vue'),
     meta: { title: '系统设置', requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/monitor',
+    name: 'SystemMonitor',
+    component: () => import('../views/SystemMonitorView.vue'),
+    meta: { title: '系统监控', requiresAuth: true, requiresAdmin: true }
   },
   // 404页面
   {

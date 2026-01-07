@@ -39,6 +39,8 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNDEyM
 
 ## 错误码说明
 
+### HTTP 状态码
+
 | 错误码 | 说明 | 处理建议 |
 |--------|------|----------|
 | 200 | 操作成功 | - |
@@ -47,11 +49,87 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNDEyM
 | 403 | 权限不足 | 检查用户权限 |
 | 404 | 资源不存在 | 检查资源ID |
 | 500 | 服务器内部错误 | 联系管理员 |
-| 1001 | 用户不存在 | 检查用户名 |
-| 1002 | 用户名已存在 | 更换用户名 |
-| 1003 | 邮箱已存在 | 更换邮箱 |
-| 1004 | 登录失败 | 检查凭据 |
-| 1005 | 用户名或密码错误 | 检查用户名和密码 |
+
+### 业务错误码
+
+| 错误码 | 错误名称 | 说明 | 处理建议 |
+|--------|----------|------|----------|
+| 1001 | USER_NOT_FOUND | 用户不存在 | 检查用户名或用户ID是否正确 |
+| 1002 | USERNAME_EXISTS | 用户名已存在 | 更换用户名重新注册 |
+| 1003 | EMAIL_EXISTS | 邮箱已存在 | 更换邮箱或使用已有账号登录 |
+| 1004 | LOGIN_FAILED | 登录失败 | 检查登录凭据 |
+| 1005 | PASSWORD_ERROR | 用户名或密码错误 | 检查用户名和密码是否正确 |
+| 1006 | DEVICE_NOT_FOUND | 设备不存在 | 检查设备ID是否正确 |
+| 1007 | DEVICE_BIND_FAILED | 设备绑定失败 | 检查设备状态或重试 |
+| 1008 | FITNESS_DATA_EXCEPTION | 健身数据异常 | 检查数据格式是否正确 |
+| 1009 | FITNESS_PLAN_NOT_FOUND | 健身计划不存在 | 检查计划ID是否正确 |
+| 1010 | HUAWEI_AUTH_FAILED | 华为授权失败 | 重新进行华为账号授权 |
+| 1011 | DATA_SYNC_FAILED | 数据同步失败 | 检查网络连接后重试 |
+
+### 验证错误响应格式
+
+当请求参数验证失败时，响应格式如下：
+
+```json
+{
+  "code": 400,
+  "message": "请求参数验证失败",
+  "data": {
+    "fieldErrors": {
+      "username": "用户名长度必须在3-50个字符之间",
+      "password": "密码不能为空"
+    }
+  },
+  "timestamp": "2024-01-01 12:00:00",
+  "success": false
+}
+```
+
+### 错误响应示例
+
+**401 未授权错误**:
+```json
+{
+  "code": 401,
+  "message": "未授权，请先登录",
+  "data": null,
+  "timestamp": "2024-01-01 12:00:00",
+  "success": false
+}
+```
+
+**403 权限不足错误**:
+```json
+{
+  "code": 403,
+  "message": "权限不足，需要管理员权限",
+  "data": null,
+  "timestamp": "2024-01-01 12:00:00",
+  "success": false
+}
+```
+
+**404 资源不存在错误**:
+```json
+{
+  "code": 404,
+  "message": "资源不存在",
+  "data": null,
+  "timestamp": "2024-01-01 12:00:00",
+  "success": false
+}
+```
+
+**500 服务器内部错误**:
+```json
+{
+  "code": 500,
+  "message": "服务器内部错误，请稍后重试",
+  "data": null,
+  "timestamp": "2024-01-01 12:00:00",
+  "success": false
+}
+```
 
 ---
 

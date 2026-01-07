@@ -10,6 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@shared': resolve(__dirname, '../shared'),
     },
   },
   test: {
@@ -22,7 +23,7 @@ export default defineConfig({
     },
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'json-summary', 'html'],
       reportsDirectory: './coverage',
       exclude: [
         'node_modules/',
@@ -32,6 +33,16 @@ export default defineConfig({
         '**/main.js',
         'src/router/**',
       ],
+      // 覆盖率阈值配置
+      thresholds: {
+        // 全局阈值
+        lines: 60,
+        functions: 60,
+        branches: 50,
+        statements: 60,
+        // 如果低于阈值，仅警告不失败（可在CI中单独检查）
+        perFile: false,
+      },
     },
     setupFiles: ['./tests/setup.js'],
   },

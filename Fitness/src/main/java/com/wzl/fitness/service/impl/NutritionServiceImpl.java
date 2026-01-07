@@ -1,5 +1,6 @@
 package com.wzl.fitness.service.impl;
 
+import com.wzl.fitness.config.CaffeineCacheConfig;
 import com.wzl.fitness.dto.response.NutritionStatsResponse;
 import com.wzl.fitness.dto.request.NutritionRecordRequest;
 import com.wzl.fitness.dto.response.NutritionRecordDTO;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 
 /**
  * 营养记录服务实现类
+ * 使用 Caffeine 缓存提升查询性能
  */
 @Service
 @RequiredArgsConstructor
@@ -37,8 +41,9 @@ public class NutritionServiceImpl implements NutritionService {
     
     @Override
     @Transactional
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_NUTRITION_STATS, allEntries = true)
     public NutritionRecord addNutritionRecord(User user, NutritionRecordRequest request) {
-        log.info("为用户 {} 添加营养记录: {}", user.getId(), request.getFoodName());
+        log.info("为用户 {} 添加营养记录: {}，清除缓存", user.getId(), request.getFoodName());
         
         if (!validateNutritionRecord(request)) {
             throw new IllegalArgumentException("营养记录数据验证失败");
@@ -64,8 +69,9 @@ public class NutritionServiceImpl implements NutritionService {
     
     @Override
     @Transactional
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_NUTRITION_STATS, allEntries = true)
     public NutritionRecord updateNutritionRecord(Long id, NutritionRecordRequest request) {
-        log.info("更新营养记录: {}", id);
+        log.info("更新营养记录: {}，清除缓存", id);
         
         if (!validateNutritionRecord(request)) {
             throw new IllegalArgumentException("营养记录数据验证失败");
@@ -92,8 +98,9 @@ public class NutritionServiceImpl implements NutritionService {
     
     @Override
     @Transactional
+    @CacheEvict(value = CaffeineCacheConfig.CACHE_NUTRITION_STATS, allEntries = true)
     public void deleteNutritionRecord(Long id, User user) {
-        log.info("删除营养记录: {}", id);
+        log.info("删除营养记录: {}，清除缓存", id);
         
         NutritionRecord record = nutritionRecordRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("营养记录不存在"));
@@ -113,7 +120,10 @@ public class NutritionServiceImpl implements NutritionService {
     }
     
     @Override
+    @Cacheable(value = CaffeineCacheConfig.CACHE_NUTRITION_STATS, 
+               key = "'records:user:' + #user.id + ':date:' + #date.toString()")
     public List<NutritionRecordDTO> getNutritionRecordsByDate(User user, LocalDate date) {
+        log.debug("从数据库查询用户 {} 在 {} 的营养记录", user.getId(), date);
         List<NutritionRecord> records = nutritionRecordRepository.findByUserAndRecordDateOrderByCreatedAt(user, date);
         return records.stream()
                 .map(this::convertToDTO)
@@ -121,7 +131,10 @@ public class NutritionServiceImpl implements NutritionService {
     }
     
     @Override
+    @Cacheable(value = CaffeineCacheConfig.CACHE_NUTRITION_STATS, 
+               key = "'records:user:' + #user.id + ':range:' + #startDate.toString() + ':' + #endDate.toString()")
     public List<NutritionRecordDTO> getNutritionRecordsByDateRange(User user, LocalDate startDate, LocalDate endDate) {
+        log.debug("从数据库查询用户 {} 在 {} 到 {} 的营养记录", user.getId(), startDate, endDate);
         List<NutritionRecord> records = nutritionRecordRepository.findByUserAndRecordDateBetweenOrderByRecordDateAsc(user, startDate, endDate);
         return records.stream()
                 .map(this::convertToDTO)
@@ -135,11 +148,16 @@ public class NutritionServiceImpl implements NutritionService {
     }
     
     @Override
+    @Cacheable(value = CaffeineCacheConfig.CACHE_NUTRITION_STATS, 
+               key = "'stats:user:' + #user.id + ':date:' + #date.toString()")
     public NutritionStatsResponse getNutritionStatsByDate(User user, LocalDate date) {
-        log.info("获取用户 {} 在 {} 的营养统计", user.getId(), date);
+        log.info("从数据库获取用户 {} 在 {} 的营养统计", user.getId(), date);
         
-        // 获取当日营养记录
-        List<NutritionRecordDTO> dailyRecords = getNutritionRecordsByDate(user, date);
+        // 获取当日营养记录（直接查询以避免循环依赖）
+        List<NutritionRecord> records = nutritionRecordRepository.findByUserAndRecordDateOrderByCreatedAt(user, date);
+        List<NutritionRecordDTO> dailyRecords = records.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
         
         // 创建统计对象
         NutritionStatsResponse stats = new NutritionStatsResponse();
@@ -218,7 +236,10 @@ public class NutritionServiceImpl implements NutritionService {
     }
     
     @Override
+    @Cacheable(value = CaffeineCacheConfig.CACHE_NUTRITION_STATS, 
+               key = "'frequentFoods:user:' + #user.id + ':limit:' + #limit")
     public List<String> getMostFrequentFoods(User user, int limit) {
+        log.debug("从数据库查询用户 {} 最常吃的 {} 种食物", user.getId(), limit);
         Pageable pageable = PageRequest.of(0, limit);
         List<Object[]> results = nutritionRecordRepository.getMostFrequentFoods(user, pageable);
         

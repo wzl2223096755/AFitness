@@ -142,7 +142,67 @@ export const adminApi = {
    * 清除系统缓存
    * @returns {Promise<any>}
    */
-  clearCache: () => post('/api/v1/admin/cache/clear')
+  clearCache: () => post('/api/v1/admin/cache/clear'),
+  
+  // ==================== 系统监控 ====================
+  
+  /**
+   * 获取系统信息
+   * @returns {Promise<any>}
+   */
+  getSystemInfo: () => get('/api/v1/admin/monitor/system-info'),
+  
+  /**
+   * 获取 JVM 指标
+   * @returns {Promise<any>}
+   */
+  getJvmMetrics: () => get('/api/v1/admin/monitor/jvm-metrics'),
+  
+  /**
+   * 获取数据库统计
+   * @returns {Promise<any>}
+   */
+  getDatabaseStats: () => get('/api/v1/admin/monitor/database-stats'),
+  
+  /**
+   * 获取用户活跃度统计
+   * @returns {Promise<any>}
+   */
+  getUserActivityStats: () => get('/api/v1/admin/monitor/user-activity'),
+  
+  // ==================== 数据导出 ====================
+  
+  /**
+   * 导出用户数据
+   * @returns {Promise<Blob>}
+   */
+  exportUsers: () => get('/api/v1/admin/export/users', {}, { responseType: 'blob' }),
+  
+  /**
+   * 导出训练记录
+   * @param {number} userId - 用户ID
+   * @param {string} startDate - 开始日期
+   * @param {string} endDate - 结束日期
+   * @returns {Promise<Blob>}
+   */
+  exportTrainingRecords: (userId, startDate, endDate) => 
+    get(`/api/v1/admin/export/training-records/${userId}`, { startDate, endDate }, { responseType: 'blob' }),
+  
+  /**
+   * 导出营养记录
+   * @param {number} userId - 用户ID
+   * @param {string} startDate - 开始日期
+   * @param {string} endDate - 结束日期
+   * @returns {Promise<Blob>}
+   */
+  exportNutritionRecords: (userId, startDate, endDate) => 
+    get(`/api/v1/admin/export/nutrition-records/${userId}`, { startDate, endDate }, { responseType: 'blob' }),
+  
+  /**
+   * 导出系统统计数据
+   * @returns {Promise<Blob>}
+   */
+  exportSystemStats: () => get('/api/v1/admin/export/system-stats', {}, { responseType: 'blob' })
 }
 
 export default adminApi

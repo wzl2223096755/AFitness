@@ -9,14 +9,14 @@ import java.util.Map;
 
 /**
  * 日志工具类
- * 提供结构化日志记录功能
+ * 提供结构化日志记录功能，并自动对敏感数据进行脱敏
  */
 public class LoggingUtils {
     
     private static final Logger AUDIT_LOG = LoggerFactory.getLogger("AUDIT");
     
     /**
-     * 记录审计日志
+     * 记录审计日志（自动脱敏）
      * @param userId 用户ID
      * @param action 操作类型
      * @param resource 资源类型
@@ -26,13 +26,14 @@ public class LoggingUtils {
     public static void audit(String userId, String action, String resource, 
                             String resourceId, String details) {
         try {
-            MDC.put("userId", userId);
+            MDC.put("userId", maskSensitiveData(userId));
             MDC.put("action", action);
             MDC.put("resource", resource);
             MDC.put("resourceId", resourceId);
             
             AUDIT_LOG.info("User {} performed {} on {} (id: {}): {}", 
-                userId, action, resource, resourceId, details);
+                maskSensitiveData(userId), action, resource, resourceId, 
+                maskSensitiveInText(details));
         } finally {
             MDC.remove("action");
             MDC.remove("resource");
@@ -41,14 +42,15 @@ public class LoggingUtils {
     }
     
     /**
-     * 记录审计日志（简化版）
+     * 记录审计日志（简化版，自动脱敏）
      */
     public static void audit(String userId, String action, String message) {
         try {
-            MDC.put("userId", userId);
+            MDC.put("userId", maskSensitiveData(userId));
             MDC.put("action", action);
             
-            AUDIT_LOG.info("User {} - {}: {}", userId, action, message);
+            AUDIT_LOG.info("User {} - {}: {}", maskSensitiveData(userId), action, 
+                maskSensitiveInText(message));
         } finally {
             MDC.remove("action");
         }
@@ -157,7 +159,7 @@ public class LoggingUtils {
     }
     
     /**
-     * 记录数据变更日志
+     * 记录数据变更日志（自动脱敏）
      */
     public static void logDataChange(Logger logger, String entity, String entityId, 
                                     String operation, String userId, 
@@ -166,14 +168,73 @@ public class LoggingUtils {
             MDC.put("entity", entity);
             MDC.put("entityId", entityId);
             MDC.put("dataOperation", operation);
-            MDC.put("userId", userId);
+            MDC.put("userId", maskSensitiveData(userId));
             
             logger.info("Data Change: {} {} (id: {}) by user {} - Old: {}, New: {}", 
-                operation, entity, entityId, userId, oldValue, newValue);
+                operation, entity, entityId, maskSensitiveData(userId), 
+                maskObjectValue(oldValue), maskObjectValue(newValue));
         } finally {
             MDC.remove("entity");
             MDC.remove("entityId");
             MDC.remove("dataOperation");
         }
+    }
+    
+    /**
+     * 对敏感数据进行脱敏
+     * @param data 原始数据
+     * @return 脱敏后的数据
+     */
+    public static String maskSensitiveData(String data) {
+        if (data == null || data.isEmpty()) {
+            return data;
+        }
+        return DataMaskingUtils.autoMask(data);
+    }
+    
+    /**
+     * 对文本中的敏感信息进行脱敏
+     * @param text 原始文本
+     * @return 脱敏后的文本
+     */
+    public static String maskSensitiveInText(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+        return DataMaskingUtils.autoMask(text);
+    }
+    
+    /**
+     * 对对象值进行脱敏（转换为字符串后脱敏）
+     * @param value 对象值
+     * @return 脱敏后的字符串
+     */
+    private static String maskObjectValue(Object value) {
+        if (value == null) {
+            return "null";
+        }
+        String strValue = value.toString();
+        return DataMaskingUtils.autoMask(strValue);
+    }
+    
+    /**
+     * 记录带脱敏的业务操作日志
+     */
+    public static void logBusinessOperationMasked(Logger logger, String operation, 
+                                                  Map<String, Object> context) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Operation: ").append(operation);
+        
+        if (context != null && !context.isEmpty()) {
+            sb.append(" | Context: ");
+            context.forEach((key, value) -> {
+                String maskedValue = maskObjectValue(value);
+                sb.append(key).append("=").append(maskedValue).append(", ");
+            });
+            // 移除最后的逗号和空格
+            sb.setLength(sb.length() - 2);
+        }
+        
+        logger.info(sb.toString());
     }
 }

@@ -1,6 +1,7 @@
 package com.wzl.fitness.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wzl.fitness.annotation.SensitiveData;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -40,10 +41,12 @@ public class User {
     @NotBlank(message = "密码不能为空")
     @Size(min = 6, message = "密码长度不能少于6位")
     @Column(nullable = false, length = 255)
+    @JsonIgnore
     private String password;
 
     @Email(message = "邮箱格式不正确")
     @Column(length = 100)
+    @SensitiveData(type = SensitiveData.SensitiveType.EMAIL)
     private String email;
 
     @Column(name = "created_at")

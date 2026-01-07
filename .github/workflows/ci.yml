@@ -37,7 +37,38 @@ jobs:
         run: npm run test:unit
 
       - name: Run unit tests with coverage
+        id: coverage
         run: npm run test:coverage
+
+      - name: Check frontend coverage threshold
+        run: |
+          # 解析覆盖率报告
+          COVERAGE_FILE="coverage/coverage-summary.json"
+          if [ -f "$COVERAGE_FILE" ]; then
+            LINES_PCT=$(cat $COVERAGE_FILE | jq '.total.lines.pct')
+            STATEMENTS_PCT=$(cat $COVERAGE_FILE | jq '.total.statements.pct')
+            FUNCTIONS_PCT=$(cat $COVERAGE_FILE | jq '.total.functions.pct')
+            BRANCHES_PCT=$(cat $COVERAGE_FILE | jq '.total.branches.pct')
+            
+            echo "📊 Frontend Coverage Report:"
+            echo "  Lines: ${LINES_PCT}%"
+            echo "  Statements: ${STATEMENTS_PCT}%"
+            echo "  Functions: ${FUNCTIONS_PCT}%"
+            echo "  Branches: ${BRANCHES_PCT}%"
+            
+            # 检查是否达到75%阈值
+            THRESHOLD=75
+            if (( $(echo "$LINES_PCT < $THRESHOLD" | bc -l) )); then
+              echo "⚠️ Warning: Line coverage (${LINES_PCT}%) is below threshold (${THRESHOLD}%)"
+              echo "coverage_warning=true" >> $GITHUB_OUTPUT
+            else
+              echo "✅ Coverage meets threshold"
+              echo "coverage_warning=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⚠️ Coverage report not found"
+            echo "coverage_warning=true" >> $GITHUB_OUTPUT
+          fi
         continue-on-error: true
 
       - name: Upload coverage report
@@ -110,15 +141,50 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Run tests
-        run: mvn test -B
+      - name: Run tests with coverage
+        run: mvn test jacoco:report -B
+
+      - name: Check backend coverage threshold
+        run: |
+          # 解析 JaCoCo 覆盖率报告
+          JACOCO_REPORT="target/site/jacoco/jacoco.csv"
+          if [ -f "$JACOCO_REPORT" ]; then
+            # 计算总体覆盖率
+            TOTAL_INSTRUCTIONS=$(awk -F',' 'NR>1 {sum+=$4+$5} END {print sum}' $JACOCO_REPORT)
+            COVERED_INSTRUCTIONS=$(awk -F',' 'NR>1 {sum+=$5} END {print sum}' $JACOCO_REPORT)
+            
+            if [ "$TOTAL_INSTRUCTIONS" -gt 0 ]; then
+              COVERAGE_PCT=$(echo "scale=2; $COVERED_INSTRUCTIONS * 100 / $TOTAL_INSTRUCTIONS" | bc)
+              echo "📊 Backend Coverage Report:"
+              echo "  Instruction Coverage: ${COVERAGE_PCT}%"
+              
+              # 检查是否达到80%阈值
+              THRESHOLD=80
+              if (( $(echo "$COVERAGE_PCT < $THRESHOLD" | bc -l) )); then
+                echo "⚠️ Warning: Backend coverage (${COVERAGE_PCT}%) is below threshold (${THRESHOLD}%)"
+                echo "coverage_warning=true" >> $GITHUB_OUTPUT
+              else
+                echo "✅ Coverage meets threshold"
+                echo "coverage_warning=false" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "⚠️ No instructions found in coverage report"
+              echo "coverage_warning=true" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⚠️ JaCoCo coverage report not found"
+            echo "coverage_warning=true" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: backend-test-results
-          path: Fitness/target/surefire-reports/
+          path: |
+            Fitness/target/surefire-reports/
+            Fitness/target/site/jacoco/
           retention-days: 7
 
   # 构建任务

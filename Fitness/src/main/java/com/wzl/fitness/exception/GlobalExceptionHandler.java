@@ -3,24 +3,26 @@ package com.wzl.fitness.exception;
 import com.wzl.fitness.common.ApiResponse;
 import com.wzl.fitness.common.ResponseCode;
 import com.wzl.fitness.dto.response.ValidationErrorResponse;
+import com.wzl.fitness.dto.response.ValidationErrorResponse.FieldErrorDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.dao.QueryTimeoutException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -31,11 +33,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 全局异常处理器
  * 统一处理所有异常，返回规范化的错误响应
+ * 提供详细的字段验证错误信息
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -52,30 +54,37 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(e.getCode(), e.getMessage()));
     }
 
+
     /**
      * 处理参数校验异常 (RequestBody)
+     * 返回详细的字段验证错误信息，包括字段名、错误消息、被拒绝的值和约束类型
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResponse> handleValidationException(
             MethodArgumentNotValidException e, HttpServletRequest request) {
         
-        Map<String, String> fieldErrors = new HashMap<>();
+        Map<String, FieldErrorDetail> fieldErrors = new HashMap<>();
         List<String> globalErrors = new ArrayList<>();
         
         e.getBindingResult().getAllErrors().forEach(error -> {
             if (error instanceof FieldError) {
-                String fieldName = ((FieldError) error).getField();
+                FieldError fieldError = (FieldError) error;
+                String fieldName = fieldError.getField();
                 String errorMessage = error.getDefaultMessage();
-                fieldErrors.put(fieldName, errorMessage);
+                Object rejectedValue = fieldError.getRejectedValue();
+                String constraintType = extractConstraintType(error.getCode());
+                
+                fieldErrors.put(fieldName, FieldErrorDetail.of(
+                        fieldName, errorMessage, rejectedValue, constraintType));
             } else {
                 globalErrors.add(error.getDefaultMessage());
             }
         });
         
-        logger.warn("参数校验失败 [{}]: 字段错误={}, 全局错误={}", 
-                request.getRequestURI(), fieldErrors, globalErrors);
+        logger.warn("参数校验失败 [{}]: 字段错误数={}, 全局错误数={}", 
+                request.getRequestURI(), fieldErrors.size(), globalErrors.size());
         
-        ValidationErrorResponse response = ValidationErrorResponse.of(
+        ValidationErrorResponse response = ValidationErrorResponse.ofDetailed(
                 fieldErrors, 
                 globalErrors.isEmpty() ? null : globalErrors, 
                 request.getRequestURI());
@@ -85,27 +94,33 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理绑定异常 (表单提交)
+     * 返回详细的字段验证错误信息
      */
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ValidationErrorResponse> handleBindException(
             BindException e, HttpServletRequest request) {
         
-        Map<String, String> fieldErrors = new HashMap<>();
+        Map<String, FieldErrorDetail> fieldErrors = new HashMap<>();
         List<String> globalErrors = new ArrayList<>();
         
         e.getBindingResult().getAllErrors().forEach(error -> {
             if (error instanceof FieldError) {
-                String fieldName = ((FieldError) error).getField();
+                FieldError fieldError = (FieldError) error;
+                String fieldName = fieldError.getField();
                 String errorMessage = error.getDefaultMessage();
-                fieldErrors.put(fieldName, errorMessage);
+                Object rejectedValue = fieldError.getRejectedValue();
+                String constraintType = extractConstraintType(error.getCode());
+                
+                fieldErrors.put(fieldName, FieldErrorDetail.of(
+                        fieldName, errorMessage, rejectedValue, constraintType));
             } else {
                 globalErrors.add(error.getDefaultMessage());
             }
         });
         
-        logger.warn("数据绑定失败 [{}]: {}", request.getRequestURI(), fieldErrors);
+        logger.warn("数据绑定失败 [{}]: 字段错误数={}", request.getRequestURI(), fieldErrors.size());
         
-        ValidationErrorResponse response = ValidationErrorResponse.of(
+        ValidationErrorResponse response = ValidationErrorResponse.ofDetailed(
                 fieldErrors, 
                 globalErrors.isEmpty() ? null : globalErrors, 
                 request.getRequestURI());
@@ -113,28 +128,42 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+
     /**
      * 处理约束违反异常 (路径参数/查询参数验证)
+     * 返回详细的字段验证错误信息
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ValidationErrorResponse> handleConstraintViolationException(
             ConstraintViolationException e, HttpServletRequest request) {
         
-        Map<String, String> fieldErrors = e.getConstraintViolations().stream()
-                .collect(Collectors.toMap(
-                        violation -> {
-                            String path = violation.getPropertyPath().toString();
-                            // 提取参数名（去除方法名前缀）
-                            int lastDot = path.lastIndexOf('.');
-                            return lastDot > 0 ? path.substring(lastDot + 1) : path;
-                        },
-                        ConstraintViolation::getMessage,
-                        (existing, replacement) -> existing + "; " + replacement
-                ));
+        Map<String, FieldErrorDetail> fieldErrors = new HashMap<>();
         
-        logger.warn("约束违反 [{}]: {}", request.getRequestURI(), fieldErrors);
+        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+            String path = violation.getPropertyPath().toString();
+            // 提取参数名（去除方法名前缀）
+            int lastDot = path.lastIndexOf('.');
+            String fieldName = lastDot > 0 ? path.substring(lastDot + 1) : path;
+            String message = violation.getMessage();
+            Object invalidValue = violation.getInvalidValue();
+            String constraintType = violation.getConstraintDescriptor()
+                    .getAnnotation().annotationType().getSimpleName();
+            
+            // 如果同一字段有多个错误，合并消息
+            if (fieldErrors.containsKey(fieldName)) {
+                FieldErrorDetail existing = fieldErrors.get(fieldName);
+                String combinedMessage = existing.getMessage() + "; " + message;
+                fieldErrors.put(fieldName, FieldErrorDetail.of(
+                        fieldName, combinedMessage, invalidValue, constraintType));
+            } else {
+                fieldErrors.put(fieldName, FieldErrorDetail.of(
+                        fieldName, message, invalidValue, constraintType));
+            }
+        }
         
-        ValidationErrorResponse response = ValidationErrorResponse.of(fieldErrors, request.getRequestURI());
+        logger.warn("约束违反 [{}]: 字段错误数={}", request.getRequestURI(), fieldErrors.size());
+        
+        ValidationErrorResponse response = ValidationErrorResponse.ofDetailed(fieldErrors, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
     
@@ -145,14 +174,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ValidationErrorResponse> handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e, HttpServletRequest request) {
         
-        Map<String, String> fieldErrors = new HashMap<>();
-        fieldErrors.put(e.getParameterName(), "参数 '" + e.getParameterName() + "' 不能为空");
+        Map<String, FieldErrorDetail> fieldErrors = new HashMap<>();
+        fieldErrors.put(e.getParameterName(), FieldErrorDetail.of(
+                e.getParameterName(), 
+                "参数 '" + e.getParameterName() + "' 不能为空",
+                null,
+                "Required"));
         
         logger.warn("缺少请求参数 [{}]: {}", request.getRequestURI(), e.getParameterName());
         
-        ValidationErrorResponse response = ValidationErrorResponse.of(fieldErrors, request.getRequestURI());
+        ValidationErrorResponse response = ValidationErrorResponse.ofDetailed(fieldErrors, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
     
     /**
      * 处理参数类型不匹配异常
@@ -161,16 +195,72 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ValidationErrorResponse> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException e, HttpServletRequest request) {
         
-        Map<String, String> fieldErrors = new HashMap<>();
+        Map<String, FieldErrorDetail> fieldErrors = new HashMap<>();
         String expectedType = e.getRequiredType() != null ? e.getRequiredType().getSimpleName() : "未知";
-        fieldErrors.put(e.getName(), "参数类型错误，期望类型: " + expectedType);
+        fieldErrors.put(e.getName(), FieldErrorDetail.of(
+                e.getName(), 
+                "参数类型错误，期望类型: " + expectedType,
+                e.getValue(),
+                "TypeMismatch"));
         
         logger.warn("参数类型不匹配 [{}]: {} 期望 {}", 
                 request.getRequestURI(), e.getName(), expectedType);
         
-        ValidationErrorResponse response = ValidationErrorResponse.of(fieldErrors, request.getRequestURI());
+        ValidationErrorResponse response = ValidationErrorResponse.ofDetailed(fieldErrors, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+    
+    /**
+     * 处理请求体不可读异常（如JSON格式错误）
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ValidationErrorResponse> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException e, HttpServletRequest request) {
+        
+        String message = "请求体格式错误";
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            String causeMessage = cause.getMessage();
+            if (causeMessage != null && causeMessage.length() > 200) {
+                causeMessage = causeMessage.substring(0, 200) + "...";
+            }
+            message = "请求体格式错误: " + causeMessage;
+        }
+        
+        Map<String, FieldErrorDetail> fieldErrors = new HashMap<>();
+        fieldErrors.put("requestBody", FieldErrorDetail.of(
+                "requestBody", message, null, "JsonParse"));
+        
+        logger.warn("请求体不可读 [{}]: {}", request.getRequestURI(), e.getMessage());
+        
+        ValidationErrorResponse response = ValidationErrorResponse.ofDetailed(fieldErrors, request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+    
+    /**
+     * 处理不支持的HTTP方法异常
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException e) {
+        logger.warn("不支持的HTTP方法: {}", e.getMethod());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(ApiResponse.error(ResponseCode.ERROR.getCode(), 
+                        "不支持的HTTP方法: " + e.getMethod()));
+    }
+    
+    /**
+     * 处理不支持的媒体类型异常
+     */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleHttpMediaTypeNotSupportedException(
+            HttpMediaTypeNotSupportedException e) {
+        logger.warn("不支持的媒体类型: {}", e.getContentType());
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                .body(ApiResponse.error(ResponseCode.ERROR.getCode(), 
+                        "不支持的媒体类型: " + e.getContentType()));
+    }
+
 
     /**
      * 处理认证异常
@@ -232,6 +322,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(ResponseCode.SERVER_ERROR.getCode(), "服务器内部错误"));
     }
 
+
     /**
      * 处理IllegalArgumentException
      */
@@ -283,5 +374,36 @@ public class GlobalExceptionHandler {
         logger.error("数据库锁获取失败: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ResponseCode.SERVER_ERROR.getCode(), "数据库资源繁忙，请稍后重试"));
+    }
+
+
+    // ==================== 辅助方法 ====================
+
+    /**
+     * 从验证注解代码中提取约束类型
+     * @param code 验证注解的代码（如 NotBlank, Size, Pattern 等）
+     * @return 约束类型的友好名称
+     */
+    private String extractConstraintType(String code) {
+        if (code == null) return "Unknown";
+        
+        return switch (code) {
+            case "NotBlank", "NotEmpty", "NotNull" -> "Required";
+            case "Size" -> "Size";
+            case "Min", "Max" -> "Range";
+            case "Pattern" -> "Pattern";
+            case "Email" -> "Email";
+            case "Past", "PastOrPresent" -> "PastDate";
+            case "Future", "FutureOrPresent" -> "FutureDate";
+            case "Positive", "PositiveOrZero" -> "Positive";
+            case "Negative", "NegativeOrZero" -> "Negative";
+            case "Digits" -> "Digits";
+            case "DecimalMin", "DecimalMax" -> "DecimalRange";
+            case "AssertTrue", "AssertFalse" -> "Boolean";
+            case "NoXss", "SafeHtml" -> "Security";
+            case "ValidDateRange" -> "DateRange";
+            case "PasswordMatch" -> "PasswordMatch";
+            default -> code;
+        };
     }
 }

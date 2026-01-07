@@ -145,124 +145,97 @@ class Message {
 
 // 简化的确认框系统
 class MessageBox {
-  static confirm(message, title = '确认', options = {}) {
-    return new Promise((resolve, reject) => {
+  static alert(message, title = '提示', options = {}) {
+    return new Promise((resolve) => {
       // 创建模态框
       const modal = document.createElement('div')
       modal.className = 'message-box-overlay'
+      
+      const typeIcon = this.getTypeIcon(options.type)
+      const confirmText = options.confirmButtonText || '确定'
+      
       modal.innerHTML = `
-        <div class="message-box">
+        <div class="message-box message-box-${options.type || 'info'}">
           <div class="message-box-header">
+            ${typeIcon ? `<span class="message-box-icon">${typeIcon}</span>` : ''}
             <h3>${title}</h3>
           </div>
           <div class="message-box-body">
             <p>${message}</p>
           </div>
           <div class="message-box-footer">
-            <button class="btn btn-cancel" data-action="cancel">取消</button>
-            <button class="btn btn-confirm" data-action="confirm">确定</button>
+            <button class="btn btn-confirm" data-action="confirm">${confirmText}</button>
           </div>
         </div>
       `
 
-      // 添加样式
-      const style = document.createElement('style')
-      style.textContent = `
-        .message-box-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10000;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      this.addStyles()
+
+      // 添加事件监听
+      const handleClick = (e) => {
+        const action = e.target.dataset.action
+        if (action === 'confirm') {
+          document.body.removeChild(modal)
+          resolve(true)
         }
-        
-        .message-box {
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-          min-width: 400px;
-          max-width: 90vw;
-          animation: modalSlideIn 0.3s ease;
-        }
-        
-        .message-box-header {
-          padding: 20px 20px 10px;
-          border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .message-box-header h3 {
-          margin: 0;
-          font-size: 18px;
-          font-weight: 600;
-          color: #111827;
-        }
-        
-        .message-box-body {
-          padding: 20px;
-        }
-        
-        .message-box-body p {
-          margin: 0;
-          color: #374151;
-          line-height: 1.5;
-        }
-        
-        .message-box-footer {
-          padding: 10px 20px 20px;
-          display: flex;
-          justify-content: flex-end;
-          gap: 10px;
-        }
-        
-        .btn {
-          padding: 8px 16px;
-          border: 1px solid #d1d5db;
-          border-radius: 6px;
-          background: white;
-          color: #374151;
-          cursor: pointer;
-          font-size: 14px;
-          transition: all 0.2s ease;
-        }
-        
-        .btn:hover {
-          background: #f9fafb;
-        }
-        
-        .btn-confirm {
-          background: #3b82f6;
-          border-color: #3b82f6;
-          color: white;
-        }
-        
-        .btn-confirm:hover {
-          background: #2563eb;
-          border-color: #2563eb;
-        }
-        
-        @keyframes modalSlideIn {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
+      }
+      
+      modal.addEventListener('click', handleClick)
+      
+      // 如果允许点击遮罩关闭
+      if (options.closeOnClickModal !== false) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            document.body.removeChild(modal)
+            resolve(true)
           }
-          to {
-            opacity: 1;
-            transform: scale(1);
+        })
+      }
+      
+      // 如果允许按ESC关闭
+      if (options.closeOnPressEscape !== false) {
+        const handleKeydown = (e) => {
+          if (e.key === 'Escape') {
+            document.body.removeChild(modal)
+            document.removeEventListener('keydown', handleKeydown)
+            resolve(true)
           }
         }
+        document.addEventListener('keydown', handleKeydown)
+      }
+
+      // 添加到页面
+      document.body.appendChild(modal)
+    })
+  }
+
+  static confirm(message, title = '确认', options = {}) {
+    return new Promise((resolve, reject) => {
+      // 创建模态框
+      const modal = document.createElement('div')
+      modal.className = 'message-box-overlay'
+      
+      const typeIcon = this.getTypeIcon(options.type)
+      const confirmText = options.confirmButtonText || '确定'
+      const cancelText = options.cancelButtonText || '取消'
+      
+      modal.innerHTML = `
+        <div class="message-box message-box-${options.type || 'info'}">
+          <div class="message-box-header">
+            ${typeIcon ? `<span class="message-box-icon">${typeIcon}</span>` : ''}
+            <h3>${title}</h3>
+          </div>
+          <div class="message-box-body">
+            <p>${message}</p>
+          </div>
+          <div class="message-box-footer">
+            <button class="btn btn-cancel" data-action="cancel">${cancelText}</button>
+            <button class="btn btn-confirm" data-action="confirm">${confirmText}</button>
+          </div>
+        </div>
       `
 
-      // 如果样式还没有添加，就添加样式
-      if (!document.querySelector('#message-box-styles')) {
-        style.id = 'message-box-styles'
-        document.head.appendChild(style)
-      }
+      this.addStyles()
 
       // 添加事件监听
       modal.addEventListener('click', (e) => {
@@ -279,6 +252,142 @@ class MessageBox {
       // 添加到页面
       document.body.appendChild(modal)
     })
+  }
+  
+  static getTypeIcon(type) {
+    const icons = {
+      success: '✅',
+      error: '❌',
+      warning: '⚠️',
+      info: 'ℹ️'
+    }
+    return icons[type] || ''
+  }
+  
+  static addStyles() {
+    // 如果样式还没有添加，就添加样式
+    if (document.querySelector('#message-box-styles')) {
+      return
+    }
+    
+    const style = document.createElement('style')
+    style.id = 'message-box-styles'
+    style.textContent = `
+      .message-box-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      .message-box {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        min-width: 400px;
+        max-width: 90vw;
+        animation: modalSlideIn 0.3s ease;
+      }
+      
+      .message-box-header {
+        padding: 20px 20px 10px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .message-box-icon {
+        font-size: 24px;
+      }
+      
+      .message-box-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #111827;
+      }
+      
+      .message-box-warning .message-box-header h3 {
+        color: #92400e;
+      }
+      
+      .message-box-error .message-box-header h3 {
+        color: #991b1b;
+      }
+      
+      .message-box-body {
+        padding: 20px;
+      }
+      
+      .message-box-body p {
+        margin: 0;
+        color: #374151;
+        line-height: 1.5;
+      }
+      
+      .message-box-footer {
+        padding: 10px 20px 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+      
+      .btn {
+        padding: 8px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: white;
+        color: #374151;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+      
+      .btn:hover {
+        background: #f9fafb;
+      }
+      
+      .btn-confirm {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: white;
+      }
+      
+      .btn-confirm:hover {
+        background: #2563eb;
+        border-color: #2563eb;
+      }
+      
+      .message-box-warning .btn-confirm {
+        background: #f59e0b;
+        border-color: #f59e0b;
+      }
+      
+      .message-box-warning .btn-confirm:hover {
+        background: #d97706;
+        border-color: #d97706;
+      }
+      
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    `
+    document.head.appendChild(style)
   }
 }
 
