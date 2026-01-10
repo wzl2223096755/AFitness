@@ -25,8 +25,11 @@ import java.util.*;
 
 /**
  * 用户活跃度统计服务实现
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.modules.admin.service.impl.UserActivityServiceImpl}
  */
-@Service
+@Deprecated
+@Service("legacyUserActivityService")
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)

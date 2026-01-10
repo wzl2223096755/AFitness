@@ -37,7 +37,7 @@ export const fitnessApi = {
   invalidateDashboardCache: () => cachedDashboardApi.invalidateCache(),
 
   // 负荷分析与建议 (LoadRecoveryController)
-  getLoadTrend: (params) => get('/api/v1/load-recovery/load-trend', { params }),
+  getLoadTrend: (params) => get('/api/v1/load-recovery/load-trend', params),
   assessRecovery: (data) => post('/api/v1/load-recovery/recovery-assessment', data),
   getTrainingSuggestions: () => get('/api/v1/load-recovery/training-suggestions'),
 }

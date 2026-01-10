@@ -548,9 +548,9 @@ onMounted(() => {
 <style scoped>
 .user-profile {
   padding: 20px;
-  background: #fff;
+  background: var(--bg-card, #fff);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
 .section-header {
@@ -562,7 +562,7 @@ onMounted(() => {
 
 .section-header h2 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 24px;
   font-weight: 600;
 }
@@ -626,17 +626,17 @@ onMounted(() => {
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .user-email {
   margin: 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .basic-info {
-  background: #f8f9fa;
+  background: var(--bg-elevated, #f8f9fa);
   border-radius: 8px;
   padding: 20px;
 }
@@ -653,13 +653,13 @@ onMounted(() => {
 }
 
 .label {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .value {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .profile-main {
@@ -673,7 +673,7 @@ onMounted(() => {
 
 .form-section h4 {
   margin: 0 0 20px 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 16px;
   font-weight: 600;
   padding-bottom: 8px;

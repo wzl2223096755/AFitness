@@ -638,13 +638,13 @@ onUnmounted(() => {
 .exercise-option-item .option-name {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 2px;
 }
 
 .exercise-option-item .option-desc {
   font-size: 11px;
-  color: #999;
+  color: var(--text-tertiary);
 }
 
 :deep(.el-table) {
@@ -653,14 +653,14 @@ onUnmounted(() => {
 }
 
 :deep(.el-table th) {
-  background-color: #f5f7fa;
-  color: #606266;
+  background-color: rgba(124, 58, 237, 0.08);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 :deep(.el-rate__text) {
   font-size: 12px;
-  color: #606266;
+  color: var(--text-secondary);
 }
 
 :deep(.el-dialog) {

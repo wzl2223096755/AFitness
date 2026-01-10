@@ -448,13 +448,13 @@
   &__title {
     font-size: tokens.$font-size-xl;
     font-weight: tokens.$font-weight-semibold;
-    color: #f8fafc;
+    color: var(--text-primary);
     margin: 0 0 tokens.$spacing-2 0;
   }
   
   &__description {
     font-size: tokens.$font-size-sm;
-    color: #94a3b8;
+    color: var(--text-secondary);
     margin: 0;
     max-width: 300px;
     line-height: tokens.$line-height-relaxed;
@@ -656,7 +656,7 @@
     
     &__label {
       font-size: tokens.$font-size-sm;
-      color: #e2e8f0;
+      color: var(--text-secondary);
       user-select: none;
       
       &--left {
@@ -665,7 +665,7 @@
     }
     
     &:hover .toggle-switch-wrapper__label {
-      color: #f8fafc;
+      color: var(--text-primary);
     }
   }
   
@@ -884,14 +884,14 @@
   &__title {
     font-size: tokens.$font-size-sm;
     font-weight: tokens.$font-weight-semibold;
-    color: #f8fafc;
+    color: var(--text-primary);
     margin: 0 0 tokens.$spacing-1 0;
     line-height: tokens.$line-height-tight;
   }
   
   &__message {
     font-size: tokens.$font-size-xs;
-    color: #94a3b8;
+    color: var(--text-secondary);
     margin: 0;
     line-height: tokens.$line-height-normal;
   }
@@ -909,14 +909,14 @@
     justify-content: center;
     background: transparent;
     border: none;
-    color: #64748b;
+    color: var(--text-tertiary);
     cursor: pointer;
     border-radius: 6px;
     transition: all tokens.$duration-fast ease;
     
     &:hover {
-      background: rgba(99, 102, 241, 0.1);
-      color: #e2e8f0;
+      background: var(--hover-bg);
+      color: var(--text-primary);
     }
     
     &:focus-visible {

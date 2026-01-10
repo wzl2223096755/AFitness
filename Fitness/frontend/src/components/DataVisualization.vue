@@ -666,10 +666,10 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  background: var(--bg-card, linear-gradient(135deg, #fff 0%, #f8f9fa 100%));
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e4e7ed;
+  box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.05));
+  border: 1px solid var(--border-default, #e4e7ed);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -697,14 +697,14 @@ onUnmounted(() => {
 .stats-value {
   font-size: 28px;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary);
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .stats-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 4px;
 }
 

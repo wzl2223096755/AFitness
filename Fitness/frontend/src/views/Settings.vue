@@ -444,12 +444,16 @@ onMounted(() => {
 .page-header__title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--color-text-primary, #f8fafc);
+  color: var(--text-primary);
   margin: 0 0 var(--spacing-2, 8px) 0;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .page-header__description {
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
   font-size: 1rem;
   margin: 0;
 }
@@ -472,7 +476,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-3, 12px) 0;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .info-item:last-child {
@@ -481,12 +485,12 @@ onMounted(() => {
 
 .info-item label {
   font-weight: 500;
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
   min-width: 100px;
 }
 
 .info-item span {
-  color: var(--color-text-primary, #f8fafc);
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -499,14 +503,14 @@ onMounted(() => {
 }
 
 .role-badge--admin {
-  background: var(--color-danger-bg, rgba(239, 68, 68, 0.15));
-  color: var(--color-danger, #ef4444);
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .role-badge--user {
   background: rgba(99, 102, 241, 0.15);
-  color: #6366f1;
+  color: var(--color-info);
   border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
@@ -521,15 +525,15 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-4, 16px);
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--hover-bg);
   border-radius: 12px;
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  border: 1px solid var(--border-subtle);
   transition: all 0.3s ease;
 }
 
 .preference-item:hover {
-  background: rgba(99, 102, 241, 0.08);
-  border-color: rgba(99, 102, 241, 0.2);
+  background: var(--active-bg);
+  border-color: var(--border-default);
 }
 
 .preference-info {
@@ -539,13 +543,13 @@ onMounted(() => {
 .preference-info label {
   display: block;
   font-weight: 600;
-  color: var(--color-text-primary, #f8fafc);
+  color: var(--text-primary);
   margin-bottom: var(--spacing-1, 4px);
 }
 
 .preference-info span {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
 }
 
 /* 数据操作列表 */
@@ -559,19 +563,19 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-4, 16px);
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--hover-bg);
   border-radius: 12px;
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  border: 1px solid var(--border-subtle);
   transition: all 0.3s ease;
 }
 
 .action-item:hover {
-  background: rgba(99, 102, 241, 0.08);
-  border-color: rgba(99, 102, 241, 0.2);
+  background: var(--active-bg);
+  border-color: var(--border-default);
 }
 
 .action-item--danger {
-  background: var(--color-danger-bg, rgba(239, 68, 68, 0.1));
+  background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
@@ -587,13 +591,13 @@ onMounted(() => {
 .action-info label {
   display: block;
   font-weight: 600;
-  color: var(--color-text-primary, #f8fafc);
+  color: var(--text-primary);
   margin-bottom: var(--spacing-1, 4px);
 }
 
 .action-info span {
   font-size: 0.875rem;
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
 }
 
 /* 响应式优化 */
@@ -663,18 +667,18 @@ onMounted(() => {
 
 /* 对话框样式覆盖 */
 :deep(.el-dialog) {
-  background: var(--glass-bg, rgba(15, 15, 35, 0.95)) !important;
-  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2)) !important;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
   border-radius: 20px !important;
 }
 
 :deep(.el-dialog__header) {
-  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+  border-bottom: 1px solid var(--border-subtle);
   padding: var(--spacing-5, 20px) var(--spacing-6, 24px);
 }
 
 :deep(.el-dialog__title) {
-  color: var(--color-text-primary, #f8fafc) !important;
+  color: var(--text-primary) !important;
   font-weight: 600;
 }
 
@@ -683,7 +687,7 @@ onMounted(() => {
 }
 
 :deep(.el-dialog__footer) {
-  border-top: 1px solid rgba(99, 102, 241, 0.1);
+  border-top: 1px solid var(--border-subtle);
   padding: var(--spacing-4, 16px) var(--spacing-6, 24px);
   display: flex;
   gap: var(--spacing-3, 12px);
@@ -691,7 +695,7 @@ onMounted(() => {
 }
 
 :deep(.el-form-item__label) {
-  color: var(--color-text-secondary, #94a3b8) !important;
+  color: var(--text-secondary) !important;
 }
 
 @media (max-width: 768px) {

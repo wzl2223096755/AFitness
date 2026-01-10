@@ -967,20 +967,24 @@ onUnmounted(() => {
 /* Requirements: 5.1, 5.2, 5.3, 7.1, 7.2, 7.3 */
 
 .training-data-page {
-  background: var(--bg-secondary, #121225);
+  background: var(--bg-page);
   min-height: 100vh;
 }
 
 /* Page header using unified styles */
 .page-header__title {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   font-size: var(--font-size-2xl, 1.5rem);
   font-weight: var(--font-weight-bold, 700);
   margin-bottom: var(--spacing-2, 0.5rem);
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .page-header__subtitle {
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   font-size: var(--font-size-sm, 0.875rem);
 }
 
@@ -1002,11 +1006,11 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   margin-top: 4px;
-  background: var(--glass-bg, rgba(15, 15, 35, 0.95));
+  background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur, 20px));
-  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  border: 1px solid var(--glass-border);
   border-radius: var(--border-radius-md, 12px);
-  box-shadow: var(--shadow-lg, 0 0 20px rgba(128, 32, 255, 0.3));
+  box-shadow: var(--shadow-lg);
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
@@ -1015,17 +1019,17 @@ onUnmounted(() => {
 .suggestion-item {
   padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
   cursor: pointer;
-  color: var(--text-regular, #e0e0ff);
+  color: var(--text-secondary);
   transition: all var(--duration-fast, 150ms) var(--ease-out, ease-out);
 }
 
 .suggestion-item:hover {
-  background-color: rgba(128, 32, 255, 0.15);
+  background-color: var(--hover-bg);
 }
 
 .suggestion-item-active {
-  background-color: rgba(128, 32, 255, 0.25);
-  color: var(--color-accent, #00f2fe);
+  background-color: var(--active-bg);
+  color: var(--brand-accent);
   font-weight: var(--font-weight-medium, 500);
 }
 
@@ -1040,42 +1044,42 @@ onUnmounted(() => {
 .weight-value {
   font-weight: var(--font-weight-medium, 500);
   font-variant-numeric: tabular-nums;
-  color: var(--text-regular, #e0e0ff);
+  color: var(--text-secondary);
 }
 
 .highlight-volume {
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--color-success, #00ff88);
+  color: var(--color-success);
   font-variant-numeric: tabular-nums;
 }
 
 :deep(.el-table .cell) {
   padding: var(--table-cell-padding-y, 0.75rem) var(--table-cell-padding-x, 1rem);
   font-variant-numeric: tabular-nums;
-  color: var(--text-regular, #e0e0ff);
+  color: var(--text-secondary);
 }
 
 :deep(.el-table th .cell) {
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
-/* Deep dark theme table styles */
+/* Table theme styles */
 :deep(.el-table) {
   background-color: transparent;
   --el-table-bg-color: transparent;
   --el-table-tr-bg-color: transparent;
-  --el-table-header-bg-color: rgba(128, 32, 255, 0.1);
-  --el-table-header-text-color: #ffffff;
-  --el-table-text-color: #e0e0ff;
-  --el-table-border-color: rgba(99, 102, 241, 0.2);
-  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15);
+  --el-table-header-bg-color: var(--hover-bg);
+  --el-table-header-text-color: var(--text-primary);
+  --el-table-text-color: var(--text-secondary);
+  --el-table-border-color: var(--border-default);
+  --el-table-row-hover-bg-color: var(--hover-bg);
   border-radius: var(--border-radius-md, 12px);
   overflow: hidden;
 }
 
 :deep(.el-table__header-wrapper) {
-  background-color: rgba(128, 32, 255, 0.1);
+  background-color: var(--hover-bg);
 }
 
 :deep(.el-table__body-wrapper) {
@@ -1083,11 +1087,11 @@ onUnmounted(() => {
 }
 
 :deep(.el-table__empty-text) {
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-tertiary);
 }
 
 .table-row-even {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: var(--hover-bg);
 }
 
 .table-row-odd {
@@ -1104,9 +1108,9 @@ onUnmounted(() => {
 /* Training checkbox group */
 .exercise-checkbox-group {
   padding: var(--spacing-4, 1rem);
-  background: rgba(128, 32, 255, 0.05);
+  background: var(--hover-bg);
   border-radius: var(--border-radius-md, 12px);
-  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  border: 1px solid var(--glass-border);
 }
 
 .checkbox-group-header {
@@ -1115,19 +1119,19 @@ onUnmounted(() => {
   align-items: center;
   margin-bottom: var(--spacing-4, 1rem);
   padding-bottom: var(--spacing-3, 0.75rem);
-  border-bottom: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
+  border-bottom: 1px solid var(--border-default);
 }
 
 .group-title {
   font-size: var(--font-size-sm, 0.875rem);
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .selected-count {
   font-size: var(--font-size-xs, 0.75rem);
-  color: var(--color-accent, #00f2fe);
-  background: rgba(0, 242, 254, 0.1);
+  color: var(--brand-accent);
+  background: rgba(6, 182, 212, 0.1);
   padding: var(--spacing-1, 0.25rem) var(--spacing-3, 0.75rem);
   border-radius: 20px;
 }
@@ -1142,7 +1146,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   border-radius: var(--border-radius-sm, 10px);
   border: 1px solid transparent;
   transition: all var(--duration-fast, 150ms) var(--ease-out, ease-out);
@@ -1150,57 +1154,57 @@ onUnmounted(() => {
 }
 
 .exercise-checkbox:hover {
-  background: rgba(128, 32, 255, 0.1);
-  border-color: var(--color-primary, #8020ff);
+  background: var(--hover-bg);
+  border-color: var(--brand-primary);
   transform: translateY(-2px);
 }
 
 :deep(.exercise-checkbox.is-checked) {
-  background: rgba(128, 32, 255, 0.15);
-  border-color: var(--color-primary, #8020ff);
-  box-shadow: 0 0 12px rgba(128, 32, 255, 0.3);
+  background: var(--active-bg);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-brand);
 }
 
 :deep(.exercise-checkbox .el-checkbox__inner) {
   background: transparent;
-  border-color: var(--text-secondary, #8888aa);
+  border-color: var(--text-tertiary);
   border-radius: 4px;
   width: 18px;
   height: 18px;
 }
 
 :deep(.exercise-checkbox.is-checked .el-checkbox__inner) {
-  background: linear-gradient(135deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
+  background: var(--brand-gradient);
   border-color: transparent;
 }
 
 .exercise-label {
   font-size: var(--font-size-sm, 0.875rem);
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .exercise-desc {
   font-size: var(--font-size-xs, 0.75rem);
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-tertiary);
 }
 
-/* Pagination dark theme */
+/* Pagination theme */
 :deep(.el-pagination .el-pager li) {
   border-radius: 6px;
   margin: 0 2px;
   transition: all var(--duration-fast, 150ms) var(--ease-out, ease-out);
   background: transparent;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
 }
 
 :deep(.el-pagination .el-pager li:hover) {
-  background-color: rgba(128, 32, 255, 0.15);
-  color: var(--color-primary, #8020ff);
+  background-color: var(--hover-bg);
+  color: var(--brand-primary);
 }
 
 :deep(.el-pagination .el-pager li.is-active) {
-  background: linear-gradient(135deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
+  background: var(--brand-gradient);
   color: white;
 }
 

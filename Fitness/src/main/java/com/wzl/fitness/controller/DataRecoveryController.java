@@ -21,9 +21,12 @@ import java.util.Map;
 /**
  * 数据恢复控制器
  * 提供已删除数据的查看和恢复功能
+ * 
+ * 注意：路径从 /api/v1/recovery 改为 /api/v1/data-recovery
+ * 以避免与恢复评估模块 RecoveryModuleController 的路由冲突
  */
 @RestController
-@RequestMapping("/api/v1/recovery")
+@RequestMapping("/api/v1/data-recovery")
 @RequiredArgsConstructor
 @Tag(name = "数据恢复", description = "已删除数据的查看和恢复接口")
 public class DataRecoveryController extends BaseController {

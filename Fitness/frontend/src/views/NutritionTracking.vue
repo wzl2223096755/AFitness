@@ -486,7 +486,7 @@ onMounted(() => {
 /* Requirements: 5.1, 5.2, 5.3, 7.1, 7.2, 7.3 */
 
 .nutrition-page {
-  background: linear-gradient(135deg, var(--bg-primary, #0a0a14) 0%, var(--bg-secondary, #121225) 100%);
+  background: var(--bg-page);
   min-height: calc(100vh - 60px);
 }
 
@@ -496,14 +496,18 @@ onMounted(() => {
 }
 
 .page-header__title {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   font-size: var(--font-size-3xl, 1.875rem);
   font-weight: var(--font-weight-extrabold, 800);
   margin-bottom: var(--spacing-3, 0.75rem);
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .page-header__subtitle {
-  color: var(--text-regular, #e0e0ff);
+  color: var(--text-secondary);
   font-size: var(--font-size-lg, 1.125rem);
   opacity: 0.9;
 }
@@ -520,7 +524,7 @@ onMounted(() => {
 }
 
 .card-title {
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-tertiary);
   font-size: var(--font-size-sm, 0.875rem);
   margin-bottom: var(--spacing-1, 0.25rem);
 }
@@ -529,13 +533,13 @@ onMounted(() => {
   font-size: var(--font-size-2xl, 1.5rem);
   font-weight: var(--font-weight-bold, 700);
   font-variant-numeric: tabular-nums;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   line-height: var(--line-height-tight, 1.25);
 }
 
 .card-unit {
   font-size: var(--font-size-xs, 0.75rem);
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-tertiary);
   margin-top: var(--spacing-1, 0.25rem);
 }
 
@@ -560,11 +564,11 @@ onMounted(() => {
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--glass-bg, rgba(15, 15, 35, 0.95));
+  background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur, 20px));
   border-radius: var(--border-radius-md, 12px);
-  border: 1px solid var(--glass-border, rgba(99, 102, 241, 0.2));
-  box-shadow: var(--shadow-lg, 0 0 20px rgba(128, 32, 255, 0.3));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
   z-index: 1000;
   max-height: 200px;
   overflow-y: auto;
@@ -574,8 +578,8 @@ onMounted(() => {
   padding: var(--spacing-3, 0.75rem) var(--spacing-4, 1rem);
   cursor: pointer;
   transition: background-color var(--duration-fast, 150ms) var(--ease-out, ease-out);
-  border-bottom: 1px solid var(--glass-border, rgba(99, 102, 241, 0.1));
-  color: var(--text-primary, #ffffff);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
 }
 
 .suggestion-item:last-child {
@@ -584,17 +588,17 @@ onMounted(() => {
 
 .suggestion-item:hover,
 .suggestion-item-active {
-  background-color: rgba(128, 32, 255, 0.15);
+  background-color: var(--hover-bg);
 }
 
 .food-name {
   font-weight: var(--font-weight-medium, 500);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .food-calories {
   font-size: var(--font-size-sm, 0.875rem);
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
 }
 
 /* Table styling - Requirements: 7.1, 7.2, 7.3 */
@@ -605,18 +609,18 @@ onMounted(() => {
 
 :deep(.el-table th .cell) {
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 :deep(.el-table) {
   background-color: transparent;
   --el-table-bg-color: transparent;
   --el-table-tr-bg-color: transparent;
-  --el-table-header-bg-color: rgba(128, 32, 255, 0.1);
-  --el-table-header-text-color: #ffffff;
-  --el-table-text-color: #e0e0ff;
-  --el-table-border-color: rgba(99, 102, 241, 0.2);
-  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15);
+  --el-table-header-bg-color: var(--hover-bg);
+  --el-table-header-text-color: var(--text-primary);
+  --el-table-text-color: var(--text-secondary);
+  --el-table-border-color: var(--border-default);
+  --el-table-row-hover-bg-color: var(--hover-bg);
   border-radius: var(--border-radius-md, 12px);
   overflow: hidden;
 }

@@ -97,25 +97,63 @@ git clone <repository-url>
 cd AFitness
 ```
 
-### 2. 启动后端
+### 2. 数据库配置
+
+#### 方式一：使用 H2 内存数据库（推荐新手）
+无需安装任何数据库，直接启动即可：
+```bash
+cd Fitness
+.\start-h2.ps1
+# 或者
+java -jar target/fitness-0.0.1-SNAPSHOT.jar --spring.profiles.active=h2
+```
+
+#### 方式二：使用 MySQL 数据库（生产环境）
+
+1. 安装并启动 MySQL 8.0+
+2. 创建数据库：
+```sql
+CREATE DATABASE fitness_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+3. 修改配置文件 `src/main/resources/application-mysql.properties`：
+```properties
+spring.datasource.username=你的用户名
+spring.datasource.password=你的密码
+```
+4. 启动应用：
+```bash
+.\start-mysql.ps1
+# 或者
+java -jar target/fitness-0.0.1-SNAPSHOT.jar --spring.profiles.active=mysql
+```
+
+#### 方式三：使用 Docker Compose（完整环境）
+```bash
+cd Fitness
+docker-compose up -d
+```
+
+详细配置请参考：[MySQL 配置指南](docs/MYSQL_SETUP.md)
+
+### 3. 启动后端
 ```bash
 cd Fitness
 
 # 使用H2数据库（开发模式）
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=h2
 
 # 使用MySQL数据库（生产模式）
-mvn spring-boot:run -Dspring.profiles.active=mysql
+mvn spring-boot:run -Dspring-boot.run.profiles=mysql
 ```
 
-### 3. 启动前端
+### 4. 启动前端
 ```bash
 cd Fitness/frontend
 npm install
 npm run dev
 ```
 
-### 4. 访问应用
+### 5. 访问应用
 | 服务 | 地址 |
 |------|------|
 | 前端应用 | http://localhost:3000 |
@@ -123,12 +161,12 @@ npm run dev
 | Swagger文档 | http://localhost:8080/swagger-ui.html |
 | 健康检查 | http://localhost:8080/actuator/health |
 | Prometheus指标 | http://localhost:8080/actuator/prometheus |
+| H2控制台 (仅H2模式) | http://localhost:8080/h2-console |
 
-### 5. 默认账户
+### 6. 默认账户
 | 用户名 | 密码 | 角色 |
 |--------|------|------|
-| admin | admin123 | 管理员 |
-| user | user123 | 普通用户 |
+| admin | Test123! | 管理员 |
 
 ## 项目结构
 

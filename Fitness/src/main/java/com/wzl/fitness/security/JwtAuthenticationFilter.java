@@ -24,7 +24,11 @@ import java.io.IOException;
 
 /**
  * JWT认证过滤器
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.shared.security.JwtAuthenticationFilter} 代替
+ * 此类保留用于向后兼容，将在未来版本中移除
  */
+@Deprecated
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

@@ -38,7 +38,11 @@ import java.util.Map;
  * 全局异常处理器
  * 统一处理所有异常，返回规范化的错误响应
  * 提供详细的字段验证错误信息
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.shared.exception.GlobalExceptionHandler} 代替
+ * 此类保留用于向后兼容，将在未来版本中移除
  */
+@Deprecated
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

@@ -141,23 +141,23 @@ onMounted(() => {
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  background: rgba(15, 15, 35, 0.9);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(128, 32, 255, 0.4);
-  color: #f8fafc;
+  border: 1px solid var(--border-brand);
+  color: var(--text-primary);
   font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(128, 32, 255, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .theme-toggle-btn:hover {
   transform: scale(1.05);
-  border-color: #8020ff;
-  box-shadow: 0 0 30px rgba(128, 32, 255, 0.5);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-brand);
 }
 
 .panel-overlay {
@@ -166,7 +166,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--bg-overlay);
   backdrop-filter: blur(4px);
   z-index: 1099;
 }
@@ -179,14 +179,14 @@ onMounted(() => {
   width: 380px;
   max-width: 90vw;
   max-height: 80vh;
-  background: rgba(15, 15, 35, 0.98);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(128, 32, 255, 0.3);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 24px;
   z-index: 1100;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(128, 32, 255, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .panel-header {
@@ -195,14 +195,14 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(128, 32, 255, 0.2);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .panel-header h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  background: linear-gradient(135deg, #8020ff, #00f2fe);
+  background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -212,9 +212,9 @@ onMounted(() => {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(128, 32, 255, 0.3);
-  color: #94a3b8;
+  background: var(--hover-bg);
+  border: 1px solid var(--border-default);
+  color: var(--text-tertiary);
   font-size: 18px;
   cursor: pointer;
   display: flex;
@@ -224,9 +224,9 @@ onMounted(() => {
 }
 
 .close-btn:hover {
-  background: rgba(255, 0, 85, 0.2);
-  border-color: #ff0055;
-  color: #ff0055;
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
 }
 
 .theme-section {
@@ -237,7 +237,7 @@ onMounted(() => {
   margin: 0 0 12px 0;
   font-size: 14px;
   font-weight: 600;
-  color: #8888aa;
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -253,25 +253,25 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(128, 32, 255, 0.2);
+  background: var(--hover-bg);
+  border: 1px solid var(--border-default);
   border-radius: 12px;
-  color: #e0e0ff;
+  color: var(--text-secondary);
   font-size: 13px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .theme-preset-btn:hover {
-  background: rgba(128, 32, 255, 0.1);
-  border-color: rgba(128, 32, 255, 0.4);
+  background: var(--active-bg);
+  border-color: var(--border-brand);
   transform: translateY(-2px);
 }
 
 .theme-preset-btn.active {
-  background: rgba(128, 32, 255, 0.2);
-  border-color: #8020ff;
-  box-shadow: 0 0 15px rgba(128, 32, 255, 0.3);
+  background: var(--active-bg);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-brand);
 }
 
 .preview-dot {
@@ -304,7 +304,7 @@ onMounted(() => {
 
 .color-item label {
   font-size: 12px;
-  color: #8888aa;
+  color: var(--text-tertiary);
   font-weight: 500;
 }
 
@@ -312,7 +312,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   padding-top: 16px;
-  border-top: 1px solid rgba(128, 32, 255, 0.2);
+  border-top: 1px solid var(--border-default);
 }
 
 .reset-btn {
@@ -320,18 +320,18 @@ onMounted(() => {
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(128, 32, 255, 0.3);
+  background: var(--hover-bg);
+  border: 1px solid var(--border-default);
   border-radius: 10px;
-  color: #e0e0ff;
+  color: var(--text-secondary);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .reset-btn:hover {
-  background: rgba(128, 32, 255, 0.15);
-  border-color: #8020ff;
+  background: var(--active-bg);
+  border-color: var(--brand-primary);
   transform: translateY(-2px);
 }
 

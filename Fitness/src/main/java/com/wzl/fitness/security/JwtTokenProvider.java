@@ -16,7 +16,11 @@ import java.util.function.Function;
 
 /**
  * JWT令牌提供者
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.shared.security.JwtTokenProvider} 代替
+ * 此类保留用于向后兼容，将在未来版本中移除
  */
+@Deprecated
 @Component
 public class JwtTokenProvider {
 

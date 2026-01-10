@@ -5,7 +5,10 @@ import java.time.LocalDate;
 /**
  * 数据导出服务接口
  * 提供用户数据、训练记录、营养记录的Excel导出功能
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.modules.admin.service.DataExportService}
  */
+@Deprecated
 public interface DataExportService {
     
     /**

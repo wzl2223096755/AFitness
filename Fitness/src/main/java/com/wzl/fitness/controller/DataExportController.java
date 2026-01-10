@@ -21,12 +21,15 @@ import java.time.format.DateTimeFormatter;
 /**
  * 数据导出控制器
  * 提供用户数据、训练记录、营养记录的Excel导出功能
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.modules.admin.controller.DataExportController}
  */
-@RestController
-@RequestMapping("/api/v1/admin/export")
+@Deprecated
+@RestController("legacyDataExportController")
+@RequestMapping("/api/v1/legacy/admin/export")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "数据导出", description = "数据导出接口")
+@Tag(name = "数据导出(旧版)", description = "数据导出接口 - 已迁移到管理模块")
 public class DataExportController {
 
     private final DataExportService dataExportService;

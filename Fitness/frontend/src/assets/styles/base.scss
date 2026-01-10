@@ -1,6 +1,7 @@
 @use './variables.scss' as *;
 @use './tokens' as tokens;
 @use './typography' as typography;
+@use './theme-tokens' as theme;
 
 // =============================================================================
 // Base Styles - Typography and Layout Optimization
@@ -47,12 +48,25 @@ body {
   line-height: inherit;
   // 字重设置
   font-weight: tokens.$font-weight-normal;
-  // 颜色设置
-  color: $text-primary;
-  background-color: $bg-secondary;
+  // 使用主题变量
+  color: var(--text-primary);
+  background: var(--bg-page);
+  min-height: 100vh;
   // 文本溢出处理
   overflow-wrap: break-word;
   word-wrap: break-word;
+  // 平滑过渡
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// 渐变动画
+@keyframes gradientShift {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 #app {
@@ -125,7 +139,7 @@ body {
 }
 
 // =============================================================================
-// 滚动条样式
+// 滚动条样式 - 明亮主题
 // =============================================================================
 ::-webkit-scrollbar {
   width: 8px;
@@ -133,16 +147,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: $border-light;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $border-color;
-  border-radius: $border-radius-small;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: $text-secondary;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(99, 102, 241, 0.4));
+  border-radius: 4px;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.6), rgba(99, 102, 241, 0.6));
+  }
 }
 
 // =============================================================================
@@ -351,18 +366,23 @@ body {
 }
 
 // =============================================================================
-// 卡片样式
+// 卡片样式 - 明亮玻璃态效果
 // =============================================================================
 .card {
-  background: $bg-card;
-  border-radius: $border-radius-base;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
   padding: tokens.$spacing-6; // 24px - 使用新令牌
-  box-shadow: $shadow-base;
-  transition: box-shadow $transition-time;
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.1), 0 0 40px rgba(139, 92, 246, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  transition: all 0.3s ease;
   margin-bottom: tokens.$spacing-6;
   
   &:hover {
-    box-shadow: $shadow-light;
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15), 0 0 60px rgba(139, 92, 246, 0.08);
+    border-color: rgba(124, 58, 237, 0.2);
+    transform: translateY(-2px);
   }
 }
 
@@ -439,97 +459,119 @@ body {
 
 
 // =============================================================================
-// Element Plus 表格深色主题全局覆盖
+// Element Plus 表格主题感知全局覆盖
 // =============================================================================
-// 确保所有页面的表格都使用深色主题 - Updated
+// 使用 CSS 变量确保表格在亮/暗主题下都能正确显示
 
 .el-table {
-  --el-table-bg-color: transparent !important;
-  --el-table-tr-bg-color: transparent !important;
-  --el-table-header-bg-color: rgba(128, 32, 255, 0.15) !important;
-  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15) !important;
-  --el-table-border-color: rgba(112, 0, 255, 0.2) !important;
-  --el-table-text-color: #e0e0ff !important;
-  --el-table-header-text-color: #ffffff !important;
-  background-color: transparent !important;
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(124, 58, 237, 0.08);
+  --el-table-row-hover-bg-color: rgba(124, 58, 237, 0.08);
+  --el-table-border-color: var(--border-default, rgba(99, 102, 241, 0.15));
+  --el-table-text-color: var(--text-secondary, #475569);
+  --el-table-header-text-color: var(--text-primary, #1e293b);
+  background-color: transparent;
 }
 
 .el-table__header-wrapper {
-  background: rgba(128, 32, 255, 0.15) !important;
+  background: rgba(124, 58, 237, 0.08);
 }
 
 .el-table__header {
-  background: rgba(128, 32, 255, 0.15) !important;
+  background: rgba(124, 58, 237, 0.08);
 }
 
 .el-table th {
-  background: rgba(128, 32, 255, 0.15) !important;
-  color: #ffffff !important;
-  border-bottom: 2px solid rgba(112, 0, 255, 0.3) !important;
+  background: rgba(124, 58, 237, 0.08);
+  color: var(--text-primary, #1e293b);
+  border-bottom: 2px solid var(--border-default, rgba(99, 102, 241, 0.2));
 }
 
 .el-table th.el-table__cell {
-  background: rgba(128, 32, 255, 0.15) !important;
-  color: #ffffff !important;
+  background: rgba(124, 58, 237, 0.08);
+  color: var(--text-primary, #1e293b);
 }
 
 .el-table th .cell {
-  color: #ffffff !important;
+  color: var(--text-primary, #1e293b);
 }
 
 .el-table td {
-  background: transparent !important;
-  color: #e0e0ff !important;
-  border-bottom: 1px solid rgba(112, 0, 255, 0.1) !important;
+  background: transparent;
+  color: var(--text-secondary, #475569);
+  border-bottom: 1px solid var(--border-subtle, rgba(99, 102, 241, 0.1));
 }
 
 .el-table td.el-table__cell {
-  background: transparent !important;
-  color: #e0e0ff !important;
+  background: transparent;
+  color: var(--text-secondary, #475569);
 }
 
 .el-table td .cell {
-  color: #e0e0ff !important;
+  color: var(--text-secondary, #475569);
 }
 
 .el-table__body tr:hover > td {
-  background-color: rgba(128, 32, 255, 0.15) !important;
+  background-color: rgba(124, 58, 237, 0.08);
 }
 
 .el-table__body tr:hover > td.el-table__cell {
-  background-color: rgba(128, 32, 255, 0.15) !important;
+  background-color: rgba(124, 58, 237, 0.08);
 }
 
 .el-table__body tr.el-table__row--striped td {
-  background: rgba(18, 18, 37, 0.3) !important;
+  background: rgba(99, 102, 241, 0.03);
 }
 
 .el-table__empty-text {
-  color: #8888aa !important;
+  color: var(--text-tertiary, #64748b);
 }
 
 .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
-  background: rgba(18, 18, 37, 0.3) !important;
+  background: rgba(99, 102, 241, 0.03);
 }
 
 // 表格排序图标颜色
 .el-table .caret-wrapper {
   .sort-caret {
-    border-bottom-color: #8888aa !important;
-    border-top-color: #8888aa !important;
+    border-bottom-color: var(--text-disabled, #94a3b8);
+    border-top-color: var(--text-disabled, #94a3b8);
   }
   
   .sort-caret.ascending {
-    border-bottom-color: $primary-color !important;
+    border-bottom-color: var(--brand-primary, #7c3aed);
   }
   
   .sort-caret.descending {
-    border-top-color: $primary-color !important;
+    border-top-color: var(--brand-primary, #7c3aed);
   }
 }
 
 // 表格固定列阴影
 .el-table__fixed-right::before,
 .el-table__fixed::before {
-  background-color: rgba(112, 0, 255, 0.2) !important;
+  background-color: var(--border-subtle, rgba(99, 102, 241, 0.1));
+}
+
+// =============================================================================
+// 深色主题表格覆盖
+// =============================================================================
+[data-theme="dark"] {
+  .el-table {
+    --el-table-header-bg-color: rgba(128, 32, 255, 0.15);
+    --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15);
+  }
+  
+  .el-table__header-wrapper,
+  .el-table__header,
+  .el-table th,
+  .el-table th.el-table__cell {
+    background: rgba(128, 32, 255, 0.15);
+  }
+  
+  .el-table__body tr.el-table__row--striped td,
+  .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+    background: rgba(18, 18, 37, 0.3);
+  }
 }

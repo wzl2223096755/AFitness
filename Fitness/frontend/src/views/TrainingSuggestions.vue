@@ -267,7 +267,7 @@ export default {
 
 .main-suggestion p {
   line-height: 1.8;
-  color: #606266;
+  color: var(--text-secondary);
 }
 
 .training-tips {
@@ -296,24 +296,24 @@ export default {
 .exercise-name {
   font-weight: bold;
   margin-bottom: 5px;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .exercise-type {
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .training-plan {
-  background: rgba(18, 18, 37, 0.95);
+  background: var(--glass-bg);
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-md);
 }
 
 .training-plan h3 {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .week-plan {
@@ -324,8 +324,8 @@ export default {
 }
 
 .day-plan {
-  background: rgba(18, 18, 37, 0.8);
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  background: var(--glass-bg);
+  border: 1px solid var(--border-default);
   padding: 15px;
   border-radius: 8px;
   text-align: center;
@@ -334,11 +334,11 @@ export default {
 .day-header {
   font-weight: bold;
   margin-bottom: 10px;
-  color: var(--color-primary, #8020ff);
+  color: var(--brand-primary);
 }
 
 .day-content {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .no-data {

@@ -536,7 +536,7 @@ onUnmounted(() => {
 }
 
 .section-title {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -559,24 +559,24 @@ onUnmounted(() => {
 
 .time-range-btn {
   padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
-  background: var(--bg-secondary, #121225);
+  border: 1px solid var(--border-default);
+  background: var(--glass-bg);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: var(--font-size-sm, 0.875rem);
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
 }
 
 .time-range-btn:hover {
-  border-color: var(--color-primary, #8020ff);
-  color: var(--color-primary, #8020ff);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
 }
 
 .time-range-btn.active {
-  background: var(--color-primary, #8020ff);
-  border-color: var(--color-primary, #8020ff);
-  color: var(--text-white, #ffffff);
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
 }
 
 /* Metrics grid uses auto-grid pattern from _grid.scss */
@@ -589,15 +589,15 @@ onUnmounted(() => {
 
 /* Metric card - Requirements: 6.1, 6.2 - consistent internal padding (20-28px) */
 .metric-card {
-  background: rgba(18, 18, 37, 0.95);
+  background: var(--glass-bg);
   border-radius: 16px;
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  border: 1px solid var(--border-default);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  box-shadow: var(--shadow-md);
 }
 
 .metric-card:hover {
@@ -653,12 +653,12 @@ onUnmounted(() => {
 
 /* Using typography classes from _typography.scss */
 .metric-title {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin: 0 0 var(--spacing-1, 0.25rem) 0;
 }
 
 .metric-subtitle {
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -700,11 +700,11 @@ onUnmounted(() => {
 .value-number {
   font-variant-numeric: tabular-nums;
   line-height: var(--line-height-tight, 1.25);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .value-unit {
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
 }
 
 .metric-trend {
@@ -828,19 +828,19 @@ onUnmounted(() => {
 
 .goal-name {
   font-size: var(--font-size-sm, 0.875rem);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin-bottom: var(--spacing-1, 0.25rem);
 }
 
 .goal-progress {
   font-size: var(--font-size-xs, 0.8rem);
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
 }
 
 .goal-bar {
   width: 60px;
   height: 6px;
-  background: rgba(136, 136, 170, 0.2);
+  background: var(--hover-bg);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -899,7 +899,7 @@ onUnmounted(() => {
 .modal-title {
   font-size: var(--font-size-lg, 1.125rem);
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -907,18 +907,18 @@ onUnmounted(() => {
   width: 32px;
   height: 32px;
   border: none;
-  background: rgba(136, 136, 170, 0.2);
+  background: var(--hover-bg);
   border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .modal-close:hover {
-  background: rgba(128, 32, 255, 0.3);
+  background: var(--active-bg);
 }
 
 .recovery-score-display {
@@ -944,27 +944,27 @@ onUnmounted(() => {
 
 .score-label {
   font-size: var(--font-size-sm, 0.875rem);
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   margin-bottom: var(--spacing-2, 0.5rem);
 }
 
 .score-description {
   font-size: var(--font-size-sm, 0.875rem);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   line-height: var(--line-height-relaxed, 1.625);
 }
 
 .recommendations {
-  background: rgba(18, 18, 37, 0.8);
+  background: var(--glass-bg);
   border-radius: 12px;
   padding: var(--spacing-4, 1rem);
-  border: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
+  border: 1px solid var(--border-subtle);
 }
 
 .recommendations-title {
   font-size: var(--font-size-base, 1rem);
   font-weight: var(--font-weight-semibold, 600);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin-bottom: var(--spacing-3, 0.75rem);
 }
 

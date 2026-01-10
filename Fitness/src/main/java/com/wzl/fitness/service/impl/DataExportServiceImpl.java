@@ -22,8 +22,11 @@ import java.util.List;
 /**
  * 数据导出服务实现
  * 使用Apache POI生成Excel文件
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.modules.admin.service.impl.DataExportServiceImpl}
  */
-@Service
+@Deprecated
+@Service("legacyDataExportService")
 @RequiredArgsConstructor
 @Slf4j
 public class DataExportServiceImpl implements DataExportService {

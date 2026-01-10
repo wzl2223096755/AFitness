@@ -286,15 +286,15 @@ onMounted(async () => {
 <style scoped>
 .tech-theme {
   min-height: 100vh;
-  background-color: transparent;
-  color: #e0e6ed;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
   padding: 20px 16px 100px;
   position: relative;
   overflow: hidden;
   font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* 背景特效 - 离子化升级 */
+/* 背景特效 */
 .tech-bg {
   position: absolute;
   top: 0;
@@ -309,8 +309,8 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(112, 0, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(112, 0, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
   background-size: 30px 30px;
 }
 
@@ -320,7 +320,7 @@ onMounted(async () => {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #7000ff, transparent);
+  background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
   animation: scan 4s linear infinite;
   opacity: 0.3;
 }
@@ -328,14 +328,14 @@ onMounted(async () => {
 .energy-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.1;
+  filter: blur(100px);
+  opacity: 0.15;
 }
 
 .blob-1 {
   width: 300px;
   height: 300px;
-  background: #7000ff;
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
   top: -100px;
   right: -50px;
   animation: float 10s ease-in-out infinite alternate;
@@ -344,7 +344,7 @@ onMounted(async () => {
 .blob-2 {
   width: 250px;
   height: 250px;
-  background: #ff00ff;
+  background: linear-gradient(135deg, var(--brand-secondary), #ec4899);
   bottom: 100px;
   left: -50px;
   animation: float 12s ease-in-out infinite alternate-reverse;
@@ -368,52 +368,53 @@ onMounted(async () => {
 
 .header-icon {
   font-size: 24px;
-  color: #7000ff;
-  text-shadow: 0 0 10px rgba(112, 0, 255, 0.5);
+  color: var(--brand-primary);
 }
 
 .header-title {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 1px;
+  color: var(--text-primary);
 }
 
 .header-status {
   font-size: 10px;
-  color: #7000ff;
+  color: var(--brand-primary);
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(112, 0, 255, 0.1);
+  background: var(--btn-secondary-bg);
   padding: 4px 10px;
   border-radius: 4px;
-  border: 1px solid rgba(112, 0, 255, 0.2);
+  border: 1px solid var(--border-brand);
 }
 
 .status-dot {
   width: 6px;
   height: 6px;
-  background: #7000ff;
+  background: var(--brand-primary);
   border-radius: 50%;
-  box-shadow: 0 0 5px #7000ff;
+  box-shadow: 0 0 5px var(--brand-primary);
   animation: pulse 1.5s infinite;
 }
 
 /* 通用面板 */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(112, 0, 255, 0.1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   position: relative;
+  box-shadow: var(--shadow-md);
 }
 
 .panel-corner {
   position: absolute;
   width: 10px;
   height: 10px;
-  border: 2px solid #7000ff;
-  opacity: 0.6;
+  border: 2px solid var(--brand-primary);
+  opacity: 0.4;
 }
 
 .top-left { top: -1px; left: -1px; border-right: none; border-bottom: none; }
@@ -441,19 +442,19 @@ onMounted(async () => {
 
 .field-label {
   font-size: 12px;
-  color: #88a;
+  color: var(--text-secondary);
   margin-bottom: 8px;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
 .tech-input {
-  background: rgba(0, 0, 0, 0.2) !important;
-  border: 1px solid rgba(112, 0, 255, 0.1) !important;
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
   border-radius: 8px;
-  color: #fff !important;
-  --van-field-input-text-color: #fff;
-  --van-field-placeholder-text-color: #4a5568;
+  color: var(--input-text) !important;
+  --van-field-input-text-color: var(--input-text);
+  --van-field-placeholder-text-color: var(--input-placeholder);
 }
 
 .input-glow {
@@ -462,9 +463,9 @@ onMounted(async () => {
   left: 0;
   width: 0;
   height: 2px;
-  background: #7000ff;
+  background: var(--brand-primary);
   transition: width 0.3s ease;
-  box-shadow: 0 0 10px rgba(112, 0, 255, 0.5);
+  box-shadow: var(--shadow-brand);
 }
 
 .field-wrapper:focus-within .input-glow {
@@ -472,19 +473,24 @@ onMounted(async () => {
 }
 
 .tech-select {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(112, 0, 255, 0.1);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   border-radius: 8px;
   padding: 10px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 44px;
+  color: var(--text-primary);
 }
 
 .select-value {
-  color: #7000ff;
+  color: var(--brand-primary);
   font-weight: 600;
+}
+
+.select-icon {
+  color: var(--text-secondary);
 }
 
 /* 结果区域 */
@@ -497,13 +503,13 @@ onMounted(async () => {
   padding: 30px;
   text-align: center;
   margin-bottom: 30px;
-  border: 1px solid rgba(112, 0, 255, 0.3);
+  border: 1px solid var(--border-brand);
   overflow: hidden;
 }
 
 .result-title {
   font-size: 14px;
-  color: #88a;
+  color: var(--text-secondary);
   margin-bottom: 12px;
   letter-spacing: 2px;
 }
@@ -517,15 +523,14 @@ onMounted(async () => {
 .result-number {
   font-size: 64px;
   font-weight: 800;
-  color: #7000ff;
-  text-shadow: 0 0 30px rgba(112, 0, 255, 0.4);
+  color: var(--brand-primary);
   font-family: 'DIN Alternate', sans-serif;
 }
 
 .result-unit {
   font-size: 20px;
   margin-left: 8px;
-  color: #7000ff;
+  color: var(--brand-primary);
   opacity: 0.8;
 }
 
@@ -534,7 +539,7 @@ onMounted(async () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, transparent, rgba(112, 0, 255, 0.05), transparent);
+  background: linear-gradient(to bottom, transparent, var(--btn-secondary-bg), transparent);
   top: -100%;
   animation: scan-vertical 3s linear infinite;
 }
@@ -554,12 +559,12 @@ onMounted(async () => {
 .section-header .line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(112, 0, 255, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-default), transparent);
 }
 
 .section-header .text {
   font-size: 12px;
-  color: #88a;
+  color: var(--text-secondary);
   letter-spacing: 1px;
 }
 
@@ -571,7 +576,7 @@ onMounted(async () => {
 
 .intensity-item {
   padding: 16px;
-  border: 1px solid rgba(112, 0, 255, 0.05);
+  border: 1px solid var(--border-subtle);
 }
 
 .item-percent {
@@ -586,24 +591,25 @@ onMounted(async () => {
   font-weight: 800;
   margin-bottom: 4px;
   font-family: 'DIN Alternate', sans-serif;
+  color: var(--text-primary);
 }
 
 .item-desc {
   font-size: 10px;
-  color: #88a;
+  color: var(--text-secondary);
   margin-bottom: 10px;
 }
 
 .item-progress {
   height: 3px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--border-subtle);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  box-shadow: 0 0 10px var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color);
 }
 
 /* 按钮样式 */
@@ -615,9 +621,9 @@ onMounted(async () => {
   width: 100%;
   height: 54px;
   background: transparent;
-  border: 1px solid #7000ff;
+  border: 1px solid var(--brand-primary);
   border-radius: 8px;
-  color: #7000ff;
+  color: var(--brand-primary);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -628,7 +634,7 @@ onMounted(async () => {
 }
 
 .tech-btn:active {
-  background: rgba(112, 0, 255, 0.1);
+  background: var(--btn-secondary-bg);
   transform: scale(0.98);
 }
 
@@ -638,7 +644,7 @@ onMounted(async () => {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(112, 0, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, var(--btn-secondary-bg), transparent);
   transition: left 0.5s;
 }
 
@@ -648,18 +654,17 @@ onMounted(async () => {
 
 /* 弹出层 */
 :deep(.van-popup) {
-  background-color: #05050a;
+  background-color: var(--bg-elevated);
 }
 
 :deep(.van-picker) {
-  background-color: #05050a;
-  --van-picker-mask-color: linear-gradient(180deg, rgba(5, 5, 10, 0.9), rgba(5, 5, 10, 0.4)), linear-gradient(0deg, rgba(5, 5, 10, 0.9), rgba(5, 5, 10, 0.4));
-  --van-picker-option-text-color: #e0e6ed;
-  --van-picker-title-text-color: #7000ff;
+  background-color: var(--bg-elevated);
+  --van-picker-option-text-color: var(--text-primary);
+  --van-picker-title-text-color: var(--brand-primary);
 }
 
 :deep(.van-picker__confirm) {
-  color: #7000ff;
+  color: var(--brand-primary);
 }
 
 /* 动画 */
@@ -688,8 +693,8 @@ onMounted(async () => {
 }
 
 @keyframes pulse-border {
-  from { border-color: rgba(112, 0, 255, 0.2); }
-  to { border-color: rgba(112, 0, 255, 0.6); box-shadow: 0 0 20px rgba(112, 0, 255, 0.1); }
+  from { border-color: var(--border-default); }
+  to { border-color: var(--border-brand); box-shadow: var(--shadow-brand); }
 }
 
 .tech-fade-enter-active, .tech-fade-leave-active {

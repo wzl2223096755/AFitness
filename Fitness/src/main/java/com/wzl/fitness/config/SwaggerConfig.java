@@ -15,6 +15,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.tags.Tag;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +33,9 @@ import java.util.Map;
  * - 服务器配置
  * - 标签分组
  * - 通用响应示例
+ * - 模块化API分组
+ * 
+ * @see Requirements 7.4 - 自动生成模块化的OpenAPI文档
  */
 @Configuration
 public class SwaggerConfig {
@@ -45,6 +49,154 @@ public class SwaggerConfig {
                 .tags(createTags())
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(createComponents());
+    }
+    
+    // ==================== 模块化API分组配置 ====================
+    
+    /**
+     * 全部API分组
+     * 包含所有模块的API接口
+     */
+    @Bean
+    public GroupedOpenApi allApi() {
+        return GroupedOpenApi.builder()
+                .group("all-apis")
+                .displayName("全部API")
+                .pathsToMatch("/api/**")
+                .build();
+    }
+    
+    /**
+     * 用户模块API分组
+     * 包含用户认证、用户管理、用户资料等接口
+     */
+    @Bean
+    public GroupedOpenApi userModuleApi() {
+        return GroupedOpenApi.builder()
+                .group("user")
+                .displayName("用户模块")
+                .pathsToMatch("/api/v1/auth/**", "/api/v1/user/**", "/api/v1/users/**")
+                .addOpenApiCustomizer(openApi -> openApi.info(
+                        new Info()
+                                .title("用户模块 API")
+                                .description("用户认证、用户管理、用户资料等接口")
+                                .version("1.0.0")
+                ))
+                .build();
+    }
+    
+    /**
+     * 训练模块API分组
+     * 包含训练记录、训练计划、训练分析等接口
+     */
+    @Bean
+    public GroupedOpenApi trainingModuleApi() {
+        return GroupedOpenApi.builder()
+                .group("training")
+                .displayName("训练模块")
+                .pathsToMatch("/api/v1/training/**", "/api/v1/training-plans/**")
+                .addOpenApiCustomizer(openApi -> openApi.info(
+                        new Info()
+                                .title("训练模块 API")
+                                .description("训练记录、训练计划、训练分析等接口")
+                                .version("1.0.0")
+                ))
+                .build();
+    }
+    
+    /**
+     * 营养模块API分组
+     * 包含营养记录、营养目标、营养建议等接口
+     */
+    @Bean
+    public GroupedOpenApi nutritionModuleApi() {
+        return GroupedOpenApi.builder()
+                .group("nutrition")
+                .displayName("营养模块")
+                .pathsToMatch("/api/v1/nutrition/**")
+                .addOpenApiCustomizer(openApi -> openApi.info(
+                        new Info()
+                                .title("营养模块 API")
+                                .description("营养记录、营养目标、营养建议等接口")
+                                .version("1.0.0")
+                ))
+                .build();
+    }
+    
+    /**
+     * 恢复评估模块API分组
+     * 包含恢复状态评估、训练建议等接口
+     */
+    @Bean
+    public GroupedOpenApi recoveryModuleApi() {
+        return GroupedOpenApi.builder()
+                .group("recovery")
+                .displayName("恢复评估模块")
+                .pathsToMatch("/api/v1/recovery/**", "/api/v1/load-recovery/**")
+                .addOpenApiCustomizer(openApi -> openApi.info(
+                        new Info()
+                                .title("恢复评估模块 API")
+                                .description("恢复状态评估、训练建议等接口")
+                                .version("1.0.0")
+                ))
+                .build();
+    }
+    
+    /**
+     * 管理模块API分组
+     * 包含系统监控、数据导出、缓存管理等接口
+     */
+    @Bean
+    public GroupedOpenApi adminModuleApi() {
+        return GroupedOpenApi.builder()
+                .group("admin")
+                .displayName("管理模块")
+                .pathsToMatch("/api/v1/admin/**")
+                .addOpenApiCustomizer(openApi -> openApi.info(
+                        new Info()
+                                .title("管理模块 API")
+                                .description("系统监控、数据导出、缓存管理等管理员接口")
+                                .version("1.0.0")
+                ))
+                .build();
+    }
+    
+    /**
+     * 仪表盘模块API分组
+     * 包含数据概览、统计数据等接口
+     */
+    @Bean
+    public GroupedOpenApi dashboardModuleApi() {
+        return GroupedOpenApi.builder()
+                .group("dashboard")
+                .displayName("仪表盘模块")
+                .pathsToMatch("/api/v1/dashboard/**")
+                .addOpenApiCustomizer(openApi -> openApi.info(
+                        new Info()
+                                .title("仪表盘模块 API")
+                                .description("数据概览、统计数据等接口")
+                                .version("1.0.0")
+                ))
+                .build();
+    }
+    
+    /**
+     * 系统模块API分组
+     * 包含健康检查、模块配置等系统接口
+     */
+    @Bean
+    public GroupedOpenApi systemModuleApi() {
+        return GroupedOpenApi.builder()
+                .group("system")
+                .displayName("系统模块")
+                .pathsToMatch("/api/v1/health/**", "/api/v1/modules/**", "/actuator/**")
+                .addOpenApiCustomizer(openApi -> openApi.info(
+                        new Info()
+                                .title("系统模块 API")
+                                .description("健康检查、模块配置等系统接口")
+                                .version("1.0.0")
+                ))
+                .build();
     }
 
     /**
@@ -73,6 +225,19 @@ public class SwaggerConfig {
                 
                 ## 概述
                 AFitness是一个专注于力量训练的智能化负荷计算与恢复监控平台，提供完整的健身数据管理功能。
+                系统采用模块化架构设计，各功能模块独立且可配置。
+                
+                ## 模块化架构
+                系统按业务领域划分为以下模块：
+                
+                | 模块 | 路由前缀 | 说明 |
+                |------|----------|------|
+                | 用户模块 | /api/v1/user, /api/v1/auth | 用户认证、用户管理、用户资料 |
+                | 训练模块 | /api/v1/training | 训练记录、训练计划、训练分析 |
+                | 营养模块 | /api/v1/nutrition | 营养记录、营养目标、营养建议 |
+                | 恢复评估模块 | /api/v1/recovery | 恢复状态评估、训练建议 |
+                | 管理模块 | /api/v1/admin | 系统监控、数据导出、缓存管理 |
+                | 仪表盘模块 | /api/v1/dashboard | 数据概览、统计数据 |
                 
                 ## 主要功能
                 - **用户认证**: 注册、登录、令牌刷新
@@ -80,6 +245,7 @@ public class SwaggerConfig {
                 - **负荷计算**: 1RM计算、训练量计算、恢复评估
                 - **营养追踪**: 营养记录、营养目标、营养建议
                 - **仪表盘**: 数据概览、趋势分析
+                - **系统管理**: 系统监控、数据导出、缓存管理
                 
                 ## 认证方式
                 本API使用JWT Bearer Token认证。获取令牌后，在请求头中添加：
@@ -113,6 +279,16 @@ public class SwaggerConfig {
                 | 1003 | 邮箱已存在 |
                 | 1004 | 登录失败 |
                 | 1005 | 用户名或密码错误 |
+                
+                ## 模块配置
+                各模块可通过配置文件启用/禁用：
+                ```properties
+                fitness.modules.user.enabled=true
+                fitness.modules.training.enabled=true
+                fitness.modules.nutrition.enabled=true
+                fitness.modules.recovery.enabled=true
+                fitness.modules.admin.enabled=true
+                ```
                 """;
     }
 
@@ -141,17 +317,37 @@ public class SwaggerConfig {
 
     /**
      * 创建API标签分组
+     * 按模块组织API标签，便于文档导航
      */
     private List<Tag> createTags() {
         return Arrays.asList(
+                // 用户模块标签
                 new Tag().name("认证管理").description("用户认证相关接口，包括注册、登录、令牌刷新等"),
-                new Tag().name("训练管理").description("训练记录和恢复指标管理，包括训练数据CRUD、训练分析等"),
-                new Tag().name("负荷恢复").description("负荷计算和恢复评估，包括1RM计算、训练负荷、恢复状态评估等"),
-                new Tag().name("营养记录管理").description("营养记录相关接口，包括营养记录CRUD、营养统计、营养建议等"),
-                new Tag().name("仪表盘管理").description("仪表盘数据相关接口，包括指标概览、统计数据、分析数据等"),
                 new Tag().name("用户管理").description("用户信息管理，包括用户资料、用户设置等"),
+                new Tag().name("用户管理（管理员）").description("管理员用户管理接口，包括用户列表、添加、删除等"),
+                
+                // 训练模块标签
+                new Tag().name("训练管理").description("训练记录和恢复指标管理，包括训练数据CRUD、训练分析等"),
                 new Tag().name("训练计划").description("训练计划管理，包括计划创建、计划执行等"),
-                new Tag().name("健康检查").description("系统健康检查和监控接口")
+                
+                // 营养模块标签
+                new Tag().name("营养记录管理").description("营养记录相关接口，包括营养记录CRUD、营养统计、营养建议等"),
+                
+                // 恢复评估模块标签
+                new Tag().name("负荷恢复").description("负荷计算和恢复评估，包括1RM计算、训练负荷、恢复状态评估等"),
+                new Tag().name("恢复评估模块").description("恢复状态评估和训练建议API"),
+                
+                // 仪表盘模块标签
+                new Tag().name("仪表盘管理").description("仪表盘数据相关接口，包括指标概览、统计数据、分析数据等"),
+                
+                // 管理模块标签
+                new Tag().name("系统监控").description("系统监控和指标接口，包括系统信息、JVM指标、数据库统计等"),
+                new Tag().name("数据导出").description("数据导出接口，支持用户数据、训练记录、营养记录的Excel导出"),
+                new Tag().name("缓存管理").description("缓存统计和管理接口，包括缓存监控、缓存清除等"),
+                
+                // 系统模块标签
+                new Tag().name("健康检查").description("系统健康检查和监控接口"),
+                new Tag().name("模块配置").description("模块配置管理接口，包括模块状态查询、模块启用/禁用等")
         );
     }
 

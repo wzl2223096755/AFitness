@@ -67,6 +67,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SyncStatusIndicator: typeof import('./components/SyncStatusIndicator.vue')['default']
     ThemeSwitcher: typeof import('./components/ThemeSwitcher.vue')['default']
+    ThemeToggle: typeof import('./components/ThemeToggle.vue')['default']
     TrainingRecordManager: typeof import('./components/TrainingRecordManager.vue')['default']
     TrainingVolumeCalculator: typeof import('./components/TrainingVolumeCalculator.vue')['default']
     UserProfile: typeof import('./components/UserProfile.vue')['default']

@@ -23,12 +23,15 @@ import java.util.List;
 /**
  * 缓存统计控制器
  * 提供缓存监控和管理功能
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.modules.admin.controller.CacheStatsController}
  */
-@RestController
-@RequestMapping("/api/v1/admin/cache")
+@Deprecated
+@RestController("legacyCacheStatsController")
+@RequestMapping("/api/v1/legacy/admin/cache")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "缓存管理", description = "缓存统计和管理接口")
+@Tag(name = "缓存管理(旧版)", description = "缓存统计和管理接口 - 已迁移到管理模块")
 public class CacheStatsController {
 
     private final CacheManager cacheManager;

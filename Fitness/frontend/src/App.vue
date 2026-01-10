@@ -280,7 +280,7 @@ onMounted(async () => {
 
 <style scoped>
 /* =====================================================
-   App 容器 - 赛博朋克科技风格
+   App 容器 - 明亮炫酷科技风格
    ===================================================== */
 
 .app-container {
@@ -288,7 +288,7 @@ onMounted(async () => {
   height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: relative;
-  background: #0a0a1a;
+  background: var(--bg-page);
 }
 
 /* 抽屉遮罩层 */
@@ -298,8 +298,8 @@ onMounted(async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+  background: var(--bg-overlay);
+  backdrop-filter: blur(8px);
   z-index: 999;
   opacity: 1;
   transition: opacity 0.3s ease;
@@ -321,15 +321,13 @@ onMounted(async () => {
 }
 
 .user-btn {
-  background: rgba(15, 15, 35, 0.9);
-  border: 1px solid rgba(128, 32, 255, 0.4);
+  background: var(--glass-bg);
+  border: 1px solid var(--border-brand);
 }
 
 .user-btn:hover {
-  border-color: #8020ff;
-  box-shadow: 
-    0 8px 30px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(128, 32, 255, 0.4);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-brand);
 }
 
 /* 用户下拉菜单 - 从按钮上方弹出 */
@@ -337,13 +335,11 @@ onMounted(async () => {
   position: absolute;
   bottom: calc(100% + 12px);
   right: 0;
-  background: rgba(15, 15, 35, 0.98);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(128, 32, 255, 0.3);
+  border: 1px solid var(--glass-border);
   border-radius: 14px;
-  box-shadow: 
-    0 -10px 40px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(128, 32, 255, 0.2);
+  box-shadow: var(--shadow-lg);
   min-width: 180px;
   overflow: hidden;
   animation: dropdownSlideUp 0.25s ease;
@@ -366,25 +362,25 @@ onMounted(async () => {
   align-items: center;
   gap: 12px;
   padding: 16px 18px;
-  background: linear-gradient(135deg, rgba(128, 32, 255, 0.1), transparent);
-  border-bottom: 1px solid rgba(128, 32, 255, 0.2);
+  background: var(--hover-bg);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .dropdown-avatar {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #8020ff, #00f2fe);
+  background: var(--brand-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   color: white;
-  box-shadow: 0 0 12px rgba(128, 32, 255, 0.4);
+  box-shadow: var(--shadow-brand);
 }
 
 .dropdown-username {
-  color: #f8fafc;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 600;
   max-width: 100px;
@@ -395,7 +391,7 @@ onMounted(async () => {
 
 .dropdown-divider {
   height: 1px;
-  background: rgba(128, 32, 255, 0.2);
+  background: var(--border-default);
   margin: 4px 0;
 }
 
@@ -404,48 +400,46 @@ onMounted(async () => {
   align-items: center;
   gap: 10px;
   padding: 14px 18px;
-  color: #e0e0ff;
+  color: var(--text-secondary);
   text-decoration: none;
   transition: all 0.2s ease;
   font-size: 14px;
 }
 
 .dropdown-item:hover {
-  background: rgba(128, 32, 255, 0.15);
-  color: #ffffff;
+  background: var(--hover-bg);
+  color: var(--text-primary);
 }
 
 .dropdown-item.logout {
-  color: #ff6b6b;
+  color: var(--color-danger);
 }
 
 .dropdown-item.logout:hover {
-  background: rgba(255, 107, 107, 0.15);
-  color: #ff4444;
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
 }
 
 .dropdown-icon {
   font-size: 16px;
 }
 
-/* 侧边栏抽屉 - 科技感 */
+/* 侧边栏抽屉 - 统一主题 */
 .sidebar-drawer {
   position: fixed;
   top: 0;
   left: -280px;
   width: 280px;
   height: 100vh;
-  background: rgba(15, 15, 35, 0.95);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  color: white;
+  color: var(--text-primary);
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  box-shadow: 
-    2px 0 30px rgba(99, 102, 241, 0.3),
-    0 0 60px rgba(0, 0, 0, 0.5);
-  border-right: 1px solid rgba(99, 102, 241, 0.3);
+  box-shadow: var(--shadow-lg);
+  border-right: 1px solid var(--glass-border);
 }
 
 .sidebar-drawer::before {
@@ -455,13 +449,8 @@ onMounted(async () => {
   right: 0;
   width: 2px;
   height: 100%;
-  background: linear-gradient(180deg, 
-    transparent, 
-    #00d4ff, 
-    #8b5cf6, 
-    #00d4ff, 
-    transparent);
-  opacity: 0.6;
+  background: var(--brand-gradient);
+  opacity: 0.5;
 }
 
 .sidebar-drawer.drawer-open {
@@ -470,18 +459,18 @@ onMounted(async () => {
 
 .drawer-header {
   padding: 24px 20px;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  border-bottom: 1px solid var(--border-default);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent);
+  background: var(--hover-bg);
 }
 
 .drawer-header h2 {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  background: var(--brand-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -491,13 +480,13 @@ onMounted(async () => {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .drawer-close {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  color: #94a3b8;
+  background: var(--hover-bg);
+  border: 1px solid var(--border-default);
+  color: var(--text-tertiary);
   font-size: 20px;
   cursor: pointer;
   padding: 0;
@@ -511,10 +500,10 @@ onMounted(async () => {
 }
 
 .drawer-close:hover {
-  background: rgba(255, 0, 110, 0.2);
-  border-color: #ff006e;
-  color: #ff006e;
-  box-shadow: 0 0 15px rgba(255, 0, 110, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
 }
 
 .sidebar-menu {
@@ -523,12 +512,12 @@ onMounted(async () => {
   overflow-y: auto;
 }
 
-/* 菜单项 - 霓虹风格 */
+/* 菜单项 - 统一主题风格 */
 .menu-item {
   display: flex;
   align-items: center;
   padding: 14px 20px;
-  color: #94a3b8;
+  color: var(--text-secondary);
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 0 16px 16px 0;
@@ -546,7 +535,7 @@ onMounted(async () => {
   top: 0;
   height: 100%;
   width: 3px;
-  background: linear-gradient(180deg, #6366f1, #8b5cf6);
+  background: var(--brand-gradient);
   transform: scaleY(0);
   transition: transform 0.3s ease;
 }
@@ -558,13 +547,13 @@ onMounted(async () => {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, var(--hover-bg), transparent);
   transition: left 0.5s;
 }
 
 .menu-item:hover {
-  background: rgba(99, 102, 241, 0.1);
-  color: #f8fafc;
+  background: var(--hover-bg);
+  color: var(--text-primary);
   transform: translateX(4px);
 }
 
@@ -577,14 +566,14 @@ onMounted(async () => {
 }
 
 .menu-item.active {
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), transparent);
-  color: #f8fafc;
+  background: var(--active-bg);
+  color: var(--text-primary);
   transform: translateX(4px);
 }
 
 .menu-item.active::before {
   transform: scaleY(1);
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+  box-shadow: var(--shadow-brand);
 }
 
 .menu-item .icon {
@@ -598,7 +587,7 @@ onMounted(async () => {
 
 .menu-item:hover .icon,
 .menu-item.active .icon {
-  filter: grayscale(0) drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+  filter: grayscale(0) drop-shadow(0 0 8px var(--brand-primary));
 }
 
 .bottom-menu-item {
@@ -614,7 +603,7 @@ onMounted(async () => {
   width: 100%;
 }
 
-/* 浮动操作按钮 - 霓虹风格 */
+/* 浮动操作按钮 - 统一主题风格 */
 .floating-actions {
   position: fixed;
   bottom: 24px;
@@ -629,15 +618,13 @@ onMounted(async () => {
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: rgba(15, 15, 35, 0.9);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  color: #f8fafc;
+  border: 1px solid var(--border-brand);
+  color: var(--text-secondary);
   font-size: 20px;
   cursor: pointer;
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow-md);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
@@ -650,7 +637,7 @@ onMounted(async () => {
   content: '';
   position: absolute;
   inset: -2px;
-  background: linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4, #6366f1);
+  background: var(--brand-gradient);
   background-size: 400% 400%;
   border-radius: 18px;
   z-index: -1;
@@ -671,25 +658,23 @@ onMounted(async () => {
 
 .fab-button:hover {
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 
-    0 8px 30px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(99, 102, 241, 0.4);
+  box-shadow: var(--shadow-lg);
   border-color: transparent;
+  color: var(--text-inverse);
 }
 
 .fab-button.active {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: var(--brand-gradient);
   border-color: transparent;
   transform: scale(1.1);
-  box-shadow: 
-    0 0 30px rgba(99, 102, 241, 0.6),
-    0 0 60px rgba(139, 92, 246, 0.3);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-brand);
 }
 
 .fab-button .icon {
   font-size: 22px;
   z-index: 1;
-  filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.5));
+  filter: drop-shadow(0 0 4px var(--brand-primary));
 }
 
 /* 页面内容 */

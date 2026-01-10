@@ -444,7 +444,7 @@ watch(currentUser, (newUser) => {
 .welcome-title {
   font-size: 2.8rem;
   font-weight: 800;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin: 0 0 16px 0;
   line-height: 1.2;
   display: flex;
@@ -454,14 +454,14 @@ watch(currentUser, (newUser) => {
 }
 
 .greeting {
-  background: linear-gradient(135deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .username {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   position: relative;
 }
 
@@ -472,7 +472,7 @@ watch(currentUser, (newUser) => {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-primary, #8020ff), var(--color-accent, #00f2fe));
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
   border-radius: 2px;
   animation: underlineGlow 2s ease-in-out infinite;
 }
@@ -494,7 +494,7 @@ watch(currentUser, (newUser) => {
 
 .welcome-subtitle {
   font-size: 1.2rem;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   margin: 0;
   font-weight: 400;
   line-height: 1.6;
@@ -524,20 +524,20 @@ watch(currentUser, (newUser) => {
 
 .stat-item:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-light, 0 0 10px rgba(112, 0, 255, 0.2));
-  background: rgba(18, 18, 37, 0.95);
+  box-shadow: var(--shadow-md);
+  background: var(--glass-bg);
 }
 
 .stat-value {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   margin-bottom: 8px;
   font-weight: 500;
 }
@@ -653,7 +653,7 @@ watch(currentUser, (newUser) => {
 .motivation-quote {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin-bottom: 12px;
   font-style: italic;
   line-height: 1.5;
@@ -661,14 +661,14 @@ watch(currentUser, (newUser) => {
 
 .motivation-author {
   font-size: 0.95rem;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   font-weight: 500;
   font-style: normal;
 }
 
 .motivation-date {
   font-size: 0.9rem;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   font-weight: 500;
   margin-bottom: 16px;
 }
@@ -719,13 +719,13 @@ watch(currentUser, (newUser) => {
 .temperature {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .weather-desc {
   font-size: 0.95rem;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 

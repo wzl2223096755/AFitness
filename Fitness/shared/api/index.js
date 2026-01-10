@@ -19,3 +19,6 @@ export * from './admin.js'
 // 缓存API
 export * from './cachedApi.js'
 export * from './apiCache.js'
+
+// 模块配置API
+export * from './modules.js'

@@ -30,8 +30,14 @@ import java.util.Optional;
  * </ul>
  */
 @Configuration
-@EnableJpaRepositories(basePackages = "com.wzl.fitness.repository")
-@EntityScan(basePackages = "com.wzl.fitness.entity")
+@EnableJpaRepositories(basePackages = {
+    "com.wzl.fitness.repository",
+    "com.wzl.fitness.modules"
+})
+@EntityScan(basePackages = {
+    "com.wzl.fitness.entity",
+    "com.wzl.fitness.modules"
+})
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @EnableTransactionManagement
 public class JpaConfig {

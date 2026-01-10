@@ -30,12 +30,15 @@ import java.util.List;
 /**
  * 系统监控控制器
  * 提供系统信息、JVM 指标、数据库统计等监控接口
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.modules.admin.controller.SystemMonitorController}
  */
-@RestController
-@RequestMapping("/api/v1/admin/monitor")
+@Deprecated
+@RestController("legacySystemMonitorController")
+@RequestMapping("/api/v1/legacy/admin/monitor")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "系统监控", description = "系统监控和指标接口")
+@Tag(name = "系统监控(旧版)", description = "系统监控和指标接口 - 已迁移到管理模块")
 public class SystemMonitorController {
 
     private final DataSource dataSource;

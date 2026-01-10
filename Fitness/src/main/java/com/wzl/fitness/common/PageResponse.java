@@ -8,7 +8,11 @@ import java.util.List;
 
 /**
  * 统一分页响应类
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.shared.common.PageResponse} 代替
+ * 此类保留用于向后兼容，将在未来版本中移除
  */
+@Deprecated
 @Data
 public class PageResponse<T> {
     private List<T> content;

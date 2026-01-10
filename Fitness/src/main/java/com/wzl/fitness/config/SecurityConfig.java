@@ -5,6 +5,7 @@ import com.wzl.fitness.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,6 +28,9 @@ import java.util.Arrays;
 
 /**
  * Spring Security配置
+ * 
+ * 注意：此类是主要的安全配置类，使用@Primary注解确保优先使用
+ * 共享包中的SecurityConfig作为备用配置
  */
 @Configuration
 @EnableWebSecurity

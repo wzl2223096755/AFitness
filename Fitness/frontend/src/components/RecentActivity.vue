@@ -185,7 +185,7 @@ onMounted(() => {
 .section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -202,12 +202,12 @@ onMounted(() => {
 }
 
 .activity-content {
-  background: rgba(18, 18, 37, 0.95);
+  background: var(--glass-bg);
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  border: 1px solid var(--border-default);
   backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  box-shadow: var(--shadow-md);
 }
 
 .empty-activity {
@@ -221,20 +221,20 @@ onMounted(() => {
 
 .empty-icon {
   font-size: 4rem;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-tertiary);
   opacity: 0.6;
 }
 
 .empty-content h3 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin: 0 0 8px 0;
 }
 
 .empty-content p {
   font-size: 1rem;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
   margin: 0 0 24px 0;
   max-width: 400px;
   margin-left: auto;
@@ -280,16 +280,16 @@ onMounted(() => {
 }
 
 :deep(.el-table th) {
-  background: rgba(18, 18, 37, 0.8);
-  color: var(--text-primary, #ffffff);
+  background: var(--hover-bg);
+  color: var(--text-primary);
   font-weight: 600;
-  border-bottom: 2px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  border-bottom: 2px solid var(--border-default);
 }
 
 :deep(.el-table td) {
-  border-bottom: 1px solid var(--border-light, rgba(112, 0, 255, 0.1));
+  border-bottom: 1px solid var(--border-subtle);
   padding: 12px 16px;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-secondary);
 }
 
 @media (max-width: 768px) {

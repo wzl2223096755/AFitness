@@ -235,7 +235,7 @@ defineExpose({ reset, hasError, retryCount })
 .error-title {
   font-size: 28px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 12px;
   background: linear-gradient(135deg, #ef4444, #f87171);
   -webkit-background-clip: text;
@@ -245,7 +245,7 @@ defineExpose({ reset, hasError, retryCount })
 
 .error-message {
   font-size: 16px;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0 0 24px;
   line-height: 1.6;
 }
@@ -312,11 +312,11 @@ defineExpose({ reset, hasError, retryCount })
 }
 
 .error-stack {
-  background: #f8fafc;
+  background: var(--bg-elevated, #f8fafc);
   padding: 16px;
   border-radius: 8px;
   font-size: 12px;
-  color: #64748b;
+  color: var(--text-secondary);
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-all;
@@ -327,7 +327,7 @@ defineExpose({ reset, hasError, retryCount })
 .retry-info {
   margin-top: 16px;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-tertiary, #94a3b8);
 }
 
 /* 深色模式支持 */

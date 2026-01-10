@@ -314,8 +314,8 @@ onMounted(() => loadDashboardData())
 <style scoped>
 .tech-dashboard {
   min-height: 100vh;
-  background-color: transparent;
-  color: #e0e6ed;
+  background: var(--bg-page);
+  color: var(--text-primary);
   position: relative;
   overflow-x: hidden;
   font-family: 'Inter', -apple-system, sans-serif;
@@ -333,8 +333,8 @@ onMounted(() => loadDashboardData())
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(112, 0, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(112, 0, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
   background-size: 25px 25px;
 }
 
@@ -342,7 +342,7 @@ onMounted(() => loadDashboardData())
   position: absolute;
   inset: 0;
   filter: blur(100px);
-  opacity: 0.1;
+  opacity: 0.2;
 }
 
 .nebula {
@@ -351,8 +351,8 @@ onMounted(() => loadDashboardData())
   animation: nebulaFloat 20s infinite alternate;
 }
 
-.blob-1 { width: 500px; height: 500px; background: #7000ff; top: -100px; right: -100px; }
-.blob-2 { width: 400px; height: 400px; background: #ff00ff; bottom: -50px; left: -100px; animation-delay: -5s; }
+.blob-1 { width: 500px; height: 500px; background: var(--brand-gradient); top: -100px; right: -100px; }
+.blob-2 { width: 400px; height: 400px; background: linear-gradient(135deg, var(--brand-secondary), #ec4899); bottom: -50px; left: -100px; animation-delay: -5s; }
 
 @keyframes nebulaFloat {
   from { transform: translate(0, 0) scale(1); }
@@ -365,9 +365,9 @@ onMounted(() => loadDashboardData())
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #7000ff, transparent);
+  background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
   animation: scanMove 4s linear infinite;
-  opacity: 0.2;
+  opacity: 0.3;
 }
 
 @keyframes scanMove {
@@ -377,14 +377,14 @@ onMounted(() => loadDashboardData())
 
 /* 导航 */
 :deep(.tech-nav-bar) {
-  background: rgba(5, 5, 10, 0.8) !important;
+  background: var(--bg-elevated) !important;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(112, 0, 255, 0.1);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .sync-icon {
   font-size: 20px;
-  color: #7000ff;
+  color: var(--brand-primary);
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -401,7 +401,7 @@ onMounted(() => loadDashboardData())
 .glitch-text {
   font-size: 14px;
   font-weight: 900;
-  color: #7000ff;
+  color: var(--brand-primary);
   letter-spacing: 2px;
   position: relative;
 }
@@ -415,18 +415,20 @@ onMounted(() => loadDashboardData())
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(112, 0, 255, 0.08);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   position: relative;
+  box-shadow: var(--shadow-md);
 }
 
 .panel-corner {
   position: absolute;
   width: 8px;
   height: 8px;
-  border: 2px solid #7000ff;
+  border: 2px solid var(--brand-primary);
+  opacity: 0.4;
 }
 
 .tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
@@ -451,8 +453,8 @@ onMounted(() => loadDashboardData())
 .avatar-glow {
   width: 64px;
   height: 64px;
-  border: 2px solid #7000ff;
-  box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);
+  border: 2px solid var(--brand-primary);
+  box-shadow: var(--shadow-brand);
 }
 
 .status-indicator {
@@ -461,14 +463,14 @@ onMounted(() => loadDashboardData())
   right: 4px;
   width: 12px;
   height: 12px;
-  background: #00ff88;
+  background: var(--color-success);
   border-radius: 50%;
-  border: 2px solid #05050a;
+  border: 2px solid var(--bg-base);
 }
 
 .uid-label {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-disabled);
   margin-right: 6px;
 }
 
@@ -480,26 +482,26 @@ onMounted(() => loadDashboardData())
 .user-meta .name {
   font-size: 20px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .motto-text {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
   margin-top: 4px;
 }
 
 .core-metrics-row {
   display: flex;
   justify-content: space-around;
-  background: rgba(112, 0, 255, 0.05);
+  background: var(--hover-bg);
   border-radius: 12px;
   padding: 16px;
 }
 
 .core-label {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
   margin-bottom: 4px;
   text-align: center;
 }
@@ -513,19 +515,20 @@ onMounted(() => loadDashboardData())
 .core-value-box .val {
   font-size: 24px;
   font-weight: 800;
-  color: #7000ff;
+  color: var(--brand-primary);
   font-family: 'DIN Alternate', sans-serif;
 }
 
 .core-value-box small {
   font-size: 10px;
-  color: rgba(112, 0, 255, 0.6);
+  color: var(--text-brand);
+  opacity: 0.6;
 }
 
 .divider-v {
   width: 1px;
   height: 30px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-default);
   align-self: center;
 }
 
@@ -540,14 +543,14 @@ onMounted(() => loadDashboardData())
 .tag-line {
   width: 4px;
   height: 14px;
-  background: #7000ff;
-  box-shadow: 0 0 8px #7000ff;
+  background: var(--brand-primary);
+  box-shadow: 0 0 6px var(--brand-primary);
 }
 
 .section-tag span {
   font-size: 12px;
   font-weight: 700;
-  color: rgba(112, 0, 255, 0.8);
+  color: var(--brand-primary);
   letter-spacing: 1px;
 }
 
@@ -587,19 +590,19 @@ onMounted(() => loadDashboardData())
 
 .metric-data .label {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
 }
 
 .metric-data .num {
   font-size: 18px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-primary);
   font-family: 'DIN Alternate', sans-serif;
 }
 
 .metric-data .unit {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-disabled);
   margin-left: 2px;
 }
 
@@ -616,7 +619,7 @@ onMounted(() => loadDashboardData())
 
 .chart-title {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-disabled);
   letter-spacing: 1px;
 }
 
@@ -635,13 +638,13 @@ onMounted(() => loadDashboardData())
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .log-item:last-child { border-bottom: none; }
 
-.log-name { font-size: 15px; font-weight: 600; color: #fff; }
-.log-time { font-size: 12px; color: rgba(255, 255, 255, 0.3); margin-top: 2px; }
+.log-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.log-time { font-size: 12px; color: var(--text-disabled); margin-top: 2px; }
 
 .log-data {
   display: flex;
@@ -652,12 +655,12 @@ onMounted(() => loadDashboardData())
 .log-data .val {
   font-size: 18px;
   font-weight: 800;
-  color: #7000ff;
+  color: var(--brand-primary);
   font-family: 'DIN Alternate', sans-serif;
 }
 
-.log-data .unit { font-size: 10px; color: rgba(255, 255, 255, 0.3); }
-.arrow-icon { color: rgba(255, 255, 255, 0.1); margin-left: 8px; }
+.log-data .unit { font-size: 10px; color: var(--text-disabled); }
+.arrow-icon { color: var(--border-default); margin-left: 8px; }
 
 /* 战术导航 */
 .tactical-nav {
@@ -665,9 +668,9 @@ onMounted(() => loadDashboardData())
   bottom: 0;
   width: 100%;
   height: 70px;
-  background: rgba(5, 5, 10, 0.9);
+  background: var(--bg-elevated);
   backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(112, 0, 255, 0.2);
+  border-top: 1px solid var(--border-default);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -679,11 +682,11 @@ onMounted(() => loadDashboardData())
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-disabled);
 }
 
 .nav-item.active {
-  color: #7000ff;
+  color: var(--brand-primary);
 }
 
 .nav-item span { font-size: 10px; font-weight: 700; }
@@ -692,19 +695,19 @@ onMounted(() => loadDashboardData())
 .center-btn {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #7000ff, #ff00ff);
+  background: var(--brand-gradient);
   border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: -30px;
-  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.4);
-  color: #fff;
+  box-shadow: var(--shadow-brand);
+  color: var(--text-inverse);
 }
 
 /* 弹窗样式 */
 :deep(.tech-popup) {
-  background: #05050a;
+  background: var(--bg-base);
   border-radius: 24px 24px 0 0;
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
@@ -713,7 +716,7 @@ onMounted(() => loadDashboardData())
 .popup-handle {
   width: 40px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-default);
   border-radius: 2px;
   margin: 12px auto;
 }

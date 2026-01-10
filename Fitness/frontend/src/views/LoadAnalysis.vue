@@ -283,20 +283,20 @@ const updateChart = (trendData) => {
       grid: { left: '12%', right: '5%', bottom: '15%', top: '15%' },
       tooltip: { 
         trigger: 'axis',
-        backgroundColor: 'rgba(10, 10, 20, 0.9)',
-        borderColor: '#7000ff',
-        textStyle: { color: '#fff' }
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: '#7c3aed',
+        textStyle: { color: '#1e293b' }
       },
       xAxis: { 
         type: 'category', 
         data: dates.map(d => d.substring(5)),
-        axisLine: { lineStyle: { color: 'rgba(112, 0, 255, 0.1)' } },
-        axisLabel: { color: '#88a', fontSize: 10 }
+        axisLine: { lineStyle: { color: 'rgba(124, 58, 237, 0.2)' } },
+        axisLabel: { color: '#64748b', fontSize: 10 }
       },
       yAxis: { 
         type: 'value',
-        splitLine: { lineStyle: { color: 'rgba(112, 0, 255, 0.05)' } },
-        axisLabel: { color: '#88a', fontSize: 10 }
+        splitLine: { lineStyle: { color: 'rgba(124, 58, 237, 0.08)' } },
+        axisLabel: { color: '#64748b', fontSize: 10 }
       },
       series: [{
         data: volumes,
@@ -304,18 +304,18 @@ const updateChart = (trendData) => {
         smooth: true,
         symbol: 'circle',
         symbolSize: 8,
-        itemStyle: { color: '#ff00ff' },
+        itemStyle: { color: '#ec4899' },
         lineStyle: { 
           width: 3, 
           color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-            { offset: 0, color: '#7000ff' },
-            { offset: 1, color: '#ff00ff' }
+            { offset: 0, color: '#7c3aed' },
+            { offset: 1, color: '#ec4899' }
           ])
         },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(112, 0, 255, 0.3)' },
-            { offset: 1, color: 'rgba(255, 0, 255, 0)' }
+            { offset: 0, color: 'rgba(124, 58, 237, 0.25)' },
+            { offset: 1, color: 'rgba(236, 72, 153, 0)' }
           ])
         }
       }]
@@ -351,8 +351,8 @@ onMounted(() => {
 <style scoped>
 .tech-analysis {
   min-height: 100vh;
-  background-color: #050a14;
-  color: #e0e6ed;
+  background: var(--bg-page);
+  color: var(--text-primary);
   position: relative;
   overflow-x: hidden;
 }
@@ -369,16 +369,16 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(112, 0, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(112, 0, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
   background-size: 30px 30px;
 }
 
 .nebula-layer {
   position: absolute;
   inset: 0;
-  filter: blur(80px);
-  opacity: 0.15;
+  filter: blur(100px);
+  opacity: 0.25;
 }
 
 .nebula {
@@ -387,8 +387,8 @@ onMounted(() => {
   animation: nebulaFloat 20s infinite alternate;
 }
 
-.blob-1 { width: 400px; height: 400px; background: #7000ff; top: -50px; right: -100px; }
-.blob-2 { width: 300px; height: 300px; background: #ff00ff; bottom: 50px; left: -80px; animation-delay: -5s; }
+.blob-1 { width: 400px; height: 400px; background: var(--brand-gradient); top: -50px; right: -100px; }
+.blob-2 { width: 300px; height: 300px; background: linear-gradient(135deg, var(--brand-secondary), #ec4899); bottom: 50px; left: -80px; animation-delay: -5s; }
 
 @keyframes nebulaFloat {
   from { transform: translate(0, 0) scale(1); }
@@ -401,9 +401,9 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #7000ff, transparent);
+  background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
   animation: scanMove 4s linear infinite;
-  opacity: 0.2;
+  opacity: 0.3;
 }
 
 @keyframes scanMove {
@@ -413,19 +413,19 @@ onMounted(() => {
 
 /* 导航与标签页 */
 :deep(.tech-nav-bar) {
-  background: rgba(10, 10, 20, 0.8) !important;
+  background: var(--bg-elevated) !important;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(112, 0, 255, 0.1);
+  border-bottom: 1px solid var(--border-default);
 }
 
-:deep(.tech-nav-bar .van-nav-bar__title) { color: #7000ff; font-weight: 600; letter-spacing: 1px; }
-:deep(.tech-nav-bar .van-icon) { color: #7000ff; }
+:deep(.tech-nav-bar .van-nav-bar__title) { color: var(--brand-primary); font-weight: 600; letter-spacing: 1px; }
+:deep(.tech-nav-bar .van-icon) { color: var(--brand-primary); }
 
 :deep(.tech-tabs) {
   --van-tabs-nav-background: transparent;
-  --van-tab-text-color: #88a;
-  --van-tab-active-text-color: #7000ff;
-  --van-tabs-bottom-bar-color: #7000ff;
+  --van-tab-text-color: var(--text-tertiary);
+  --van-tab-active-text-color: var(--brand-primary);
+  --van-tabs-bottom-bar-color: var(--brand-primary);
 }
 
 .tab-content {
@@ -436,18 +436,19 @@ onMounted(() => {
 
 /* 卡片面板 */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(15px);
-  border: 1px solid rgba(112, 0, 255, 0.1);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   margin-bottom: 16px;
   overflow: hidden;
   transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
 }
 
 .panel-header {
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(112, 0, 255, 0.05);
+  border-bottom: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -456,7 +457,7 @@ onMounted(() => {
 .panel-title {
   font-size: 14px;
   font-weight: 600;
-  color: #7000ff;
+  color: var(--brand-primary);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -467,10 +468,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(112, 0, 255, 0.05);
+  background: var(--hover-bg);
 }
 
-.date-text { font-size: 16px; color: #fff; font-family: 'Courier New', monospace; }
+.date-text { font-size: 16px; color: var(--text-primary); font-family: 'Courier New', monospace; }
 
 /* 图表 */
 .tech-chart { height: 240px; padding: 10px; }
@@ -480,16 +481,16 @@ onMounted(() => {
   align-items: center;
   gap: 6px;
   font-size: 10px;
-  color: #7000ff;
+  color: var(--brand-primary);
   opacity: 0.8;
 }
 
 .dot {
   width: 6px;
   height: 6px;
-  background: #7000ff;
+  background: var(--brand-primary);
   border-radius: 50%;
-  box-shadow: 0 0 10px #7000ff;
+  box-shadow: 0 0 10px var(--brand-primary);
   animation: pulse 1.5s infinite;
 }
 
@@ -511,10 +512,10 @@ onMounted(() => {
   text-align: center;
 }
 
-.stat-icon { font-size: 20px; color: #7000ff; margin-bottom: 8px; }
-.stat-label { display: block; font-size: 10px; color: #88a; margin-bottom: 4px; }
-.stat-value { font-size: 18px; font-weight: 700; color: #fff; font-family: 'Inter', sans-serif; }
-.stat-value small { font-size: 10px; margin-left: 2px; color: #7000ff; }
+.stat-icon { font-size: 20px; color: var(--brand-primary); margin-bottom: 8px; }
+.stat-label { display: block; font-size: 10px; color: var(--text-tertiary); margin-bottom: 4px; }
+.stat-value { font-size: 18px; font-weight: 700; color: var(--text-primary); font-family: 'Inter', sans-serif; }
+.stat-value small { font-size: 10px; margin-left: 2px; color: var(--brand-primary); }
 
 /* 历史列表 */
 .history-card { margin-bottom: 12px; }
@@ -536,24 +537,24 @@ onMounted(() => {
   text-transform: uppercase;
 }
 
-.type-badge.1rm { background: rgba(112, 0, 255, 0.1); color: #7000ff; border: 1px solid rgba(112, 0, 255, 0.3); }
-.type-badge.volume { background: rgba(255, 0, 255, 0.1); color: #ff00ff; border: 1px solid rgba(255, 0, 255, 0.3); }
-.type-badge.calories { background: rgba(255, 153, 0, 0.1); color: #ff9900; border: 1px solid rgba(255, 153, 0, 0.3); }
+.type-badge.1rm { background: rgba(124, 58, 237, 0.1); color: var(--brand-primary); border: 1px solid var(--border-brand); }
+.type-badge.volume { background: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.3); }
+.type-badge.calories { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); border: 1px solid rgba(245, 158, 11, 0.3); }
 
-.history-params { font-size: 14px; color: #fff; margin-bottom: 4px; }
-.history-date { font-size: 11px; color: #666; }
+.history-params { font-size: 14px; color: var(--text-primary); margin-bottom: 4px; }
+.history-date { font-size: 11px; color: var(--text-disabled); }
 
 .history-result { text-align: right; }
-.result-val { display: block; font-size: 22px; font-weight: 700; color: #7000ff; font-family: 'Inter', sans-serif; }
-.result-unit { font-size: 10px; color: #88a; }
+.result-val { display: block; font-size: 22px; font-weight: 700; color: var(--brand-primary); font-family: 'Inter', sans-serif; }
+.result-unit { font-size: 10px; color: var(--text-tertiary); }
 
-.delete-btn { height: 100%; border: none; background: rgba(239, 68, 68, 0.2); color: #ef4444; backdrop-filter: blur(5px); }
+.delete-btn { height: 100%; border: none; background: rgba(239, 68, 68, 0.1); color: var(--color-danger); backdrop-filter: blur(5px); }
 
 /* 日历适配 */
 :deep(.tech-calendar) {
-  --van-calendar-background: #0a1425;
-  --van-calendar-header-title-text-color: #fff;
+  --van-calendar-background: var(--bg-base);
+  --van-calendar-header-title-text-color: var(--text-primary);
   --van-calendar-day-height: 44px;
-  color: #fff;
+  color: var(--text-primary);
 }
 </style>

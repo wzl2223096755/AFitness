@@ -1,161 +1,55 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { mergeModuleRoutes, filterRoutesByModuleConfig } from './modules'
 
 /**
  * 统一前端路由配置
  * 支持用户端和管理端在同一个应用中
  * 根据用户角色自动跳转到对应界面
+ * 支持根据后端模块配置动态过滤路由
+ * 
+ * 模块化路由结构:
+ * - modules/auth.js: 认证相关路由
+ * - modules/dashboard.js: 仪表盘路由
+ * - modules/training.js: 训练模块路由
+ * - modules/nutrition.js: 营养模块路由
+ * - modules/user.js: 用户模块路由
+ * - modules/settings.js: 设置模块路由
+ * - modules/admin.js: 管理模块路由
+ * - modules/common.js: 公共路由（重定向、404等）
+ * 
+ * Requirements: 4.4, 6.2, 7.1
  */
 
-const routes = [
-  // ==================== 公共路由 ====================
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('../views/Login.vue'),
-    meta: { title: '登录', requiresAuth: false }
-  },
-  {
-    path: '/',
-    redirect: '/login'
-  },
-  
-  // ==================== 用户端路由 ====================
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('../views/Dashboard.vue'),
-    meta: { title: '仪表盘', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/training-data',
-    name: 'TrainingData',
-    component: () => import('../views/TrainingData.vue'),
-    meta: { title: '训练数据', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/load-analysis',
-    name: 'LoadAnalysis',
-    component: () => import('../views/LoadAnalysis.vue'),
-    meta: { title: '负荷分析', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/training-plan-display',
-    name: 'TrainingPlanDisplay',
-    component: () => import('../views/TrainingPlanDisplay.vue'),
-    meta: { title: '训练计划展示', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/mobile-dashboard',
-    name: 'MobileDashboard',
-    component: () => import('../views/MobileDashboard.vue'),
-    meta: { title: '用户数据看板', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/recovery-status',
-    name: 'RecoveryStatus',
-    component: () => import('../views/RecoveryStatus.vue'),
-    meta: { title: '恢复状态', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/training-suggestions',
-    name: 'TrainingSuggestions',
-    component: () => import('../views/TrainingSuggestions.vue'),
-    meta: { title: '训练建议', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/history-stats',
-    name: 'HistoryStatistics',
-    component: () => import('../views/HistoryStatistics.vue'),
-    meta: { title: '历史统计', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/user-profile',
-    name: 'UserProfile',
-    component: () => import('../views/UserProfile.vue'),
-    meta: { title: '用户资料', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/settings',
-    name: 'Settings',
-    component: () => import('../views/Settings.vue'),
-    meta: { title: '设置', requiresAuth: true }
-  },
-  {
-    path: '/training-records',
-    name: 'TrainingRecords',
-    component: () => import('../components/TrainingRecordManager.vue'),
-    meta: { title: '训练记录管理', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/data-visualization',
-    name: 'DataVisualization',
-    component: () => import('../components/DataVisualization.vue'),
-    meta: { title: '数据可视化', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/user-profile-manage',
-    name: 'UserProfileManage',
-    component: () => import('../components/UserProfile.vue'),
-    meta: { title: '个人资料管理', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/fitness-planner',
-    name: 'FitnessPlanner',
-    component: () => import('../components/FitnessPlanner.vue'),
-    meta: { title: '健身计划制定', requiresAuth: true, role: 'USER' }
-  },
-  {
-    path: '/nutrition-tracking',
-    name: 'NutritionTracking',
-    component: () => import('../views/NutritionTracking.vue'),
-    meta: { title: '营养追踪', requiresAuth: true, role: 'USER' }
-  },
-
-  // ==================== 管理端路由 ====================
-  {
-    path: '/admin/dashboard',
-    name: 'AdminDashboard',
-    component: () => import('../views/admin/AdminDashboard.vue'),
-    meta: { title: '管理后台', requiresAuth: true, role: 'ADMIN' }
-  },
-  {
-    path: '/admin/users',
-    name: 'UserManagement',
-    component: () => import('../views/admin/UserManagement.vue'),
-    meta: { title: '用户管理', requiresAuth: true, role: 'ADMIN' }
-  },
-  {
-    path: '/admin/stats',
-    name: 'SystemStats',
-    component: () => import('../views/admin/SystemStats.vue'),
-    meta: { title: '系统统计', requiresAuth: true, role: 'ADMIN' }
-  },
-  {
-    path: '/admin/audit-logs',
-    name: 'AuditLogs',
-    component: () => import('../views/admin/AuditLogs.vue'),
-    meta: { title: '审计日志', requiresAuth: true, role: 'ADMIN' }
-  },
-  {
-    path: '/admin/settings',
-    name: 'SystemSettings',
-    component: () => import('../views/admin/SystemSettings.vue'),
-    meta: { title: '系统设置', requiresAuth: true, role: 'ADMIN' }
-  },
-  
-  // ==================== 404页面 ====================
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: () => import('../views/NotFound.vue'),
-    meta: { title: '页面未找到', requiresAuth: false }
-  }
-]
+// 合并所有模块路由
+const routes = mergeModuleRoutes()
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
+
+/**
+ * 根据模块配置更新路由
+ * @param {Object} enabledModules - 模块启用状态对象 { moduleName: boolean }
+ */
+export const updateRoutesByModuleConfig = (enabledModules) => {
+  // 获取过滤后的路由
+  const filteredRoutes = filterRoutesByModuleConfig(enabledModules)
+  
+  // 移除所有现有路由
+  router.getRoutes().forEach(route => {
+    if (route.name) {
+      router.removeRoute(route.name)
+    }
+  })
+  
+  // 添加过滤后的路由
+  filteredRoutes.forEach(route => {
+    router.addRoute(route)
+  })
+  
+  console.log('[Router] 路由已根据模块配置更新')
+}
 
 /**
  * 获取用户角色

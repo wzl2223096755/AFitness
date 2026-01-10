@@ -12,7 +12,11 @@ import java.time.format.DateTimeFormatter;
 /**
  * 统一响应类
  * 规范API的响应格式
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.shared.common.ApiResponse} 代替
+ * 此类保留用于向后兼容，将在未来版本中移除
  */
+@Deprecated
 @Data
 @Builder
 @NoArgsConstructor

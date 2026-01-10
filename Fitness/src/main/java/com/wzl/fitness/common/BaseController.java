@@ -8,7 +8,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * 基础控制器类
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.shared.common.BaseController} 代替
+ * 此类保留用于向后兼容，将在未来版本中移除
  */
+@Deprecated
 public abstract class BaseController {
 
     /**

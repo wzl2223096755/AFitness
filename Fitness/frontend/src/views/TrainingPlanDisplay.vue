@@ -325,8 +325,8 @@ onMounted(() => {
 <style scoped>
 .tech-theme {
   min-height: 100vh;
-  background-color: #050a14;
-  color: #e0e6ed;
+  background: var(--bg-page);
+  color: var(--text-primary);
   position: relative;
   overflow: hidden;
   font-family: 'Inter', -apple-system, sans-serif;
@@ -347,8 +347,8 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(112, 0, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(112, 0, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
   background-size: 30px 30px;
 }
 
@@ -358,7 +358,7 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #7000ff, transparent);
+  background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
   animation: scan 4s linear infinite;
   opacity: 0.3;
 }
@@ -371,14 +371,14 @@ onMounted(() => {
 .energy-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.15;
+  filter: blur(100px);
+  opacity: 0.2;
 }
 
 .blob-1 {
   width: 300px;
   height: 300px;
-  background: #7000ff;
+  background: var(--brand-gradient);
   top: -100px;
   right: -50px;
   animation: float 10s ease-in-out infinite alternate;
@@ -387,7 +387,7 @@ onMounted(() => {
 .blob-2 {
   width: 250px;
   height: 250px;
-  background: #ff00ff;
+  background: linear-gradient(135deg, var(--brand-secondary), #ec4899);
   bottom: 10%;
   left: -80px;
   animation: float 12s ease-in-out infinite alternate-reverse;
@@ -400,20 +400,19 @@ onMounted(() => {
 
 /* 导航栏 */
 :deep(.tech-nav) {
-  background: rgba(10, 20, 35, 0.8) !important;
+  background: var(--bg-elevated) !important;
   backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(112, 0, 255, 0.2);
+  border-bottom: 1px solid var(--border-default);
 }
 
 :deep(.tech-nav .van-nav-bar__title) {
-  color: #7000ff !important;
+  color: var(--brand-primary) !important;
   font-weight: 700;
   letter-spacing: 1px;
-  text-shadow: 0 0 10px rgba(112, 0, 255, 0.5);
 }
 
 :deep(.tech-nav .van-icon) {
-  color: #7000ff !important;
+  color: var(--brand-primary) !important;
 }
 
 .nav-plus-btn {
@@ -422,11 +421,11 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(112, 0, 255, 0.1);
-  border: 1px solid rgba(112, 0, 255, 0.3);
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--border-brand);
   border-radius: 8px;
-  color: #7000ff;
-  box-shadow: 0 0 10px rgba(112, 0, 255, 0.2);
+  color: var(--brand-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 /* 刷新器 */
@@ -436,7 +435,7 @@ onMounted(() => {
 
 .refresh-text {
   font-size: 12px;
-  color: #7000ff;
+  color: var(--brand-primary);
   opacity: 0.7;
 }
 
@@ -448,20 +447,20 @@ onMounted(() => {
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   position: relative;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .panel-corner {
   position: absolute;
   width: 10px;
   height: 10px;
-  border: 2px solid #7000ff;
-  opacity: 0.6;
+  border: 2px solid var(--brand-primary);
+  opacity: 0.4;
 }
 
 .top-left { top: -1px; left: -1px; border-right: none; border-bottom: none; }
@@ -501,7 +500,7 @@ onMounted(() => {
 
 .plan-card:active {
   transform: scale(0.98);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--active-bg);
 }
 
 .plan-card-header {
@@ -513,7 +512,7 @@ onMounted(() => {
 
 .plan-date {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-disabled);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -523,32 +522,31 @@ onMounted(() => {
   font-size: 10px;
   padding: 2px 8px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--hover-bg);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-default);
 }
 
-.status-tag.active { color: #7000ff; border-color: rgba(112, 0, 255, 0.3); background: rgba(112, 0, 255, 0.05); }
-.status-tag.completed { color: #00ff88; border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.05); }
+.status-tag.active { color: var(--brand-primary); border-color: var(--border-brand); background: var(--btn-secondary-bg); }
+.status-tag.completed { color: var(--color-success); border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08); }
 
 .plan-name {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
-  text-shadow: 0 0 10px rgba(112, 0, 255, 0.3);
+  color: var(--text-primary);
 }
 
 .plan-desc {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
   line-height: 1.6;
 }
 
 .plan-card-footer {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -564,7 +562,7 @@ onMounted(() => {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-disabled);
 }
 
 .action-hint {
@@ -572,7 +570,7 @@ onMounted(() => {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #7000ff;
+  color: var(--brand-primary);
   opacity: 0.8;
 }
 
@@ -582,14 +580,14 @@ onMounted(() => {
 }
 
 .empty-desc {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-disabled);
   margin-bottom: 24px;
 }
 
 .tech-btn {
-  background: linear-gradient(135deg, #7000ff, #ff00ff);
+  background: var(--brand-gradient);
   border: none;
-  color: #fff;
+  color: var(--text-inverse);
   font-weight: 700;
   padding: 0 24px;
   height: 44px;
@@ -597,7 +595,7 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
+  box-shadow: var(--shadow-brand);
 }
 
 .pulse {
@@ -605,16 +603,16 @@ onMounted(() => {
 }
 
 @keyframes btnPulse {
-  0% { transform: scale(1); box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3); }
-  50% { transform: scale(1.05); box-shadow: 0 4px 25px rgba(112, 0, 255, 0.5); }
-  100% { transform: scale(1); box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3); }
+  0% { transform: scale(1); box-shadow: var(--shadow-brand); }
+  50% { transform: scale(1.05); box-shadow: 0 4px 24px rgba(124, 58, 237, 0.4); }
+  100% { transform: scale(1); box-shadow: var(--shadow-brand); }
 }
 
 /* 详情弹窗 */
 :deep(.tech-details-popup) {
   width: 100%;
   height: 100%;
-  background: #050a14;
+  background: var(--bg-page);
 }
 
 .details-page {
@@ -632,7 +630,7 @@ onMounted(() => {
 
 .section-title {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-disabled);
   text-transform: uppercase;
   letter-spacing: 2px;
   margin: 20px 0 10px 4px;
@@ -659,18 +657,18 @@ onMounted(() => {
 
 .detail-row .label {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-disabled);
 }
 
 .detail-row .value {
   font-size: 14px;
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .detail-row .desc {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
   line-height: 1.6;
   margin: 0;
 }
@@ -691,14 +689,14 @@ onMounted(() => {
 }
 
 .ex-item.is-completed {
-  background: rgba(7, 193, 96, 0.05);
-  border-color: rgba(7, 193, 96, 0.2);
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.2);
 }
 
 .ex-name {
   font-size: 15px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 6px;
 }
 
@@ -710,7 +708,7 @@ onMounted(() => {
 
 .param {
   font-family: 'DIN Alternate', sans-serif;
-  color: #7000ff;
+  color: var(--brand-primary);
   font-size: 16px;
   font-weight: 700;
 }
@@ -722,22 +720,22 @@ onMounted(() => {
 }
 
 .divider {
-  color: rgba(255, 255, 255, 0.1);
+  color: var(--border-default);
 }
 
 .ex-tag {
   font-size: 10px;
   padding: 1px 6px;
   border-radius: 4px;
-  background: rgba(255, 0, 255, 0.1);
-  color: #ff00ff;
-  border: 1px solid rgba(255, 0, 255, 0.2);
+  background: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+  border: 1px solid rgba(236, 72, 153, 0.2);
 }
 
 .tech-checkbox {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--border-default);
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -746,15 +744,15 @@ onMounted(() => {
 }
 
 .tech-checkbox.checked {
-  background: #00ff88;
-  border-color: #00ff88;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+  background: var(--color-success);
+  border-color: var(--color-success);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .no-exercises {
   padding: 40px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-disabled);
 }
 
 .no-exercises p {
@@ -769,45 +767,45 @@ onMounted(() => {
   left: 0;
   width: 100%;
   padding: 20px 16px 30px;
-  background: linear-gradient(to top, #050a14 80%, transparent);
+  background: linear-gradient(to top, var(--bg-page) 80%, transparent);
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 .tech-btn.primary {
-  background: linear-gradient(135deg, #7000ff, #ff00ff);
-  color: #fff;
+  background: var(--brand-gradient);
+  color: var(--text-inverse);
 }
 
 .tech-btn.danger-outline {
   background: transparent;
-  border: 1px solid rgba(255, 77, 79, 0.4);
-  color: #ff4d4f;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: var(--color-danger);
   box-shadow: none;
 }
 
 .tech-btn.danger-outline:active {
-  background: rgba(255, 77, 79, 0.1);
+  background: rgba(239, 68, 68, 0.08);
 }
 
 /* Vant 全局覆盖 */
 :deep(.van-dialog.tech-dialog) {
-  background: rgba(10, 20, 35, 0.95);
+  background: var(--bg-elevated);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(112, 0, 255, 0.2);
-  color: #fff;
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
 }
 
 :deep(.tech-dialog .van-dialog__header),
 :deep(.tech-dialog .van-dialog__message) {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 :deep(.tech-toast) {
-  background: rgba(112, 0, 255, 0.15) !important;
+  background: var(--bg-elevated) !important;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(112, 0, 255, 0.3);
-  color: #7000ff !important;
+  border: 1px solid var(--border-brand);
+  color: var(--brand-primary) !important;
 }
 </style>

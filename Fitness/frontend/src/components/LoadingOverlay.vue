@@ -108,7 +108,7 @@ const props = withDefaults(defineProps({
 
 .loading-text {
   font-size: 16px;
-  color: #64748b;
+  color: var(--text-secondary, #64748b);
   font-weight: 500;
   margin: 0;
   animation: pulse 1.5s ease-in-out infinite;
@@ -124,13 +124,11 @@ const props = withDefaults(defineProps({
 }
 
 /* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-  .loading-overlay {
-    background: rgba(30, 41, 59, 0.95);
-  }
-  
-  .loading-text {
-    color: #94a3b8;
-  }
+[data-theme="dark"] .loading-overlay {
+  background: rgba(30, 41, 59, 0.95);
+}
+
+[data-theme="dark"] .loading-text {
+  color: #94a3b8;
 }
 </style>

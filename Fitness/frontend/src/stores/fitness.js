@@ -29,7 +29,6 @@ export const useFitnessStore = defineStore('fitness', {
       
       try {
         await Promise.all([
-          this.fetchUsers(),
           this.fetchDevices(),
           this.fetchMyFitnessData()
         ])
@@ -44,14 +43,16 @@ export const useFitnessStore = defineStore('fitness', {
     },
 
     async fetchUsers() {
-    try {
-      const response = await userApi.getUsers()
-      this.users = response.data?.data || []
-    } catch (error) {
-      console.error('获取用户列表失败:', error)
-      this.users = []
-    }
-  },
+      // 此方法需要管理员权限，普通用户不应调用
+      // 如果需要获取用户列表，请使用管理员账号
+      try {
+        const response = await userApi.getUsers()
+        this.users = response.data?.data || []
+      } catch (error) {
+        console.error('获取用户列表失败（可能需要管理员权限）:', error)
+        this.users = []
+      }
+    },
 
     async fetchDevices() {
       // 如果后端没有设备管理接口，可以先返回空数组或模拟数据

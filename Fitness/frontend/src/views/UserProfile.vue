@@ -294,7 +294,7 @@ export default {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .stats-grid {
@@ -305,8 +305,8 @@ export default {
 }
 
 .stat-item {
-  background: rgba(18, 18, 37, 0.8);
-  border: 1px solid var(--border-color, rgba(112, 0, 255, 0.2));
+  background: var(--glass-bg);
+  border: 1px solid var(--border-default);
   padding: 24px;
   border-radius: 12px;
   text-align: center;
@@ -315,26 +315,26 @@ export default {
 
 .stat-item:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-base, 0 0 15px rgba(112, 0, 255, 0.3));
+  box-shadow: var(--shadow-md);
 }
 
 .stat-value {
   font-size: 32px;
   font-weight: 700;
-  color: var(--color-primary, #8020ff);
+  color: var(--brand-primary);
   margin-bottom: 8px;
 }
 
 .stat-label {
   font-size: 15px;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   margin-bottom: 4px;
   font-weight: 500;
 }
 
 .stat-desc {
   font-size: 13px;
-  color: var(--text-secondary, #8888aa);
+  color: var(--text-secondary);
 }
 
 /* 响应式设计 */

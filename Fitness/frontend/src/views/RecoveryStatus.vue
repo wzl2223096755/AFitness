@@ -206,6 +206,6 @@ export default {
 
 .advice-content p {
   line-height: 1.8;
-  color: #606266;
+  color: var(--text-secondary);
 }
 </style>

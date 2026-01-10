@@ -206,15 +206,15 @@ const saveRecord = async () => {
 <style scoped>
 .tech-theme {
   min-height: 100vh;
-  background-color: transparent;
-  color: #e0e6ed;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
   padding: 20px 16px 100px;
   position: relative;
   overflow: hidden;
   font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* 背景特效 - 离子化升级 */
+/* 背景特效 */
 .tech-bg {
   position: absolute;
   top: 0;
@@ -229,8 +229,8 @@ const saveRecord = async () => {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(112, 0, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(112, 0, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
   background-size: 30px 30px;
 }
 
@@ -240,7 +240,7 @@ const saveRecord = async () => {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #7000ff, transparent);
+  background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
   animation: scan 4s linear infinite;
   opacity: 0.3;
 }
@@ -255,7 +255,7 @@ const saveRecord = async () => {
 .blob-1 {
   width: 300px;
   height: 300px;
-  background: #7000ff;
+  background: var(--brand-primary);
   top: -100px;
   right: -50px;
   animation: float 10s ease-in-out infinite alternate;
@@ -264,7 +264,7 @@ const saveRecord = async () => {
 .blob-2 {
   width: 250px;
   height: 250px;
-  background: #ff00ff;
+  background: #ec4899;
   bottom: 100px;
   left: -50px;
   animation: float 12s ease-in-out infinite alternate-reverse;
@@ -288,42 +288,42 @@ const saveRecord = async () => {
 
 .header-icon {
   font-size: 24px;
-  color: #7000ff;
-  text-shadow: 0 0 10px rgba(112, 0, 255, 0.5);
+  color: var(--brand-primary);
 }
 
 .header-title {
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 1px;
+  color: var(--text-primary);
 }
 
 .header-status {
   font-size: 10px;
-  color: #7000ff;
+  color: var(--brand-primary);
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(112, 0, 255, 0.1);
+  background: var(--btn-secondary-bg);
   padding: 4px 10px;
   border-radius: 4px;
-  border: 1px solid rgba(112, 0, 255, 0.2);
+  border: 1px solid var(--border-brand);
 }
 
 .status-dot {
   width: 6px;
   height: 6px;
-  background: #7000ff;
+  background: var(--brand-primary);
   border-radius: 50%;
-  box-shadow: 0 0 5px #7000ff;
+  box-shadow: 0 0 5px var(--brand-primary);
   animation: pulse 1.5s infinite;
 }
 
 /* 通用面板 */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(112, 0, 255, 0.1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   position: relative;
 }
@@ -332,7 +332,7 @@ const saveRecord = async () => {
   position: absolute;
   width: 10px;
   height: 10px;
-  border: 2px solid #7000ff;
+  border: 2px solid var(--brand-primary);
   opacity: 0.6;
 }
 
@@ -361,19 +361,19 @@ const saveRecord = async () => {
 
 .field-label {
   font-size: 12px;
-  color: #88a;
+  color: var(--text-secondary);
   margin-bottom: 8px;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
 .tech-input {
-  background: rgba(0, 0, 0, 0.2) !important;
-  border: 1px solid rgba(112, 0, 255, 0.1) !important;
+  background: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
   border-radius: 8px;
-  color: #fff !important;
-  --van-field-input-text-color: #fff;
-  --van-field-placeholder-text-color: #4a5568;
+  color: var(--input-text) !important;
+  --van-field-input-text-color: var(--input-text);
+  --van-field-placeholder-text-color: var(--input-placeholder);
 }
 
 .input-glow {
@@ -382,9 +382,9 @@ const saveRecord = async () => {
   left: 0;
   width: 0;
   height: 2px;
-  background: #7000ff;
+  background: var(--brand-primary);
   transition: width 0.3s ease;
-  box-shadow: 0 0 10px rgba(112, 0, 255, 0.5);
+  box-shadow: var(--shadow-brand);
 }
 
 .field-wrapper:focus-within .input-glow {
@@ -401,13 +401,13 @@ const saveRecord = async () => {
   padding: 30px;
   text-align: center;
   margin-bottom: 24px;
-  border: 1px solid rgba(112, 0, 255, 0.3);
+  border: 1px solid var(--border-brand);
   overflow: hidden;
 }
 
 .result-title {
   font-size: 14px;
-  color: #88a;
+  color: var(--text-secondary);
   margin-bottom: 12px;
   letter-spacing: 2px;
 }
@@ -422,15 +422,14 @@ const saveRecord = async () => {
 .result-number {
   font-size: 64px;
   font-weight: 800;
-  color: #7000ff;
-  text-shadow: 0 0 30px rgba(112, 0, 255, 0.4);
+  color: var(--brand-primary);
   font-family: 'DIN Alternate', sans-serif;
 }
 
 .result-unit {
   font-size: 20px;
   margin-left: 8px;
-  color: #7000ff;
+  color: var(--brand-primary);
   opacity: 0.8;
 }
 
@@ -440,7 +439,7 @@ const saveRecord = async () => {
 }
 
 .intensity-tag {
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--hover-bg);
   border: 1px solid var(--tag-color);
   color: var(--tag-color);
   padding: 4px 16px;
@@ -448,7 +447,6 @@ const saveRecord = async () => {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .scanning-bar {
@@ -456,7 +454,7 @@ const saveRecord = async () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, transparent, rgba(112, 0, 255, 0.05), transparent);
+  background: linear-gradient(to bottom, transparent, var(--btn-secondary-bg), transparent);
   top: -100%;
   animation: scan-vertical 3s linear infinite;
 }
@@ -475,14 +473,14 @@ const saveRecord = async () => {
 }
 
 .section-icon {
-  color: #ffaa00;
+  color: var(--color-warning);
   font-size: 20px;
 }
 
 .section-header .text {
   font-size: 13px;
   font-weight: 700;
-  color: #88a;
+  color: var(--text-secondary);
   letter-spacing: 1px;
 }
 
@@ -494,22 +492,22 @@ const saveRecord = async () => {
 }
 
 .goal-item {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--hover-bg);
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid rgba(112, 0, 255, 0.05);
+  border: 1px solid var(--border-subtle);
 }
 
 .goal-label {
   font-size: 10px;
-  color: #88a;
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
 .goal-value {
   font-size: 20px;
   font-weight: 800;
-  color: #7000ff;
+  color: var(--brand-primary);
   font-family: 'DIN Alternate', sans-serif;
 }
 
@@ -521,10 +519,10 @@ const saveRecord = async () => {
 
 .progression-desc {
   font-size: 12px;
-  color: #88a;
+  color: var(--text-secondary);
   line-height: 1.6;
   padding-top: 12px;
-  border-top: 1px solid rgba(112, 0, 255, 0.05);
+  border-top: 1px solid var(--border-subtle);
 }
 
 /* 按钮样式 */
@@ -536,9 +534,9 @@ const saveRecord = async () => {
   width: 100%;
   height: 54px;
   background: transparent;
-  border: 1px solid #7000ff;
+  border: 1px solid var(--brand-primary);
   border-radius: 8px;
-  color: #7000ff;
+  color: var(--brand-primary);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -549,7 +547,7 @@ const saveRecord = async () => {
 }
 
 .tech-btn:active {
-  background: rgba(112, 0, 255, 0.1);
+  background: var(--btn-secondary-bg);
   transform: scale(0.98);
 }
 
@@ -559,7 +557,7 @@ const saveRecord = async () => {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(112, 0, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, var(--btn-secondary-bg), transparent);
   transition: left 0.5s;
 }
 
@@ -593,8 +591,8 @@ const saveRecord = async () => {
 }
 
 @keyframes pulse-border {
-  from { border-color: rgba(112, 0, 255, 0.2); }
-  to { border-color: rgba(112, 0, 255, 0.6); box-shadow: 0 0 20px rgba(112, 0, 255, 0.1); }
+  from { border-color: var(--border-default); }
+  to { border-color: var(--border-brand); box-shadow: var(--shadow-brand); }
 }
 
 .tech-fade-enter-active, .tech-fade-leave-active {

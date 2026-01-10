@@ -356,6 +356,10 @@ onMounted(() => {
   margin-bottom: var(--spacing-7, 28px);
   position: relative;
   overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur, 20px));
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
 }
 
 .welcome-section::before {
@@ -365,7 +369,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, var(--brand-primary), var(--brand-secondary), transparent);
 }
 
 .welcome-section::after {
@@ -375,7 +379,7 @@ onMounted(() => {
   right: -20%;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -388,7 +392,7 @@ onMounted(() => {
 .welcome-title {
   font-size: 2.2rem;
   font-weight: 800;
-  color: var(--color-text-primary, #ffffff);
+  color: var(--text-primary);
   margin: 0 0 var(--spacing-4, 14px) 0;
   display: flex;
   align-items: center;
@@ -398,7 +402,7 @@ onMounted(() => {
 }
 
 .username {
-  color: var(--color-text-primary, #f8fafc);
+  color: var(--text-primary);
 }
 
 .emoji {
@@ -407,7 +411,7 @@ onMounted(() => {
 }
 
 .welcome-subtitle {
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
   font-size: 1.05rem;
   margin: 0;
   line-height: 1.7;
@@ -427,11 +431,11 @@ onMounted(() => {
 
 .quote-icon {
   margin-bottom: var(--spacing-4, 14px);
-  filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.5));
+  filter: drop-shadow(0 0 12px var(--brand-primary));
 }
 
 .quote-text {
-  color: var(--color-text-primary, #f1f5f9);
+  color: var(--text-primary);
   font-size: 1.05rem;
   font-style: italic;
   margin-bottom: var(--spacing-4, 14px);
@@ -439,7 +443,7 @@ onMounted(() => {
 }
 
 .quote-date {
-  color: var(--color-text-tertiary, #64748b);
+  color: var(--text-tertiary);
   font-size: 0.85rem;
   font-weight: 500;
 }
@@ -463,7 +467,7 @@ onMounted(() => {
 }
 
 .stat-icon {
-  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.4));
+  filter: drop-shadow(0 0 10px var(--brand-primary));
 }
 
 .stat-info {
@@ -473,13 +477,13 @@ onMounted(() => {
 .stat-value {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--color-text-primary, #ffffff);
+  color: var(--text-primary);
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .stat-label {
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: var(--spacing-2, 6px) 0;
   font-weight: 500;
@@ -494,20 +498,20 @@ onMounted(() => {
 }
 
 .stat-change.positive {
-  color: var(--color-success, #10b981);
-  background: var(--color-success-bg, rgba(16, 185, 129, 0.15));
+  color: var(--color-success);
+  background: rgba(16, 185, 129, 0.15);
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .stat-change.negative {
-  color: var(--color-danger, #ef4444);
-  background: var(--color-danger-bg, rgba(239, 68, 68, 0.15));
+  color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .stat-change.neutral {
-  color: var(--color-warning, #f59e0b);
-  background: var(--color-warning-bg, rgba(245, 158, 11, 0.15));
+  color: var(--color-warning);
+  background: rgba(245, 158, 11, 0.15);
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
@@ -529,7 +533,7 @@ onMounted(() => {
 
 .action-icon {
   margin-bottom: var(--spacing-3, 10px);
-  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+  filter: drop-shadow(0 0 8px var(--brand-primary));
   transition: transform 0.3s ease;
 }
 
@@ -538,7 +542,7 @@ onMounted(() => {
 }
 
 .action-text {
-  color: var(--color-text-primary, #e2e8f0);
+  color: var(--text-primary);
   font-size: 0.95rem;
   font-weight: 600;
 }
@@ -569,7 +573,7 @@ onMounted(() => {
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(180deg, #6366f1, #8b5cf6);
+  background: var(--brand-gradient);
   border-radius: 4px 0 0 4px;
   opacity: 0;
   transition: opacity 0.3s;
@@ -580,14 +584,14 @@ onMounted(() => {
 }
 
 .record-date {
-  color: var(--color-text-tertiary, #64748b);
+  color: var(--text-tertiary);
   font-size: 0.8rem;
   margin-bottom: var(--spacing-2, 8px);
   font-weight: 500;
 }
 
 .record-name {
-  color: var(--color-text-primary, #f8fafc);
+  color: var(--text-primary);
   font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: var(--spacing-3, 10px);
@@ -601,7 +605,7 @@ onMounted(() => {
 }
 
 .detail-item {
-  color: #06b6d4;
+  color: var(--brand-accent);
   font-size: 0.85rem;
   font-weight: 600;
   background: rgba(6, 182, 212, 0.12);
@@ -611,7 +615,7 @@ onMounted(() => {
 }
 
 .record-volume {
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   font-weight: 500;
 }
@@ -629,15 +633,15 @@ onMounted(() => {
 
 .goal-item {
   padding: var(--spacing-4, 16px);
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--hover-bg);
   border-radius: 12px;
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  border: 1px solid var(--border-subtle);
   transition: all 0.3s ease;
 }
 
 .goal-item:hover {
-  background: rgba(99, 102, 241, 0.08);
-  border-color: rgba(99, 102, 241, 0.25);
+  background: var(--active-bg);
+  border-color: var(--border-default);
 }
 
 .goal-info {
@@ -647,13 +651,13 @@ onMounted(() => {
 }
 
 .goal-name {
-  color: var(--color-text-primary, #f8fafc);
+  color: var(--text-primary);
   font-size: 1rem;
   font-weight: 600;
 }
 
 .goal-progress {
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   font-weight: 500;
 }

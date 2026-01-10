@@ -521,7 +521,7 @@ onUnmounted(() => {
 
 .control-label {
   font-size: 14px;
-  color: #e2e8f0;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 

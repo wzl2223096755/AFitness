@@ -3,8 +3,10 @@ package com.wzl.fitness.service.impl;
 import com.wzl.fitness.config.CaffeineCacheConfig;
 import com.wzl.fitness.entity.TrainingRecord;
 import com.wzl.fitness.entity.User;
+import com.wzl.fitness.modules.training.event.TrainingCompletedEvent;
 import com.wzl.fitness.repository.TrainingRecordRepository;
 import com.wzl.fitness.service.TrainingRecordService;
+import com.wzl.fitness.shared.event.EventPublisher;
 import com.wzl.fitness.dto.response.TrainingStatsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,8 @@ import java.util.Optional;
  * 训练记录服务实现
  * 支持软删除和数据恢复功能
  * 使用 Caffeine 缓存提升查询性能
+ * 
+ * @see Requirements 3.2 - 用户完成训练记录时发布TrainingCompletedEvent事件
  */
 @Service
 @Transactional
@@ -37,13 +41,51 @@ public class TrainingRecordServiceImpl implements TrainingRecordService {
     @Autowired
     private TrainingRecordRepository trainingRecordRepository;
     
+    @Autowired
+    private EventPublisher eventPublisher;
+    
     @Override
     @CacheEvict(value = CaffeineCacheConfig.CACHE_TRAINING_RECORDS, allEntries = true)
     public TrainingRecord createTrainingRecord(TrainingRecord record) {
         // 确保新记录未被标记为删除
         record.setDeleted(false);
         logger.debug("创建训练记录，清除缓存");
-        return trainingRecordRepository.save(record);
+        TrainingRecord savedRecord = trainingRecordRepository.save(record);
+        
+        // 发布训练完成事件
+        publishTrainingCompletedEvent(savedRecord);
+        
+        return savedRecord;
+    }
+    
+    /**
+     * 发布训练完成事件
+     * 
+     * @param record 保存的训练记录
+     * @see Requirements 3.2 - 用户完成训练记录时发布TrainingCompletedEvent事件
+     */
+    private void publishTrainingCompletedEvent(TrainingRecord record) {
+        if (record == null || record.getUser() == null) {
+            logger.warn("无法发布训练完成事件：记录或用户为空");
+            return;
+        }
+        
+        try {
+            TrainingCompletedEvent event = new TrainingCompletedEvent(
+                    record.getUser().getId(),
+                    record.getId(),
+                    record.getTotalVolume() != null ? record.getTotalVolume() : record.getCalculatedTotalVolume(),
+                    record.getExerciseName(),
+                    record.getTrainingStress(),
+                    record.getDuration()
+            );
+            
+            eventPublisher.publish(event);
+            logger.info("训练完成事件已发布: recordId={}, userId={}", record.getId(), record.getUser().getId());
+        } catch (Exception e) {
+            logger.error("发布训练完成事件失败: recordId={}, error={}", record.getId(), e.getMessage(), e);
+            // 不抛出异常，避免影响主业务流程
+        }
     }
     
     @Override

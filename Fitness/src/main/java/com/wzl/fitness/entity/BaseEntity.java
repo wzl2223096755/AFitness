@@ -1,11 +1,8 @@
 package com.wzl.fitness.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -22,8 +19,6 @@ import java.time.LocalDateTime;
  * </ul>
  */
 @MappedSuperclass
-@Getter
-@Setter
 public abstract class BaseEntity {
 
     /**
@@ -59,6 +54,18 @@ public abstract class BaseEntity {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    // Getters and Setters
+    public Boolean getDeleted() { return deleted; }
+    public void setDeleted(Boolean deleted) { this.deleted = deleted; }
+    public LocalDateTime getDeletedAt() { return deletedAt; }
+    public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
+    public Long getDeletedBy() { return deletedBy; }
+    public void setDeletedBy(Long deletedBy) { this.deletedBy = deletedBy; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     /**
      * 执行软删除

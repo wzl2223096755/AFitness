@@ -1,0 +1,253 @@
+// =============================================================================
+// 主题色令牌系统 - Theme Color Tokens
+// =============================================================================
+// 统一的主题色系统，支持亮色/暗色主题切换
+// 规则：白背景用黑字，黑背景用白字
+
+// =============================================================================
+// 品牌色 (Brand Colors) - 两种主题共用
+// =============================================================================
+$brand-primary: #7c3aed;        // 主色 - 紫色
+$brand-secondary: #8b5cf6;      // 次色 - 浅紫
+$brand-accent: #06b6d4;         // 强调色 - 青色
+$brand-gradient: linear-gradient(135deg, #7c3aed, #ec4899);
+
+// =============================================================================
+// 功能色 (Functional Colors) - 两种主题共用
+// =============================================================================
+$color-success: #10b981;
+$color-warning: #f59e0b;
+$color-danger: #ef4444;
+$color-info: #6366f1;
+
+// =============================================================================
+// 亮色主题 (Light Theme) - 黑字白背景
+// =============================================================================
+$light-bg-base: #ffffff;
+$light-bg-page: #f8fafc;
+$light-bg-elevated: #ffffff;
+$light-bg-card: rgba(255, 255, 255, 0.9);
+$light-bg-overlay: rgba(0, 0, 0, 0.5);
+
+$light-text-primary: #1e293b;
+$light-text-secondary: #475569;
+$light-text-tertiary: #64748b;
+$light-text-disabled: #94a3b8;
+$light-text-inverse: #ffffff;
+
+$light-border-default: rgba(0, 0, 0, 0.1);
+$light-border-strong: rgba(0, 0, 0, 0.2);
+$light-border-subtle: rgba(0, 0, 0, 0.05);
+
+$light-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$light-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+$light-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+// =============================================================================
+// 暗色主题 (Dark Theme) - 白字黑背景
+// =============================================================================
+$dark-bg-base: #0f0f23;
+$dark-bg-page: #050510;
+$dark-bg-elevated: #1a1a2e;
+$dark-bg-card: rgba(15, 15, 35, 0.9);
+$dark-bg-overlay: rgba(0, 0, 0, 0.7);
+
+$dark-text-primary: #f8fafc;
+$dark-text-secondary: #e2e8f0;
+$dark-text-tertiary: #94a3b8;
+$dark-text-disabled: #64748b;
+$dark-text-inverse: #1e293b;
+
+$dark-border-default: rgba(255, 255, 255, 0.1);
+$dark-border-strong: rgba(255, 255, 255, 0.2);
+$dark-border-subtle: rgba(255, 255, 255, 0.05);
+
+$dark-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+$dark-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+$dark-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+// =============================================================================
+// CSS 自定义属性 - 亮色主题 (默认)
+// =============================================================================
+:root,
+[data-theme="light"] {
+  // 品牌色
+  --brand-primary: #{$brand-primary};
+  --brand-secondary: #{$brand-secondary};
+  --brand-accent: #{$brand-accent};
+  --brand-gradient: #{$brand-gradient};
+  
+  // 功能色
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-danger: #{$color-danger};
+  --color-info: #{$color-info};
+  
+  // 背景色 - 白背景
+  --bg-base: #{$light-bg-base};
+  --bg-page: #{$light-bg-page};
+  --bg-elevated: #{$light-bg-elevated};
+  --bg-card: #{$light-bg-card};
+  --bg-overlay: #{$light-bg-overlay};
+  
+  // 文字色 - 黑字
+  --text-primary: #{$light-text-primary};
+  --text-secondary: #{$light-text-secondary};
+  --text-tertiary: #{$light-text-tertiary};
+  --text-disabled: #{$light-text-disabled};
+  --text-inverse: #{$light-text-inverse};
+  --text-brand: #{$brand-primary};
+  
+  // 边框色
+  --border-default: #{$light-border-default};
+  --border-strong: #{$light-border-strong};
+  --border-subtle: #{$light-border-subtle};
+  --border-brand: rgba(124, 58, 237, 0.3);
+  
+  // 阴影
+  --shadow-sm: #{$light-shadow-sm};
+  --shadow-md: #{$light-shadow-md};
+  --shadow-lg: #{$light-shadow-lg};
+  --shadow-brand: 0 4px 16px rgba(124, 58, 237, 0.2);
+  
+  // 交互状态
+  --hover-bg: rgba(0, 0, 0, 0.04);
+  --active-bg: rgba(0, 0, 0, 0.08);
+  --focus-ring: 0 0 0 3px rgba(124, 58, 237, 0.3);
+  
+  // 玻璃态效果
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: 20px;
+  
+  // 输入框
+  --input-bg: #{$light-bg-base};
+  --input-border: #{$light-border-default};
+  --input-text: #{$light-text-primary};
+  --input-placeholder: #{$light-text-disabled};
+  
+  // 按钮
+  --btn-primary-bg: #{$brand-gradient};
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: rgba(124, 58, 237, 0.1);
+  --btn-secondary-text: #{$brand-primary};
+}
+
+// =============================================================================
+// CSS 自定义属性 - 暗色主题
+// =============================================================================
+[data-theme="dark"] {
+  // 品牌色 (保持不变)
+  --brand-primary: #{$brand-primary};
+  --brand-secondary: #{$brand-secondary};
+  --brand-accent: #{$brand-accent};
+  --brand-gradient: #{$brand-gradient};
+  
+  // 功能色 (保持不变)
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-danger: #{$color-danger};
+  --color-info: #{$color-info};
+  
+  // 背景色 - 黑背景
+  --bg-base: #{$dark-bg-base};
+  --bg-page: #{$dark-bg-page};
+  --bg-elevated: #{$dark-bg-elevated};
+  --bg-card: #{$dark-bg-card};
+  --bg-overlay: #{$dark-bg-overlay};
+  
+  // 文字色 - 白字
+  --text-primary: #{$dark-text-primary};
+  --text-secondary: #{$dark-text-secondary};
+  --text-tertiary: #{$dark-text-tertiary};
+  --text-disabled: #{$dark-text-disabled};
+  --text-inverse: #{$dark-text-inverse};
+  --text-brand: #{$brand-secondary};
+  
+  // 边框色
+  --border-default: #{$dark-border-default};
+  --border-strong: #{$dark-border-strong};
+  --border-subtle: #{$dark-border-subtle};
+  --border-brand: rgba(124, 58, 237, 0.4);
+  
+  // 阴影
+  --shadow-sm: #{$dark-shadow-sm};
+  --shadow-md: #{$dark-shadow-md};
+  --shadow-lg: #{$dark-shadow-lg};
+  --shadow-brand: 0 4px 20px rgba(124, 58, 237, 0.3);
+  
+  // 交互状态
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --active-bg: rgba(255, 255, 255, 0.1);
+  --focus-ring: 0 0 0 3px rgba(124, 58, 237, 0.4);
+  
+  // 玻璃态效果
+  --glass-bg: rgba(15, 15, 35, 0.85);
+  --glass-border: rgba(124, 58, 237, 0.2);
+  --glass-blur: 20px;
+  
+  // 输入框
+  --input-bg: #{$dark-bg-elevated};
+  --input-border: #{$dark-border-default};
+  --input-text: #{$dark-text-primary};
+  --input-placeholder: #{$dark-text-disabled};
+  
+  // 按钮
+  --btn-primary-bg: #{$brand-gradient};
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: rgba(124, 58, 237, 0.15);
+  --btn-secondary-text: #{$brand-secondary};
+}
+
+// =============================================================================
+// 系统偏好自动检测
+// =============================================================================
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    // 背景色 - 黑背景
+    --bg-base: #{$dark-bg-base};
+    --bg-page: #{$dark-bg-page};
+    --bg-elevated: #{$dark-bg-elevated};
+    --bg-card: #{$dark-bg-card};
+    --bg-overlay: #{$dark-bg-overlay};
+    
+    // 文字色 - 白字
+    --text-primary: #{$dark-text-primary};
+    --text-secondary: #{$dark-text-secondary};
+    --text-tertiary: #{$dark-text-tertiary};
+    --text-disabled: #{$dark-text-disabled};
+    --text-inverse: #{$dark-text-inverse};
+    --text-brand: #{$brand-secondary};
+    
+    // 边框色
+    --border-default: #{$dark-border-default};
+    --border-strong: #{$dark-border-strong};
+    --border-subtle: #{$dark-border-subtle};
+    --border-brand: rgba(124, 58, 237, 0.4);
+    
+    // 阴影
+    --shadow-sm: #{$dark-shadow-sm};
+    --shadow-md: #{$dark-shadow-md};
+    --shadow-lg: #{$dark-shadow-lg};
+    --shadow-brand: 0 4px 20px rgba(124, 58, 237, 0.3);
+    
+    // 交互状态
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --active-bg: rgba(255, 255, 255, 0.1);
+    --focus-ring: 0 0 0 3px rgba(124, 58, 237, 0.4);
+    
+    // 玻璃态效果
+    --glass-bg: rgba(15, 15, 35, 0.85);
+    --glass-border: rgba(124, 58, 237, 0.2);
+    
+    // 输入框
+    --input-bg: #{$dark-bg-elevated};
+    --input-border: #{$dark-border-default};
+    --input-text: #{$dark-text-primary};
+    --input-placeholder: #{$dark-text-disabled};
+    
+    // 按钮
+    --btn-secondary-bg: rgba(124, 58, 237, 0.15);
+    --btn-secondary-text: #{$brand-secondary};
+  }
+}

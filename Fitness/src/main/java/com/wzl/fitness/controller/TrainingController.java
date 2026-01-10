@@ -15,11 +15,13 @@ import com.wzl.fitness.entity.RecoveryMetric;
 import com.wzl.fitness.entity.TrainingRecord;
 import com.wzl.fitness.entity.User;
 import com.wzl.fitness.exception.BusinessException;
+import com.wzl.fitness.modules.training.event.TrainingCompletedEvent;
 import com.wzl.fitness.repository.RecoveryMetricRepository;
 import com.wzl.fitness.repository.TrainingRecordRepository;
 import com.wzl.fitness.repository.UserRepository;
 import com.wzl.fitness.service.LoadRecoveryService;
 import com.wzl.fitness.service.UserService;
+import com.wzl.fitness.shared.event.EventPublisher;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +32,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,10 +48,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 训练管理控制器
+ * 
+ * @see Requirements 3.2 - 用户完成训练记录时发布TrainingCompletedEvent事件
+ */
 @RestController
 @RequestMapping("/api/v1/training")
 @Tag(name = "训练管理", description = "训练记录和恢复指标管理，包括训练数据CRUD、训练分析等")
 public class TrainingController extends BaseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(TrainingController.class);
 
     @Autowired
     private TrainingRecordRepository trainingRecordRepository;
@@ -63,6 +74,9 @@ public class TrainingController extends BaseController {
 
     @Autowired
     private LoadRecoveryService loadRecoveryService;
+    
+    @Autowired
+    private EventPublisher eventPublisher;
 
     /**
      * 获取当前登录用户
@@ -213,10 +227,43 @@ public class TrainingController extends BaseController {
         // 保存训练记录
         savedRecord = trainingRecordRepository.save(savedRecord);
         
+        // 发布训练完成事件
+        publishTrainingCompletedEvent(savedRecord);
+        
         // 转换为响应DTO
         TrainingRecordResponse responseDto = convertToResponse(savedRecord);
         
         return ResponseEntity.ok(ApiResponse.success("训练记录创建成功", responseDto));
+    }
+    
+    /**
+     * 发布训练完成事件
+     * 
+     * @param record 保存的训练记录
+     * @see Requirements 3.2 - 用户完成训练记录时发布TrainingCompletedEvent事件
+     */
+    private void publishTrainingCompletedEvent(TrainingRecord record) {
+        if (record == null || record.getUser() == null) {
+            logger.warn("无法发布训练完成事件：记录或用户为空");
+            return;
+        }
+        
+        try {
+            TrainingCompletedEvent event = new TrainingCompletedEvent(
+                    record.getUser().getId(),
+                    record.getId(),
+                    record.getTotalVolume() != null ? record.getTotalVolume() : record.getCalculatedTotalVolume(),
+                    record.getExerciseName(),
+                    record.getTrainingStress(),
+                    record.getDuration()
+            );
+            
+            eventPublisher.publish(event);
+            logger.info("训练完成事件已发布: recordId={}, userId={}", record.getId(), record.getUser().getId());
+        } catch (Exception e) {
+            logger.error("发布训练完成事件失败: recordId={}, error={}", record.getId(), e.getMessage(), e);
+            // 不抛出异常，避免影响主业务流程
+        }
     }
 
     /**

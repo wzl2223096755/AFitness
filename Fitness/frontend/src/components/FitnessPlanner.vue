@@ -859,7 +859,7 @@ onMounted(() => {
 
 .section-header h2 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 24px;
   font-weight: 600;
 }
@@ -885,7 +885,7 @@ onMounted(() => {
 
 .card-header {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .quick-templates {
@@ -937,13 +937,13 @@ onMounted(() => {
 
 .template-name {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .template-desc {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .planner-main {
@@ -964,7 +964,7 @@ onMounted(() => {
 
 .week-header h4 {
   margin: 0;
-  color: #333;
+  color: var(--text-primary);
   font-size: 18px;
   font-weight: 600;
 }
@@ -1002,7 +1002,7 @@ onMounted(() => {
 
 .day-name {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .day-content {
@@ -1034,14 +1034,14 @@ onMounted(() => {
 
 .exercise-name {
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   display: block;
   margin-bottom: 2px;
 }
 
 .exercise-details {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .exercise-actions {
@@ -1084,7 +1084,7 @@ onMounted(() => {
 
 .preview-header h2 {
   margin: 0 0 12px 0;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .plan-meta {
@@ -1092,7 +1092,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   gap: 16px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .preview-week {
@@ -1101,8 +1101,8 @@ onMounted(() => {
 
 .preview-week h3 {
   margin: 0 0 16px 0;
-  color: #333;
-  border-bottom: 1px solid #e4e7ed;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-default, #e4e7ed);
   padding-bottom: 8px;
 }
 
@@ -1132,7 +1132,7 @@ onMounted(() => {
 
 .preview-exercises {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .preview-exercise {
@@ -1161,7 +1161,7 @@ onMounted(() => {
 
 .select-title {
   font-size: 13px;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -1199,7 +1199,7 @@ onMounted(() => {
 .option-name {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 2px;
 }
 

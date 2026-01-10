@@ -1,7 +1,7 @@
 @use './variables.scss' as *;
 
 // =============================================================================
-// 深色主题系统 - Enhanced Dark Theme System
+// 明亮炫酷主题系统 - Bright & Cool Theme System
 // =============================================================================
 // Requirements: 6.2, 7.3, 7.4, 7.5, 7.6
 
@@ -10,141 +10,151 @@
 // =============================================================================
 // Requirements: 6.2, 7.6
 
-// 深色主题变量 (Legacy - 保持向后兼容)
-$dark-bg-primary: #1a1a1a;
-$dark-bg-secondary: #2d2d2d;
-$dark-bg-sidebar: #000000;
-$dark-bg-header: #2d2d2d;
-$dark-bg-card: #2d2d2d;
+// 明亮主题变量 (Legacy - 保持向后兼容)
+$dark-bg-primary: #f0f4ff;
+$dark-bg-secondary: #ffffff;
+$dark-bg-sidebar: #ffffff;
+$dark-bg-header: #ffffff;
+$dark-bg-card: #ffffff;
 
-$dark-text-primary: #ffffff;
-$dark-text-regular: #e0e0e0;
-$dark-text-secondary: #a0a0a0;
-$dark-text-placeholder: #666666;
+$dark-text-primary: #1e293b;
+$dark-text-regular: #334155;
+$dark-text-secondary: #64748b;
+$dark-text-placeholder: #94a3b8;
 
-$dark-border-color: #404040;
-$dark-border-light: #333333;
-$dark-border-lighter: #292929;
+$dark-border-color: rgba(99, 102, 241, 0.2);
+$dark-border-light: rgba(99, 102, 241, 0.15);
+$dark-border-lighter: rgba(99, 102, 241, 0.1);
 
-$dark-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 6px rgba(0, 0, 0, 0.1);
-$dark-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+$dark-shadow-base: 0 4px 20px rgba(99, 102, 241, 0.15), 0 0 40px rgba(139, 92, 246, 0.1);
+$dark-shadow-light: 0 2px 12px rgba(99, 102, 241, 0.1);
 
 // =============================================================================
 // CSS Custom Properties - Semantic Color Tokens
 // =============================================================================
 :root {
   // -------------------------------------------------------------------------
-  // Surface Colors (背景表面颜色)
+  // Surface Colors (背景表面颜色) - 明亮炫酷风格
   // -------------------------------------------------------------------------
   // Requirements: 7.6
-  --color-surface-0: #0a0a14;                    // 最深背景 - 页面底层
-  --color-surface-1: #121225;                    // 主要背景 - 内容区域
-  --color-surface-2: rgba(15, 15, 35, 0.85);     // 卡片背景 - 带透明度
-  --color-surface-3: rgba(15, 15, 35, 0.95);     // 模态框背景 - 高不透明度
-  --color-surface-elevated: rgba(25, 25, 50, 0.95); // 悬浮元素背景
-  --color-surface-overlay: rgba(0, 0, 0, 0.6);  // 遮罩层背景
+  --color-surface-0: #f0f4ff;                    // 最浅背景 - 页面底层（淡紫蓝色）
+  --color-surface-1: #ffffff;                    // 主要背景 - 内容区域
+  --color-surface-2: rgba(255, 255, 255, 0.9);   // 卡片背景 - 带透明度
+  --color-surface-3: rgba(255, 255, 255, 0.95);  // 模态框背景 - 高不透明度
+  --color-surface-elevated: rgba(255, 255, 255, 0.98); // 悬浮元素背景
+  --color-surface-overlay: rgba(99, 102, 241, 0.1);  // 遮罩层背景
 
   // -------------------------------------------------------------------------
   // Text Colors (文字颜色) - WCAG AA Compliant
   // -------------------------------------------------------------------------
   // Requirements: 6.2
-  // 对比度计算基于 #0a0a14 背景
-  --color-text-primary: #ffffff;                 // 主要文字 - 对比度 21:1
-  --color-text-secondary: #94a3b8;               // 次要文字 - 对比度 7:1
-  --color-text-tertiary: #64748b;                // 三级文字 - 对比度 4.5:1
-  --color-text-disabled: #475569;                // 禁用文字 - 对比度 3:1
-  --color-text-inverse: #0a0a14;                 // 反色文字 - 用于亮色背景
-  --color-text-link: #8b5cf6;                    // 链接文字 - 对比度 5:1
-  --color-text-link-hover: #a78bfa;              // 链接悬停 - 对比度 6:1
+  --color-text-primary: #1e293b;                 // 主要文字 - 深灰蓝
+  --color-text-secondary: #475569;               // 次要文字
+  --color-text-tertiary: #64748b;                // 三级文字
+  --color-text-disabled: #94a3b8;                // 禁用文字
+  --color-text-inverse: #ffffff;                 // 反色文字 - 用于深色背景
+  --color-text-link: #7c3aed;                    // 链接文字 - 紫色
+  --color-text-link-hover: #6d28d9;              // 链接悬停
 
   // -------------------------------------------------------------------------
   // Border Colors (边框颜色)
   // -------------------------------------------------------------------------
   --color-border-default: rgba(99, 102, 241, 0.2);   // 默认边框
   --color-border-hover: rgba(99, 102, 241, 0.4);     // 悬停边框
-  --color-border-focus: #8020ff;                      // 焦点边框
+  --color-border-focus: #7c3aed;                      // 焦点边框
   --color-border-subtle: rgba(99, 102, 241, 0.1);    // 微弱边框
   --color-border-strong: rgba(99, 102, 241, 0.5);    // 强调边框
-  --color-border-divider: rgba(99, 102, 241, 0.15);  // 分隔线
+  --color-border-divider: rgba(99, 102, 241, 0.12);  // 分隔线
 
   // -------------------------------------------------------------------------
   // Interactive Colors (交互颜色)
   // -------------------------------------------------------------------------
-  --color-interactive-default: rgba(99, 102, 241, 0.15);  // 默认交互背景
-  --color-interactive-hover: rgba(99, 102, 241, 0.25);    // 悬停交互背景
-  --color-interactive-active: rgba(99, 102, 241, 0.35);   // 激活交互背景
-  --color-interactive-selected: rgba(128, 32, 255, 0.2);  // 选中状态背景
-  --color-interactive-disabled: rgba(99, 102, 241, 0.08); // 禁用交互背景
+  --color-interactive-default: rgba(99, 102, 241, 0.08);  // 默认交互背景
+  --color-interactive-hover: rgba(99, 102, 241, 0.15);    // 悬停交互背景
+  --color-interactive-active: rgba(99, 102, 241, 0.25);   // 激活交互背景
+  --color-interactive-selected: rgba(124, 58, 237, 0.15); // 选中状态背景
+  --color-interactive-disabled: rgba(99, 102, 241, 0.05); // 禁用交互背景
 
   // -------------------------------------------------------------------------
-  // Status Colors (状态颜色) - 深色背景优化
+  // Status Colors (状态颜色) - 明亮背景优化
   // -------------------------------------------------------------------------
   // Requirements: 6.5
-  --color-success: #10b981;                      // 成功色 - 对比度 4.5:1
-  --color-success-hover: #0ea472;                // 成功悬停色
-  --color-success-active: #0d9668;               // 成功激活色
-  --color-success-bg: rgba(16, 185, 129, 0.15); // 成功背景
-  --color-success-border: rgba(16, 185, 129, 0.4); // 成功边框
-  --color-success-text: #34d399;                 // 成功文字 - 更亮
+  --color-success: #10b981;                      // 成功色
+  --color-success-hover: #059669;                // 成功悬停色
+  --color-success-active: #047857;               // 成功激活色
+  --color-success-bg: rgba(16, 185, 129, 0.1);  // 成功背景
+  --color-success-border: rgba(16, 185, 129, 0.3); // 成功边框
+  --color-success-text: #059669;                 // 成功文字
 
-  --color-warning: #f59e0b;                      // 警告色 - 对比度 5:1
-  --color-warning-hover: #e08f0a;                // 警告悬停色
-  --color-warning-active: #ca8009;               // 警告激活色
-  --color-warning-bg: rgba(245, 158, 11, 0.15); // 警告背景
-  --color-warning-border: rgba(245, 158, 11, 0.4); // 警告边框
-  --color-warning-text: #fbbf24;                 // 警告文字 - 更亮
+  --color-warning: #f59e0b;                      // 警告色
+  --color-warning-hover: #d97706;                // 警告悬停色
+  --color-warning-active: #b45309;               // 警告激活色
+  --color-warning-bg: rgba(245, 158, 11, 0.1);  // 警告背景
+  --color-warning-border: rgba(245, 158, 11, 0.3); // 警告边框
+  --color-warning-text: #d97706;                 // 警告文字
 
-  --color-danger: #ef4444;                       // 危险色 - 对比度 4.5:1
+  --color-danger: #ef4444;                       // 危险色
   --color-danger-hover: #dc2626;                 // 危险悬停色
   --color-danger-active: #b91c1c;                // 危险激活色
-  --color-danger-bg: rgba(239, 68, 68, 0.15);   // 危险背景
-  --color-danger-border: rgba(239, 68, 68, 0.4); // 危险边框
-  --color-danger-text: #f87171;                  // 危险文字 - 更亮
+  --color-danger-bg: rgba(239, 68, 68, 0.1);    // 危险背景
+  --color-danger-border: rgba(239, 68, 68, 0.3); // 危险边框
+  --color-danger-text: #dc2626;                  // 危险文字
 
-  --color-info: #6366f1;                         // 信息色 - 对比度 4.5:1
+  --color-info: #6366f1;                         // 信息色
   --color-info-hover: #4f46e5;                   // 信息悬停色
   --color-info-active: #4338ca;                  // 信息激活色
-  --color-info-bg: rgba(99, 102, 241, 0.15);    // 信息背景
-  --color-info-border: rgba(99, 102, 241, 0.4); // 信息边框
-  --color-info-text: #818cf8;                    // 信息文字 - 更亮
+  --color-info-bg: rgba(99, 102, 241, 0.1);     // 信息背景
+  --color-info-border: rgba(99, 102, 241, 0.3); // 信息边框
+  --color-info-text: #4f46e5;                    // 信息文字
 
   // -------------------------------------------------------------------------
-  // Glassmorphism Variables (玻璃态效果)
+  // Glassmorphism Variables (玻璃态效果) - 明亮版
   // -------------------------------------------------------------------------
   // Requirements: 7.5 - 统一玻璃态效果变量
-  --glass-bg: rgba(15, 15, 35, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-blur: 20px;
-  --glass-border: rgba(99, 102, 241, 0.2);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(99, 102, 241, 0.15);
+  --glass-shadow: 0 8px 32px rgba(99, 102, 241, 0.15), 0 0 60px rgba(139, 92, 246, 0.1);
   
   // 玻璃态效果变体
-  --glass-bg-light: rgba(255, 255, 255, 0.1);
+  --glass-bg-light: rgba(255, 255, 255, 0.9);
   --glass-blur-light: 10px;
-  --glass-border-light: rgba(255, 255, 255, 0.2);
+  --glass-border-light: rgba(99, 102, 241, 0.1);
   
-  --glass-bg-dark: rgba(0, 0, 0, 0.5);
+  --glass-bg-dark: rgba(255, 255, 255, 0.95);
   --glass-blur-dark: 20px;
-  --glass-border-dark: rgba(255, 255, 255, 0.1);
+  --glass-border-dark: rgba(99, 102, 241, 0.2);
   
   // 玻璃态效果悬停状态
-  --glass-border-hover: rgba(99, 102, 241, 0.4);
-  --glass-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(128, 32, 255, 0.2);
+  --glass-border-hover: rgba(124, 58, 237, 0.3);
+  --glass-shadow-hover: 0 12px 40px rgba(99, 102, 241, 0.2), 0 0 60px rgba(139, 92, 246, 0.15);
 
   // -------------------------------------------------------------------------
-  // Primary Brand Colors (品牌主色)
+  // Primary Brand Colors (品牌主色) - 炫酷紫色渐变
   // -------------------------------------------------------------------------
-  --color-primary: #8020ff;
-  --color-primary-hover: #9040ff;
-  --color-primary-active: #6010dd;
-  --color-primary-bg: rgba(128, 32, 255, 0.15);
-  --color-primary-border: rgba(128, 32, 255, 0.4);
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-active: #5b21b6;
+  --color-primary-bg: rgba(124, 58, 237, 0.1);
+  --color-primary-border: rgba(124, 58, 237, 0.3);
 
   // -------------------------------------------------------------------------
   // Focus Ring (焦点环)
   // -------------------------------------------------------------------------
-  --focus-ring-color: rgba(128, 32, 255, 0.5);
+  --focus-ring-color: rgba(124, 58, 237, 0.4);
   --focus-ring-offset: 2px;
   --focus-ring-width: 3px;
+  
+  // -------------------------------------------------------------------------
+  // 炫酷渐变背景 (Cool Gradient Background)
+  // -------------------------------------------------------------------------
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-cool: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --gradient-aurora: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --gradient-sunset: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+  --gradient-ocean: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
 }
 
 // =============================================================================
@@ -1564,22 +1574,22 @@ $dark-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 }
 
 // =============================================================================
-// 全局深色主题覆盖 - 修复浅色主题硬编码颜色问题
+// 主题感知样式 - Theme-Aware Styles
 // =============================================================================
-// 使用 Neon Ionized Palette 深色主题变量覆盖所有页面组件
+// 使用 CSS 变量实现亮/暗主题自动切换
 
-// 页面容器深色主题
+// 页面容器 - 使用 CSS 变量
 .nutrition-page,
 .training-data-page,
 .training-suggestions-container,
 .user-profile-container,
 .dashboard-page,
 .dashboard-container {
-  background: linear-gradient(135deg, $bg-primary 0%, $bg-secondary 100%) !important;
-  color: $text-primary !important;
+  background: linear-gradient(135deg, var(--bg-page, #{$bg-primary}) 0%, var(--bg-elevated, #{$bg-secondary}) 100%);
+  color: var(--text-primary);
 }
 
-// 卡片组件深色主题
+// 卡片组件 - 使用 CSS 变量
 .overview-card,
 .chart-card,
 .form-card,
@@ -1595,21 +1605,21 @@ $dark-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 .weather-widget,
 .summary-card,
 .analytics-section {
-  background: rgba($bg-secondary, 0.95) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid $border-color !important;
-  color: $text-primary !important;
-  box-shadow: $shadow-base !important;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
 }
 
 // 卡片悬停效果
 .overview-card:hover,
 .metric-card:hover,
 .summary-card:hover {
-  box-shadow: $shadow-base, 0 0 20px rgba($primary-color, 0.2) !important;
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(124, 58, 237, 0.15);
 }
 
-// 标题文字深色主题
+// 标题文字 - 使用 CSS 变量
 .page-header h1,
 .page-header .page-description,
 .section-title,
@@ -1618,33 +1628,24 @@ $dark-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 .welcome-title,
 .welcome-subtitle,
 .metric-title,
-.metric-subtitle,
 .card-title,
 .card-value,
 .stat-value,
 .stat-label,
-.stat-desc,
 .value-number,
 .value-unit,
 .motivation-quote,
-.motivation-author,
-.motivation-date,
 .temperature,
-.weather-desc,
 .food-name,
-.food-calories,
 .exercise-name,
-.exercise-type,
 .day-header,
 .day-content,
 .recovery-score,
 .main-suggestion h3,
 .main-suggestion p,
 .empty-content h3,
-.empty-content p,
-.empty-title,
-.empty-description {
-  color: $text-primary !important;
+.empty-title {
+  color: var(--text-primary);
 }
 
 // 次要文字颜色
@@ -1658,286 +1659,313 @@ $dark-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
 .exercise-type,
 .empty-content p,
 .empty-description {
-  color: $text-secondary !important;
+  color: var(--text-secondary);
 }
 
-// 统计项深色主题
+// 统计项 - 使用 CSS 变量
 .stat-item,
 .quick-stats {
-  background: rgba($bg-secondary, 0.8) !important;
-  border: 1px solid $border-color !important;
-  color: $text-primary !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
 }
 
 .stat-item:hover {
-  background: rgba($bg-secondary, 0.95) !important;
-  box-shadow: $shadow-light !important;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
 }
 
 // 训练建议页面特定样式
 .exercise-item,
 .day-plan {
-  background: rgba($bg-secondary, 0.8) !important;
-  border: 1px solid $border-color !important;
-  color: $text-primary !important;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
 }
 
 .recovery-indicator {
-  background: rgba($success-color, 0.1) !important;
-  border: 1px solid rgba($success-color, 0.3) !important;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .main-suggestion {
-  background: rgba($primary-color, 0.1) !important;
-  border-left: 4px solid $primary-color !important;
+  background: rgba(124, 58, 237, 0.1);
+  border-left: 4px solid var(--brand-primary, #7c3aed);
 }
 
-// 食物建议列表深色主题
+// 食物建议列表
 .food-suggestions {
-  background: $bg-secondary !important;
-  border: 1px solid $border-color !important;
-  box-shadow: $shadow-base !important;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-md);
 }
 
 .suggestion-item {
-  border-bottom-color: $border-color !important;
-  color: $text-primary !important;
+  border-bottom-color: var(--border-default);
+  color: var(--text-primary);
 }
 
 .suggestion-item:hover,
 .suggestion-item-active {
-  background: rgba($primary-color, 0.1) !important;
+  background: rgba(124, 58, 237, 0.1);
 }
 
-// 表格深色主题覆盖
-.el-table {
-  --el-table-bg-color: transparent !important;
-  --el-table-tr-bg-color: transparent !important;
-  --el-table-header-bg-color: rgba(128, 32, 255, 0.15) !important;
-  --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15) !important;
-  --el-table-border-color: rgba(112, 0, 255, 0.2) !important;
-  --el-table-text-color: #e0e0ff !important;
-  --el-table-header-text-color: #ffffff !important;
-  background-color: transparent !important;
-}
-
-.el-table__header-wrapper {
-  background: rgba(128, 32, 255, 0.15) !important;
-}
-
-.el-table th {
-  background: transparent !important;
-  color: #ffffff !important;
-  border-bottom: 2px solid rgba(112, 0, 255, 0.2) !important;
-}
-
-.el-table th .cell {
-  color: #ffffff !important;
-}
-
-.el-table td {
-  background: transparent !important;
-  color: #e0e0ff !important;
-  border-bottom: 1px solid rgba(112, 0, 255, 0.1) !important;
-}
-
-.el-table td .cell {
-  color: #e0e0ff !important;
-}
-
-.el-table__body tr:hover > td {
-  background-color: rgba(128, 32, 255, 0.15) !important;
-}
-
-.el-table__body tr.el-table__row--striped td {
-  background: rgba(18, 18, 37, 0.3) !important;
-}
-
-.el-table__empty-text {
-  color: #8888aa !important;
-}
-
-:deep(.el-table) {
-  background-color: transparent !important;
-  
-  th {
-    background: rgba(128, 32, 255, 0.15) !important;
-    color: #ffffff !important;
-    border-bottom: 2px solid rgba(112, 0, 255, 0.2) !important;
-    
-    .cell {
-      color: #ffffff !important;
-    }
+// =============================================================================
+// 表格主题感知样式 - 亮色主题
+// =============================================================================
+:root,
+[data-theme="light"] {
+  .el-table {
+    --el-table-bg-color: transparent;
+    --el-table-tr-bg-color: transparent;
+    --el-table-header-bg-color: rgba(124, 58, 237, 0.08);
+    --el-table-row-hover-bg-color: rgba(124, 58, 237, 0.06);
+    --el-table-border-color: rgba(99, 102, 241, 0.15);
+    --el-table-text-color: #1e293b;
+    --el-table-header-text-color: #1e293b;
   }
-  
-  td {
-    background: transparent !important;
-    color: #e0e0ff !important;
-    border-bottom: 1px solid rgba(112, 0, 255, 0.1) !important;
-    
-    .cell {
-      color: #e0e0ff !important;
-    }
+
+  .el-table__header-wrapper {
+    background: rgba(124, 58, 237, 0.08);
   }
-  
-  tr:hover > td {
-    background: rgba(128, 32, 255, 0.15) !important;
+
+  .el-table th {
+    background: transparent;
+    color: #1e293b;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+  }
+
+  .el-table th .cell {
+    color: #1e293b;
+  }
+
+  .el-table td {
+    background: transparent;
+    color: #334155;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+  }
+
+  .el-table td .cell {
+    color: #334155;
+  }
+
+  .el-table__body tr:hover > td {
+    background-color: rgba(124, 58, 237, 0.06);
+  }
+
+  .el-table__body tr.el-table__row--striped td {
+    background: rgba(124, 58, 237, 0.03);
+  }
+
+  .el-table__empty-text {
+    color: #64748b;
   }
 }
 
-// 表单组件深色主题
+// =============================================================================
+// 表格主题感知样式 - 暗色主题
+// =============================================================================
+[data-theme="dark"] {
+  .el-table {
+    --el-table-bg-color: transparent;
+    --el-table-tr-bg-color: transparent;
+    --el-table-header-bg-color: rgba(128, 32, 255, 0.15);
+    --el-table-row-hover-bg-color: rgba(128, 32, 255, 0.15);
+    --el-table-border-color: rgba(112, 0, 255, 0.2);
+    --el-table-text-color: #e0e0ff;
+    --el-table-header-text-color: #f8fafc;
+  }
+
+  .el-table__header-wrapper {
+    background: rgba(128, 32, 255, 0.15);
+  }
+
+  .el-table th {
+    background: transparent;
+    color: #f8fafc;
+    border-bottom: 2px solid rgba(112, 0, 255, 0.2);
+  }
+
+  .el-table th .cell {
+    color: #f8fafc;
+  }
+
+  .el-table td {
+    background: transparent;
+    color: #e0e0ff;
+    border-bottom: 1px solid rgba(112, 0, 255, 0.1);
+  }
+
+  .el-table td .cell {
+    color: #e0e0ff;
+  }
+
+  .el-table__body tr:hover > td {
+    background-color: rgba(128, 32, 255, 0.15);
+  }
+
+  .el-table__body tr.el-table__row--striped td {
+    background: rgba(18, 18, 37, 0.3);
+  }
+
+  .el-table__empty-text {
+    color: #8888aa;
+  }
+}
+
+// 表单组件 - 使用 CSS 变量
 .el-form-item__label {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 // 空状态图标
 .empty-icon {
-  color: $text-secondary !important;
-  opacity: 0.6 !important;
+  color: var(--text-secondary);
+  opacity: 0.6;
 }
 
-// 加载占位符深色主题
+// 加载占位符
 .loading-placeholder {
-  background: linear-gradient(90deg, $bg-secondary 25%, rgba($primary-color, 0.2) 50%, $bg-secondary 75%) !important;
+  background: linear-gradient(90deg, var(--bg-elevated) 25%, rgba(124, 58, 237, 0.15) 50%, var(--bg-elevated) 75%);
 }
 
 // 进度条和指示器
 .metric-progress .progress-bar {
-  background: rgba($text-secondary, 0.2) !important;
+  background: rgba(100, 116, 139, 0.2);
 }
 
 .metric-progress .progress-fill {
-  background: linear-gradient(90deg, $primary-color, $accent-color) !important;
+  background: linear-gradient(90deg, var(--brand-primary, #7c3aed), var(--brand-accent, #06b6d4));
 }
 
-// 模态框深色主题
+// 模态框 - 使用 CSS 变量
 .modal-content,
 .el-dialog {
-  background: $bg-secondary !important;
-  border: 1px solid $border-color !important;
-  color: $text-primary !important;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
 }
 
 .modal-header,
 .el-dialog__header {
-  border-bottom: 1px solid $border-color !important;
+  border-bottom: 1px solid var(--border-default);
 }
 
 .modal-title,
 .el-dialog__title {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
-// 图表容器深色主题
+// 图表容器
 .chart-container,
 .chart-content {
-  background: transparent !important;
+  background: transparent;
 }
 
-// 按钮深色主题增强
+// 按钮增强
 .action-button,
 .primary-action {
-  box-shadow: 0 0 10px rgba($primary-color, 0.3) !important;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
 }
 
 .action-button:hover,
 .primary-action:hover {
-  box-shadow: 0 0 20px rgba($primary-color, 0.5) !important;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.35);
 }
 
-// 时间选择器深色主题
+// 时间选择器
 .time-range-btn {
-  background: $bg-secondary !important;
-  border-color: $border-color !important;
-  color: $text-primary !important;
+  background: var(--bg-elevated);
+  border-color: var(--border-default);
+  color: var(--text-primary);
 }
 
 .time-range-btn:hover {
-  border-color: $primary-color !important;
-  color: $primary-color !important;
+  border-color: var(--brand-primary, #7c3aed);
+  color: var(--brand-primary, #7c3aed);
 }
 
 .time-range-btn.active {
-  background: $primary-color !important;
-  border-color: $primary-color !important;
-  color: $text-white !important;
+  background: var(--brand-primary, #7c3aed);
+  border-color: var(--brand-primary, #7c3aed);
+  color: #ffffff;
 }
 
 // 恢复状态和目标详情
 .recovery-details,
 .goal-details {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 .score-value,
 .score-label {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 .recovery-recommendations,
 .goal-info {
-  background: rgba($bg-secondary, 0.5) !important;
+  background: var(--hover-bg);
 }
 
 .recovery-recommendations h4,
 .goal-info h4 {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 .recovery-recommendations li,
 .goal-info p {
-  color: $text-secondary !important;
+  color: var(--text-secondary);
 }
 
 // 性能详情
 .performance-details {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 .performance-label {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 .performance-desc {
-  color: $text-secondary !important;
+  color: var(--text-secondary);
 }
 
 // 因子项
 .factor-item {
-  background: rgba($bg-secondary, 0.5) !important;
-  color: $text-primary !important;
+  background: var(--hover-bg);
+  color: var(--text-primary);
 }
 
 .factor-label {
-  color: $text-secondary !important;
+  color: var(--text-secondary);
 }
 
 // 目标项
 .goal-item {
-  border-bottom-color: $border-color !important;
+  border-bottom-color: var(--border-default);
 }
 
 .goal-name {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 .goal-progress {
-  color: $text-secondary !important;
+  color: var(--text-secondary);
 }
 
 .goal-bar {
-  background: rgba($text-secondary, 0.2) !important;
+  background: rgba(100, 116, 139, 0.2);
 }
 
 // 推荐项
 .recommendations {
-  background: rgba($bg-secondary, 0.5) !important;
+  background: var(--hover-bg);
 }
 
 .recommendations-title {
-  color: $text-primary !important;
+  color: var(--text-primary);
 }
 
 .recommendation-item {
-  color: $text-secondary !important;
+  color: var(--text-secondary);
 }

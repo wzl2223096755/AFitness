@@ -8,7 +8,10 @@ import java.util.List;
 
 /**
  * 用户活跃度统计服务接口
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.modules.admin.service.UserActivityService}
  */
+@Deprecated
 public interface UserActivityService {
     
     /**

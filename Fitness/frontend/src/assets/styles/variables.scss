@@ -11,48 +11,46 @@
 @use 'tokens' as tokens;
 
 // =============================================================================
-// 离子化主题颜色变量 (Neon Ionized Palette)
+// 明亮炫酷主题颜色变量 (Bright & Cool Palette)
 // =============================================================================
-// Note: Primary color adjusted from #7000ff to #8020ff for WCAG AA compliance
-// (3:1 contrast ratio for large text/icons on dark backgrounds)
-$primary-color: #8020ff;
-$secondary-color: #ff00ff;
-$accent-color: #00f2fe;
-$success-color: #00ff88;
-$warning-color: #ffaa00;
-$danger-color: #ff0055;
-$info-color: #8888ff;
+$primary-color: #7c3aed;
+$secondary-color: #8b5cf6;
+$accent-color: #06b6d4;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$info-color: #6366f1;
 
 // =============================================================================
-// 背景颜色 (Dark Space)
+// 背景颜色 (Bright & Airy)
 // =============================================================================
-$bg-primary: #0a0a14;
-$bg-secondary: #121225;
-$bg-sidebar: #05050a;
-$bg-header: rgba(10, 10, 20, 0.8);
-$bg-card: rgba(255, 255, 255, 0.03);
+$bg-primary: #f0f4ff;
+$bg-secondary: #f5f7fa;
+$bg-sidebar: #ffffff;
+$bg-header: rgba(255, 255, 255, 0.9);
+$bg-card: rgba(255, 255, 255, 0.85);
 
 // =============================================================================
 // 文字颜色
 // =============================================================================
-$text-primary: #ffffff;
-$text-regular: #e0e0ff;
-$text-secondary: #8888aa;
-$text-placeholder: #555577;
+$text-primary: #1e293b;
+$text-regular: #334155;
+$text-secondary: #64748b;
+$text-placeholder: #94a3b8;
 $text-white: #ffffff;
 
 // =============================================================================
 // 边框颜色
 // =============================================================================
-$border-color: rgba(112, 0, 255, 0.2);
-$border-light: rgba(112, 0, 255, 0.1);
-$border-lighter: rgba(112, 0, 255, 0.05);
+$border-color: rgba(99, 102, 241, 0.2);
+$border-light: rgba(99, 102, 241, 0.15);
+$border-lighter: rgba(99, 102, 241, 0.1);
 
 // =============================================================================
-// 阴影 (Neon Glow)
+// 阴影 (Soft Glow)
 // =============================================================================
-$shadow-base: 0 0 15px rgba(112, 0, 255, 0.3);
-$shadow-light: 0 0 10px rgba(112, 0, 255, 0.2);
+$shadow-base: 0 4px 24px rgba(99, 102, 241, 0.12), 0 0 40px rgba(139, 92, 246, 0.06);
+$shadow-light: 0 2px 12px rgba(99, 102, 241, 0.08);
 
 // =============================================================================
 // 圆角

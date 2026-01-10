@@ -3,7 +3,11 @@ package com.wzl.fitness.common;
 /**
  * 统一响应码枚举类
  * 定义系统中所有的响应状态码和对应的消息
+ * 
+ * @deprecated 请使用 {@link com.wzl.fitness.shared.common.ResponseCode} 代替
+ * 此类保留用于向后兼容，将在未来版本中移除
  */
+@Deprecated
 public enum ResponseCode {
     // 成功状态码
     SUCCESS(200, "操作成功"),

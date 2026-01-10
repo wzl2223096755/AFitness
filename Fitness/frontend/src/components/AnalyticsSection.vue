@@ -1061,7 +1061,7 @@ onMounted(() => {
 .section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -1085,13 +1085,13 @@ onMounted(() => {
 }
 
 .summary-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
   border-radius: 12px;
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.1));
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
@@ -1120,13 +1120,13 @@ onMounted(() => {
 .card-value {
   font-size: 24px;
   font-weight: bold;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .card-label {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-bottom: 4px;
 }
 
@@ -1147,7 +1147,7 @@ onMounted(() => {
 }
 
 .card-trend.neutral {
-  color: #6b7280;
+  color: var(--text-tertiary, #6b7280);
 }
 
 .analytics-grid {
@@ -1163,7 +1163,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--bg-page, rgba(255, 255, 255, 0.98));
   z-index: 1000;
   padding: 20px;
   overflow-y: auto;
@@ -1171,10 +1171,10 @@ onMounted(() => {
 }
 
 .chart-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-card, rgba(255, 255, 255, 0.95));
   border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.2));
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   position: relative;
@@ -1210,7 +1210,7 @@ onMounted(() => {
 .chart-header h3 {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -1245,7 +1245,7 @@ onMounted(() => {
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-elevated, white);
   padding: 32px;
   border-radius: 16px;
   max-width: 600px;
@@ -1266,7 +1266,7 @@ onMounted(() => {
 .modal-header h3 {
   font-size: 20px;
   font-weight: bold;
-  color: #1f2937;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -1278,7 +1278,7 @@ onMounted(() => {
 
 .performance-item {
   padding: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-default, #e5e7eb);
   border-radius: 12px;
   transition: all 0.3s ease;
 }
@@ -1290,7 +1290,7 @@ onMounted(() => {
 
 .performance-label {
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
@@ -1304,11 +1304,11 @@ onMounted(() => {
 .score-text {
   font-weight: bold;
   font-size: 18px;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .performance-desc {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -1397,34 +1397,17 @@ onMounted(() => {
   }
 }
 
-/* 深色模式适配 */
-@media (prefers-color-scheme: dark) {
-  .analytics-section {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-  }
-  
-  .section-title {
-    color: #f1f5f9;
-  }
-  
-  .chart-card {
-    background: rgba(30, 41, 59, 0.95);
-  }
-  
-  .summary-card {
-    background: rgba(30, 41, 59, 0.95);
-  }
-  
-  .chart-header h3 {
-    color: #f1f5f9;
-  }
-  
-  .card-value {
-    color: #f1f5f9;
-  }
-  
-  .card-label {
-    color: #94a3b8;
-  }
+/* 深色模式适配 - 使用 data-theme 属性 */
+[data-theme="dark"] .analytics-section {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+[data-theme="dark"] .chart-card,
+[data-theme="dark"] .summary-card {
+  background: rgba(30, 41, 59, 0.95);
+}
+
+[data-theme="dark"] .card-label {
+  color: #94a3b8;
 }
 </style>
