@@ -69,7 +69,10 @@ electron_builder_binaries_mirror=https://npmmirror.com/mirrors/electron-builder-
 ```
 
 ### Q: 打包时出现符号链接权限错误？
-A: 这是 Windows 创建符号链接需要管理员权限导致的，但不影响打包结果。配置已禁用代码签名（`sign: null`）。
+A: 这是 Windows 创建符号链接需要管理员权限导致的（winCodeSign 解压时需要创建 darwin 平台的符号链接）。解决方案：
+1. 直接使用 `release/win-unpacked/AFitness.exe` 运行
+2. 或使用已生成的 `release/AFitness-1.0.0-Portable.exe`
+3. 或以管理员身份运行打包命令
 
 ### Q: 如何打包 Mac/Linux 版本？
 A: 

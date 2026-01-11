@@ -9,7 +9,7 @@
   },
   "files": [
     "dist/**/*",
-    "electron/**/*"
+    "electron/**/*.cjs"
   ],
   "win": {
     "target": [
@@ -23,9 +23,7 @@
       }
     ],
     "icon": "public/favicon.ico",
-    "artifactName": "${productName}-${version}-${arch}.${ext}",
-    "sign": null,
-    "signingHashAlgorithms": null
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
   },
   "nsis": {
     "oneClick": false,

@@ -4,7 +4,7 @@
   "type": "module",
   "description": "AFitness - 力量训练负荷与恢复监控系统",
   "author": "AFitness Team",
-  "main": "electron/main.js",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
