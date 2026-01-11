@@ -17,13 +17,19 @@ npm run dev
 npm run electron:dev
 ```
 
-### 3. 打包 Windows .exe
+### 3. 一键打包（推荐）
+```powershell
+# 在 Fitness 目录运行
+.\build-desktop.ps1
+```
+
+### 4. 手动打包 Windows .exe
 
 #### 便携版（免安装，推荐）
 ```bash
 npm run electron:build:portable
 ```
-输出文件：`release/AFitness-1.0.0-Portable.exe`（约 80MB）
+输出文件：`release/AFitness-1.0.0-Portable.exe`（约 170MB，含后端）
 
 #### 安装版（带安装向导）
 ```bash
@@ -37,28 +43,38 @@ npm run electron:build:win
 
 | 文件 | 说明 | 大小 |
 |------|------|------|
-| `AFitness-1.0.0-Portable.exe` | 便携版（免安装，双击运行） | ~80MB |
-| `AFitness-1.0.0-x64.exe` | Windows 安装程序 | ~80MB |
-| `win-unpacked/` | 解压版目录 | ~400MB |
+| `AFitness-1.0.0-Portable.exe` | 便携版（免安装，双击运行） | ~170MB |
+| `AFitness-1.0.0-x64.exe` | Windows 安装程序 | ~170MB |
+| `win-unpacked/` | 解压版目录 | ~500MB |
 
-## 注意事项
+## 内嵌后端说明
 
-1. **后端服务**：桌面应用仍需要后端 API 服务运行
-   - 可以连接远程服务器
-   - 或者使用 H2 数据库本地运行：`.\start-h2.ps1`
+桌面应用已内嵌 Spring Boot 后端 JAR：
+- 启动 exe 时自动启动后端服务
+- 关闭 exe 时自动停止后端服务
+- 使用 H2 内存数据库（无需安装 MySQL）
+- 数据存储在用户目录
 
-2. **API 地址配置**：生产环境需要修改 API 地址
-   - 编辑 `src/api/config.js` 或环境变量
+## 系统要求
 
-3. **图标自定义**：替换 `public/favicon.ico` 为你的图标（已包含默认图标）
+- **Java 17 或更高版本**（必须）
+- Windows 10/11 64位
+- 至少 4GB 内存
 
 ## 技术栈
 
 - Electron 28.x
 - Vue 3 + Vite
+- Spring Boot 3.2.5
+- H2 Database
 - electron-builder 24.x
 
 ## 常见问题
+
+### Q: 启动时提示"找不到 Java"？
+A: 请安装 Java 17 或更高版本：
+- 下载地址：https://adoptium.net/
+- 安装后确保 `java` 命令可用
 
 ### Q: 打包失败提示下载 Electron 超时？
 A: 项目已配置国内镜像源（`.npmrc` 文件），如仍有问题可手动设置：
@@ -85,4 +101,10 @@ npm run electron:build -- --linux
 ```
 
 ### Q: 应用启动后白屏？
-A: 确保后端服务已启动，或检查 API 地址配置是否正确。
+A: 
+1. 检查是否安装了 Java 17+
+2. 等待后端启动（约 10-20 秒）
+3. 查看启动画面是否显示"正在启动服务..."
+
+### Q: 端口 8080 被占用？
+A: 关闭占用 8080 端口的程序，或修改 `electron/main.cjs` 中的 `BACKEND_PORT` 变量

@@ -11,6 +11,12 @@
     "dist/**/*",
     "electron/**/*.cjs"
   ],
+  "extraResources": [
+    {
+      "from": "../target/fitness-0.0.1-SNAPSHOT.jar",
+      "to": "backend/fitness.jar"
+    }
+  ],
   "win": {
     "target": [
       {
