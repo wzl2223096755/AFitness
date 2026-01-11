@@ -25,8 +25,7 @@ function globalThisResolverPlugin() {
 }
 
 export default defineConfig({
-  // Electron 打包需要使用相对路径
-  base: process.env.ELECTRON === 'true' ? './' : '/',
+  base: '/',
   plugins: [
     globalThisResolverPlugin(),
     vue(),
