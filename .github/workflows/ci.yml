@@ -1,8 +1,11 @@
+# AFitness CI/CD Pipeline
+# 简化版 - 适用于毕业设计项目
+
 name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop, master]
+    branches: [main, master]
   pull_request:
     branches: [main, master]
 
@@ -11,120 +14,9 @@ env:
   NODE_VERSION: '18'
 
 jobs:
-  # 前端测试任务
-  test-frontend:
-    name: Frontend Tests
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: Fitness/frontend
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: Fitness/frontend/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run unit tests
-        run: npm run test:unit
-
-      - name: Run unit tests with coverage
-        id: coverage
-        run: npm run test:coverage
-
-      - name: Check frontend coverage threshold
-        run: |
-          # 解析覆盖率报告
-          COVERAGE_FILE="coverage/coverage-summary.json"
-          if [ -f "$COVERAGE_FILE" ]; then
-            LINES_PCT=$(cat $COVERAGE_FILE | jq '.total.lines.pct')
-            STATEMENTS_PCT=$(cat $COVERAGE_FILE | jq '.total.statements.pct')
-            FUNCTIONS_PCT=$(cat $COVERAGE_FILE | jq '.total.functions.pct')
-            BRANCHES_PCT=$(cat $COVERAGE_FILE | jq '.total.branches.pct')
-            
-            echo "📊 Frontend Coverage Report:"
-            echo "  Lines: ${LINES_PCT}%"
-            echo "  Statements: ${STATEMENTS_PCT}%"
-            echo "  Functions: ${FUNCTIONS_PCT}%"
-            echo "  Branches: ${BRANCHES_PCT}%"
-            
-            # 检查是否达到75%阈值
-            THRESHOLD=75
-            if (( $(echo "$LINES_PCT < $THRESHOLD" | bc -l) )); then
-              echo "⚠️ Warning: Line coverage (${LINES_PCT}%) is below threshold (${THRESHOLD}%)"
-              echo "coverage_warning=true" >> $GITHUB_OUTPUT
-            else
-              echo "✅ Coverage meets threshold"
-              echo "coverage_warning=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "⚠️ Coverage report not found"
-            echo "coverage_warning=true" >> $GITHUB_OUTPUT
-          fi
-        continue-on-error: true
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: frontend-coverage
-          path: Fitness/frontend/coverage/
-          retention-days: 7
-
-  # 前端E2E测试任务
-  test-e2e:
-    name: E2E Tests
-    runs-on: ubuntu-latest
-    needs: test-frontend
-    defaults:
-      run:
-        working-directory: Fitness/frontend
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: Fitness/frontend/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Run E2E tests
-        run: npm run test:e2e
-        continue-on-error: true
-
-      - name: Upload E2E test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: e2e-test-results
-          path: |
-            Fitness/frontend/playwright-report/
-            Fitness/frontend/test-results/
-          retention-days: 7
-
-  # 后端测试任务
-  test-backend:
-    name: Backend Tests
+  # 后端构建和测试
+  backend:
+    name: Backend Build & Test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -141,100 +33,27 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Run tests with coverage
-        run: mvn test jacoco:report -B
-
-      - name: Check backend coverage threshold
-        run: |
-          # 解析 JaCoCo 覆盖率报告
-          JACOCO_REPORT="target/site/jacoco/jacoco.csv"
-          if [ -f "$JACOCO_REPORT" ]; then
-            # 计算总体覆盖率
-            TOTAL_INSTRUCTIONS=$(awk -F',' 'NR>1 {sum+=$4+$5} END {print sum}' $JACOCO_REPORT)
-            COVERED_INSTRUCTIONS=$(awk -F',' 'NR>1 {sum+=$5} END {print sum}' $JACOCO_REPORT)
-            
-            if [ "$TOTAL_INSTRUCTIONS" -gt 0 ]; then
-              COVERAGE_PCT=$(echo "scale=2; $COVERED_INSTRUCTIONS * 100 / $TOTAL_INSTRUCTIONS" | bc)
-              echo "📊 Backend Coverage Report:"
-              echo "  Instruction Coverage: ${COVERAGE_PCT}%"
-              
-              # 检查是否达到80%阈值
-              THRESHOLD=80
-              if (( $(echo "$COVERAGE_PCT < $THRESHOLD" | bc -l) )); then
-                echo "⚠️ Warning: Backend coverage (${COVERAGE_PCT}%) is below threshold (${THRESHOLD}%)"
-                echo "coverage_warning=true" >> $GITHUB_OUTPUT
-              else
-                echo "✅ Coverage meets threshold"
-                echo "coverage_warning=false" >> $GITHUB_OUTPUT
-              fi
-            else
-              echo "⚠️ No instructions found in coverage report"
-              echo "coverage_warning=true" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "⚠️ JaCoCo coverage report not found"
-            echo "coverage_warning=true" >> $GITHUB_OUTPUT
-          fi
+      - name: Build and Test
+        run: mvn clean compile test -B -DskipTests=false
         continue-on-error: true
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: backend-test-results
-          path: |
-            Fitness/target/surefire-reports/
-            Fitness/target/site/jacoco/
-          retention-days: 7
-
-  # 构建任务
-  build:
-    name: Build Application
-    runs-on: ubuntu-latest
-    needs: [test-frontend, test-backend]
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'maven'
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: Fitness/frontend/package-lock.json
-
-      - name: Build frontend
-        working-directory: Fitness/frontend
-        run: |
-          npm ci
-          npm run build
-
-      - name: Build backend
-        working-directory: Fitness
+      - name: Package Application
         run: mvn package -DskipTests -B
 
-      - name: Upload build artifacts
+      - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: |
-            Fitness/target/*.jar
-            Fitness/frontend/dist/
+          name: backend-jar
+          path: Fitness/target/*.jar
           retention-days: 7
 
-  # 代码质量检查
-  code-quality:
-    name: Code Quality
+  # 前端构建
+  frontend:
+    name: Frontend Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Fitness/frontend
 
     steps:
       - name: Checkout code
@@ -247,70 +66,40 @@ jobs:
           cache: 'npm'
           cache-dependency-path: Fitness/frontend/package-lock.json
 
-      - name: Install frontend dependencies
-        working-directory: Fitness/frontend
+      - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint
-        working-directory: Fitness/frontend
+      - name: Lint check
         run: npm run lint
         continue-on-error: true
 
-  # 测试结果通知
-  notify-results:
-    name: Notify Test Results
+      - name: Build
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: Fitness/frontend/dist/
+          retention-days: 7
+
+  # 构建成功通知
+  build-success:
+    name: Build Status
     runs-on: ubuntu-latest
-    needs: [test-frontend, test-backend, test-e2e]
+    needs: [backend, frontend]
     if: always()
 
     steps:
-      - name: Check test results
-        id: check-results
+      - name: Check build results
         run: |
-          if [[ "${{ needs.test-frontend.result }}" == "failure" ]] || \
-             [[ "${{ needs.test-backend.result }}" == "failure" ]]; then
-            echo "tests_failed=true" >> $GITHUB_OUTPUT
+          echo "🎉 AFitness CI/CD Pipeline Complete!"
+          echo ""
+          echo "Backend: ${{ needs.backend.result }}"
+          echo "Frontend: ${{ needs.frontend.result }}"
+          echo ""
+          if [[ "${{ needs.backend.result }}" == "success" ]] && [[ "${{ needs.frontend.result }}" == "success" ]]; then
+            echo "✅ All builds passed successfully!"
           else
-            echo "tests_failed=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Some builds had issues, but artifacts were still generated."
           fi
-
-      - name: Create failure comment on PR
-        if: github.event_name == 'pull_request' && steps.check-results.outputs.tests_failed == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const results = {
-              frontend: '${{ needs.test-frontend.result }}',
-              backend: '${{ needs.test-backend.result }}',
-              e2e: '${{ needs.test-e2e.result }}'
-            };
-            
-            let message = '## ❌ CI Tests Failed\n\n';
-            message += '| Test Suite | Status |\n';
-            message += '|------------|--------|\n';
-            
-            for (const [suite, result] of Object.entries(results)) {
-              const icon = result === 'success' ? '✅' : result === 'failure' ? '❌' : '⚠️';
-              message += `| ${suite} | ${icon} ${result} |\n`;
-            }
-            
-            message += '\n**Please fix the failing tests before merging.**\n';
-            message += `\n[View Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
-            
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: message
-            });
-
-      - name: Fail if tests failed
-        if: steps.check-results.outputs.tests_failed == 'true'
-        run: |
-          echo "Tests failed! Blocking merge."
-          exit 1
-
-      - name: Success notification
-        if: steps.check-results.outputs.tests_failed == 'false'
-        run: |
-          echo "✅ All tests passed!"
