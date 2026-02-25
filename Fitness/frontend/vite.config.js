@@ -7,6 +7,9 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const repoName = process.env.GITHUB_REPOSITORY?.split('/')?.[1]
+const base = process.env.GITHUB_PAGES === 'true' && repoName ? `/${repoName}/` : '/'
+
 // Plugin to fix Element Plus and Vant module resolution issues
 function globalThisResolverPlugin() {
   return {
@@ -25,7 +28,7 @@ function globalThisResolverPlugin() {
 }
 
 export default defineConfig({
-  base: '/',
+  base,
   plugins: [
     globalThisResolverPlugin(),
     vue(),
@@ -53,7 +56,7 @@ export default defineConfig({
         theme_color: '#409EFF',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '/',
+        start_url: base,
         icons: [
           {
             src: 'pwa-192x192.svg',
