@@ -189,16 +189,20 @@ const validateForm = () => {
 }
 
 const handleLogin = async () => {
+  console.log('Login button clicked', loginForm)
   if (!validateForm()) return
   
   try {
     loading.value = true
+    console.log('Starting login process...')
     
     const result = await authStore.login({
       username: loginForm.username,
       password: loginForm.password,
       rememberMe: loginForm.rememberMe
     })
+    
+    console.log('Login result:', result)
     
     if (result.success) {
       ElMessage.success('登录成功！')
