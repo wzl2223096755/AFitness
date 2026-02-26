@@ -3,8 +3,8 @@
  * Training Module API - handles strength training, cardio training, and fitness data
  */
 
-import { get, post, put, del } from '../../../api/request.js'
-import request from '../../../api/request.js'
+import { get, post, put, del } from '../../api/request.js'
+import request from '../../api/request.js'
 
 // 力量训练 API
 export const strengthTrainingApi = {

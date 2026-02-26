@@ -3,7 +3,7 @@
  * Nutrition Module API - handles nutrition records, stats, and advice
  */
 
-import { get, post, put, del } from '../../../api/request.js'
+import { get, post, put, del } from '../../api/request.js'
 
 // 营养记录 API
 export const nutritionApi = {

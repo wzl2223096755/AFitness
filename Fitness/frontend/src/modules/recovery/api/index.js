@@ -3,7 +3,7 @@
  * Recovery Module API - handles recovery status, training suggestions, and fatigue management
  */
 
-import { get, post, put } from '../../../api/request.js'
+import { get, post, put } from '../../api/request.js'
 
 // 恢复状态 API
 export const recoveryApi = {

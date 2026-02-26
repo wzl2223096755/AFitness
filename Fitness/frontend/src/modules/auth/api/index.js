@@ -4,7 +4,7 @@
  */
 
 // 从根 API 导入认证API
-import { authApi as sharedAuthApi } from '../../../api/auth.js'
+import { authApi as sharedAuthApi } from '../../api/auth.js'
 
 // 导出认证API
 export const authApi = sharedAuthApi
