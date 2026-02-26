@@ -3,7 +3,7 @@
  * Auth module Pinia store for authentication state management
  */
 import { defineStore } from 'pinia'
-import { authApi } from '../api'
+import { authApi } from '../../../api/auth.js'
 
 // 管理端前端URL
 const ADMIN_FRONTEND_URL = 'http://localhost:3002'
