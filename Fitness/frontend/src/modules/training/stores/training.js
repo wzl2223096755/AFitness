@@ -4,7 +4,6 @@
  */
 
 import { defineStore } from 'pinia'
-import { strengthTrainingApi, cardioTrainingApi, trainingSuggestionsApi } from '../api'
 import { fitnessApi } from '../../../api/fitness'
 
 export const useTrainingStore = defineStore('training', {
@@ -92,15 +91,13 @@ export const useTrainingStore = defineStore('training', {
       this.strengthError = null
       
       try {
-        const response = await strengthTrainingApi.getStrengthTrainingList(params)
-        this.strengthTrainingData = response.data?.content || response.data || []
-        if (response.data?.content) {
-          this.pagination = {
-            currentPage: response.data.currentPage,
-            pageSize: response.data.pageSize,
-            totalElements: response.data.totalElements,
-            totalPages: response.data.totalPages
-          }
+        const response = await fitnessApi.getTrainingRecords(params)
+        this.strengthTrainingData = response.data?.records?.filter(r => r.type === 'strength') || []
+        this.pagination = {
+          currentPage: 0,
+          pageSize: 20,
+          totalElements: this.strengthTrainingData.length,
+          totalPages: 1
         }
         return response
       } catch (error) {
@@ -116,7 +113,7 @@ export const useTrainingStore = defineStore('training', {
       this.strengthError = null
       
       try {
-        const response = await strengthTrainingApi.addStrengthTraining(data)
+        const response = await fitnessApi.createTrainingRecord({ ...data, type: 'strength' })
         this.strengthTrainingData.unshift(response.data)
         return response
       } catch (error) {
@@ -167,8 +164,8 @@ export const useTrainingStore = defineStore('training', {
       this.cardioError = null
       
       try {
-        const response = await cardioTrainingApi.getCardioTrainingData(params)
-        this.cardioTrainingData = response.data?.content || response.data || []
+        const response = await fitnessApi.getTrainingRecords(params)
+        this.cardioTrainingData = response.data?.records?.filter(r => r.type === 'cardio') || []
         return response
       } catch (error) {
         this.cardioError = error.message || '获取有氧训练数据失败'
@@ -183,7 +180,7 @@ export const useTrainingStore = defineStore('training', {
       this.cardioError = null
       
       try {
-        const response = await cardioTrainingApi.createCardioTrainingData(data)
+        const response = await fitnessApi.createTrainingRecord({ ...data, type: 'cardio' })
         this.cardioTrainingData.unshift(response.data)
         return response
       } catch (error) {

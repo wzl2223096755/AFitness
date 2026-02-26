@@ -195,7 +195,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { fitnessApi } from '../api'
+import { fitnessApi } from '../../../api/fitness'
 import { ElMessage } from 'element-plus'
 
 const router = useRouter()
@@ -298,32 +298,28 @@ const getRecoveryText = (score) => {
 const loadDashboardData = async () => {
   loading.value = true
   try {
-    // 获取指标概览
-    const metricsRes = await fitnessApi.getMetricsOverview('week')
-    if (metricsRes.data) {
+    // 获取仪表盘统计数据
+    const statsRes = await fitnessApi.getDashboardStats()
+    if (statsRes.data) {
       stats.value = {
-        weeklyTrainingCount: metricsRes.data.weeklyTrainingCount || 0,
-        weeklyChange: metricsRes.data.weeklyChange || 0,
-        totalVolume: metricsRes.data.totalVolume || 0,
-        recoveryScore: metricsRes.data.recoveryScore || 0,
-        goalCompletionRate: metricsRes.data.goalCompletionRate || 0
+        weeklyTrainingCount: statsRes.data.weeklyTrainingCount || 0,
+        weeklyChange: statsRes.data.weeklyChange || 0,
+        totalVolume: statsRes.data.totalVolume || 0,
+        recoveryScore: statsRes.data.recoveryScore || 0,
+        goalCompletionRate: statsRes.data.nutritionGoalProgress || 0
       }
       
       // 设置今日目标
-      if (metricsRes.data.goals && Array.isArray(metricsRes.data.goals)) {
-        todayGoals.value = metricsRes.data.goals
-      } else {
-        todayGoals.value = [
-          { id: 1, name: '训练次数', progress: stats.value.weeklyTrainingCount, target: 7 },
-          { id: 2, name: '训练量', progress: Math.min(stats.value.totalVolume, 15000), target: 15000 }
-        ]
-      }
+      todayGoals.value = [
+        { id: 1, name: '训练次数', progress: stats.value.weeklyTrainingCount, target: 7 },
+        { id: 2, name: '训练量', progress: Math.min(stats.value.totalVolume, 15000), target: 15000 }
+      ]
     }
 
     // 获取最近训练记录
-    const recordsRes = await fitnessApi.getRecentTrainingRecords()
-    if (recordsRes.data && Array.isArray(recordsRes.data)) {
-      recentRecords.value = recordsRes.data.slice(0, 6)
+    const recordsRes = await fitnessApi.getTrainingRecords()
+    if (recordsRes.data && Array.isArray(recordsRes.data.records)) {
+      recentRecords.value = recordsRes.data.records.slice(0, 6)
     }
   } catch (error) {
     console.error('加载仪表盘数据失败:', error)
