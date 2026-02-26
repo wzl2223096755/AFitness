@@ -150,15 +150,16 @@
             :class="`stagger-${index + 1}`"
             @click="navigateTo('/training-records')"
           >
-            <div class="record-date">{{ formatDate(record.trainingDate) }}</div>
-            <div class="record-name">{{ record.exerciseName }}</div>
+            <div class="record-date">{{ formatDate(record.date) }}</div>
+            <div class="record-name">{{ record.exercise }}</div>
             <div class="record-details">
-              <span class="detail-item">{{ record.weight }}kg</span>
-              <span class="detail-item">{{ record.sets }}组</span>
-              <span class="detail-item">{{ record.reps }}次</span>
+              <span v-if="record.weight" class="detail-item">{{ record.weight }}kg</span>
+              <span v-if="record.sets" class="detail-item">{{ record.sets }}组</span>
+              <span v-if="record.reps" class="detail-item">{{ record.reps }}次</span>
+              <span v-if="record.duration" class="detail-item">{{ record.duration }}分钟</span>
             </div>
-            <div class="record-volume">
-              训练量: {{ formatNumber(record.totalVolume) }}kg
+            <div class="record-volume" v-if="record.weight && record.sets && record.reps">
+              训练量: {{ formatNumber(record.weight * record.sets * record.reps) }}kg
             </div>
           </div>
         </div>
