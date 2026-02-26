@@ -151,7 +151,7 @@ export const useThemeStore = defineStore('theme', () => {
   
   // 设置自定义颜色
   const setCustomColor = (colorKey, colorValue) => {
-    if (customColors.value.hasOwnProperty(colorKey)) {
+    if (Object.prototype.hasOwnProperty.call(customColors.value, colorKey)) {
       customColors.value[colorKey] = colorValue
       useCustomTheme.value = true
       applyTheme()
