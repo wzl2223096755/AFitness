@@ -129,7 +129,7 @@ export const useTrainingStore = defineStore('training', {
       this.strengthError = null
       
       try {
-        const response = await strengthTrainingApi.updateStrengthTraining(id, data)
+        const response = await fitnessApi.updateTrainingRecord(id, data)
         const index = this.strengthTrainingData.findIndex(item => item.id === id)
         if (index !== -1) {
           this.strengthTrainingData[index] = response.data
@@ -148,7 +148,7 @@ export const useTrainingStore = defineStore('training', {
       this.strengthError = null
       
       try {
-        await strengthTrainingApi.deleteStrengthTraining(id)
+        await fitnessApi.deleteTrainingRecord(id)
         this.strengthTrainingData = this.strengthTrainingData.filter(item => item.id !== id)
       } catch (error) {
         this.strengthError = error.message || '删除力量训练数据失败'
@@ -221,7 +221,7 @@ export const useTrainingStore = defineStore('training', {
     async fetchTrainingSuggestions() {
       this.recoveryLoading = true
       try {
-        const response = await trainingSuggestionsApi.getTrainingSuggestions()
+        const response = await fitnessApi.getTrainingSuggestions()
         return response
       } catch (error) {
         this.recoveryError = error.message
@@ -250,7 +250,7 @@ export const useTrainingStore = defineStore('training', {
       this.statsError = null
       
       try {
-        const response = await strengthTrainingApi.getMaxWeightStats(params)
+        const response = await fitnessApi.getDashboardStats(params)
         this.trainingStats = response.data
         return response
       } catch (error) {

@@ -137,5 +137,53 @@ export const fitnessApi = {
         nutritionGoalProgress: 85
       }
     }
+  },
+
+  // 更新训练记录
+  async updateTrainingRecord(id, data) {
+    await new Promise(resolve => setTimeout(resolve, 300))
+    return {
+      code: 200,
+      data: { id, ...data },
+      message: '训练记录更新成功'
+    }
+  },
+
+  // 删除训练记录
+  async deleteTrainingRecord(id) {
+    await new Promise(resolve => setTimeout(resolve, 300))
+    return {
+      code: 200,
+      message: '训练记录删除成功'
+    }
+  },
+
+  // 获取训练建议
+  async getTrainingSuggestions() {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return {
+      code: 200,
+      data: [
+        { id: 1, type: 'strength', suggestion: '建议增加深蹲重量，当前强度偏低' },
+        { id: 2, type: 'cardio', suggestion: '有氧训练表现良好，可适当增加时长' },
+        { id: 3, type: 'recovery', suggestion: '注意休息，建议增加睡眠时间' }
+      ]
+    }
+  },
+
+  // 获取负荷趋势
+  async getLoadTrend(params = {}) {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return {
+      code: 200,
+      data: [
+        { date: '2024-01-10', load: 1200 },
+        { date: '2024-01-11', load: 1400 },
+        { date: '2024-01-12', load: 1100 },
+        { date: '2024-01-13', load: 1600 },
+        { date: '2024-01-14', load: 1300 },
+        { date: '2024-01-15', load: 1500 }
+      ]
+    }
   }
 }
