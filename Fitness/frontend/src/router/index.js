@@ -93,13 +93,9 @@ router.beforeEach((to, from, next) => {
     return
   }
   
-  // 2. 已登录用户访问登录页，根据角色跳转
+  // 2. 已登录用户访问登录页，统一跳转到仪表盘
   if (to.path === '/login' && token && isLoggedIn) {
-    if (isAdmin) {
-      next('/admin/dashboard')
-    } else {
-      next('/dashboard')
-    }
+    next('/dashboard')
     return
   }
   

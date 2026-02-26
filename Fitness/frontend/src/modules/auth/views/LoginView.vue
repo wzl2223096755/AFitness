@@ -207,13 +207,9 @@ const handleLogin = async () => {
     if (result.success) {
       ElMessage.success('登录成功！')
       
-      // 根据角色跳转到不同界面
+      // 统一跳转到仪表盘
       setTimeout(() => {
-        if (result.isAdmin) {
-          router.push('/dashboard')
-        } else {
-          router.push('/dashboard')
-        }
+        router.push('/dashboard')
       }, 500)
     } else {
       ElMessage.error(result.message || '登录失败')
