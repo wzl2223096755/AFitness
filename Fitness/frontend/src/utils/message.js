@@ -1,5 +1,5 @@
 /**
  * 用户端消息系统
- * 从共享模块重新导出，保持向后兼容
+ * 直接使用 Element Plus 消息组件
  */
-export * from '@shared/utils/message.js'
+export { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
