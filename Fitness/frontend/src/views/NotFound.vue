@@ -134,7 +134,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from '../utils/message.js'
+import { ElMessage } from 'element-plus'
 
 // 路由
 const router = useRouter()
