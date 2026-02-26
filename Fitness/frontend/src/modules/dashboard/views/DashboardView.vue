@@ -300,6 +300,8 @@ const loadDashboardData = async () => {
   try {
     // 获取仪表盘统计数据
     const statsRes = await fitnessApi.getDashboardStats()
+    console.log('Dashboard stats response:', statsRes)
+    
     if (statsRes.data) {
       stats.value = {
         weeklyTrainingCount: statsRes.data.weeklyTrainingCount || 0,
@@ -318,9 +320,15 @@ const loadDashboardData = async () => {
 
     // 获取最近训练记录
     const recordsRes = await fitnessApi.getTrainingRecords()
-    if (recordsRes.data && Array.isArray(recordsRes.data.records)) {
+    console.log('Training records response:', recordsRes)
+    
+    if (recordsRes.data && recordsRes.data.records && Array.isArray(recordsRes.data.records)) {
       recentRecords.value = recordsRes.data.records.slice(0, 6)
+    } else if (recordsRes.data && Array.isArray(recordsRes.data)) {
+      recentRecords.value = recordsRes.data.slice(0, 6)
     }
+    
+    console.log('Final recentRecords:', recentRecords.value)
   } catch (error) {
     console.error('加载仪表盘数据失败:', error)
     ElMessage.error('加载数据失败，请刷新重试')
