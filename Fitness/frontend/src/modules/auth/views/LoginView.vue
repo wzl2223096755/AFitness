@@ -135,10 +135,8 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from '@/utils/message.js'
+import { ElMessage } from 'element-plus'
 import { useAuthStore } from '../stores/auth'
-import RegisterModal from '../components/RegisterModal.vue'
-import ForgotPasswordModal from '../components/ForgotPasswordModal.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -208,7 +206,7 @@ const handleLogin = async () => {
       // 根据角色跳转到不同界面
       setTimeout(() => {
         if (result.isAdmin) {
-          router.push('/admin/dashboard')
+          router.push('/dashboard')
         } else {
           router.push('/dashboard')
         }
