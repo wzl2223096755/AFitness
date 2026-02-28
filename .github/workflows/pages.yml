@@ -47,10 +47,11 @@ jobs:
         env:
           GITHUB_PAGES: 'true'
           GITHUB_REPOSITORY: ${{ github.repository }}
-          NODE_ENV: 'production'
+          NODE_ENV: 'development'  # 使用开发模式保留console.log
         run: |
           echo "Building for repository: $GITHUB_REPOSITORY"
           echo "Base path will be: /$(basename $GITHUB_REPOSITORY)/"
+          echo "Building in DEBUG mode to diagnose display issues..."
           npm run build
 
       - name: Check build output
