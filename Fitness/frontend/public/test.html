@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFitness - 测试页面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #0a0a1a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .test-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0 0 20px 0;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .status {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #10b981;
+        }
+        .error {
+            color: #ef4444;
+        }
+        .info {
+            color: #6366f1;
+        }
+        button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="logo">🏋️</div>
+        <h1>AFitness</h1>
+        <p class="status success">✅ HTML页面加载成功</p>
+        <p class="status info">📱 GitHub Pages部署正常</p>
+        <p class="status" id="js-status">⏳ 检查JavaScript...</p>
+        <p class="status" id="vue-status">⏳ 检查Vue应用...</p>
+        
+        <button onclick="testBasicJS()">测试基础JavaScript</button>
+        <button onclick="testVueLoad()">测试Vue加载</button>
+        <button onclick="goToApp()">访问主应用</button>
+        
+        <div id="debug-info" style="margin-top: 20px; text-align: left; font-size: 14px;"></div>
+    </div>
+
+    <script>
+        // 基础JavaScript测试
+        function testBasicJS() {
+            try {
+                const test = 'JavaScript正常工作';
+                document.getElementById('js-status').innerHTML = `<span class="success">✅ ${test}</span>`;
+                return true;
+            } catch (error) {
+                document.getElementById('js-status').innerHTML = `<span class="error">❌ JavaScript错误: ${error.message}</span>`;
+                return false;
+            }
+        }
+
+        // 测试Vue加载
+        function testVueLoad() {
+            const vueStatus = document.getElementById('vue-status');
+            
+            // 检查是否能加载Vue模块
+            fetch('/AFitness/assets/js/index-960c420f.js')
+                .then(response => {
+                    if (response.ok) {
+                        vueStatus.innerHTML = '<span class="success">✅ Vue应用文件可访问</span>';
+                        return response.text();
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                })
+                .then(content => {
+                    if (content.includes('createApp')) {
+                        vueStatus.innerHTML = '<span class="success">✅ Vue应用代码正常</span>';
+                    } else {
+                        vueStatus.innerHTML = '<span class="error">❌ Vue应用代码异常</span>';
+                    }
+                })
+                .catch(error => {
+                    vueStatus.innerHTML = `<span class="error">❌ Vue加载失败: ${error.message}</span>`;
+                });
+        }
+
+        // 访问主应用
+        function goToApp() {
+            window.location.href = '/AFitness/';
+        }
+
+        // 页面加载时自动测试
+        window.addEventListener('DOMContentLoaded', () => {
+            testBasicJS();
+            
+            // 显示调试信息
+            const debugInfo = document.getElementById('debug-info');
+            debugInfo.innerHTML = `
+                <h3>🔍 调试信息</h3>
+                <p><strong>当前URL:</strong> ${window.location.href}</p>
+                <p><strong>用户代理:</strong> ${navigator.userAgent}</p>
+                <p><strong>时间:</strong> ${new Date().toLocaleString()}</p>
+                <p><strong>支持ES6模块:</strong> ${'noModule' in HTMLScriptElement.prototype ? '否' : '是'}</p>
+                <p><strong>在线状态:</strong> ${navigator.onLine ? '在线' : '离线'}</p>
+            `;
+            
+            // 自动测试Vue
+            setTimeout(testVueLoad, 1000);
+        });
+    </script>
+</body>
+</html>
