@@ -1,480 +1,176 @@
 <template>
-
   <div class="login-page">
-
-    <!-- 科技感背景 -->
-
-    <div class="cyber-background">
-
-      <div class="grid-lines"></div>
-
-      <div class="glow-orbs">
-
-        <div class="orb orb-1"></div>
-
-        <div class="orb orb-2"></div>
-
-        <div class="orb orb-3"></div>
-
-      </div>
-
-      <div class="scan-line"></div>
-
+    <!-- 简化背景 -->
+    <div class="background">
+      <div class="gradient-bg"></div>
     </div>
 
-
-
-    <!-- 登录卡片 -->
-
+    <!-- 登录容器 -->
     <div class="login-container">
-
-      <div class="login-card" :class="{ 'shake': hasError }">
-
-        <!-- Logo 区域 -->
-
+      <div class="login-card">
+        <!-- Logo区域 -->
         <div class="logo-section">
-
-          <div class="logo-icon">
-
-            <span class="icon-glow">🏋️</span>
-
-          </div>
-
+          <div class="logo-icon">🏋️</div>
           <h1 class="logo-text">AFitness</h1>
-
-          <p class="logo-subtitle">智能健身数据管理系统</p>
-
+          <p class="logo-subtitle">智能健身管理系统</p>
         </div>
-
-
 
         <!-- 登录表单 -->
-
         <form @submit.prevent="handleLogin" class="login-form">
-
           <!-- 用户名输入 -->
-
           <div class="input-group">
-
-            <div class="input-icon">
-
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-
-                <circle cx="12" cy="7" r="4"/>
-
-              </svg>
-
-            </div>
-
             <input 
-
               type="text" 
-
               v-model="loginForm.username"
-
               placeholder="用户名"
-
               class="cyber-input"
-
               :class="{ 'has-error': errors.username }"
-
               @focus="clearError('username')"
-
               autocomplete="username"
-
             />
-
             <div class="input-border"></div>
-
           </div>
-
           <p v-if="errors.username" class="error-text">{{ errors.username }}</p>
 
-
-
           <!-- 密码输入 -->
-
           <div class="input-group">
-
-            <div class="input-icon">
-
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-
-              </svg>
-
-            </div>
-
             <input 
-
               :type="showPassword ? 'text' : 'password'"
-
               v-model="loginForm.password"
-
               placeholder="密码"
-
               class="cyber-input"
-
               :class="{ 'has-error': errors.password }"
-
               @focus="clearError('password')"
-
               @keyup.enter="handleLogin"
-
               autocomplete="current-password"
-
             />
-
             <button type="button" class="toggle-password" @click="showPassword = !showPassword">
-
-              <svg v-if="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-
-                <circle cx="12" cy="12" r="3"/>
-
-              </svg>
-
-              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-
-                <line x1="1" y1="1" x2="23" y2="23"/>
-
-              </svg>
-
+              <span v-if="!showPassword">👁️</span>
+              <span v-else>🙈</span>
             </button>
-
             <div class="input-border"></div>
-
           </div>
-
           <p v-if="errors.password" class="error-text">{{ errors.password }}</p>
 
-
-
           <!-- 记住我 -->
-
           <div class="options-row">
-
-            <label class="cyber-checkbox">
-
+            <label class="checkbox">
               <input type="checkbox" v-model="loginForm.rememberMe" />
-
-              <span class="checkmark"></span>
-
-              <span class="label-text">记住我</span>
-
+              <span>记住我</span>
             </label>
-
-            <a href="#" class="forgot-link" @click.prevent="showForgotPassword = true">忘记密码?</a>
-
           </div>
 
-
-
           <!-- 登录按钮 -->
-
-          <button type="submit" class="cyber-button" :disabled="loading">
-
-            <span class="button-content">
-
-              <span v-if="loading" class="loading-spinner"></span>
-
-              <span v-else>{{ loading ? '登录中...' : '登 录' }}</span>
-
-            </span>
-
-            <div class="button-glow"></div>
-
+          <button type="submit" class="login-button" :disabled="loading">
+            <span v-if="loading" class="loading-spinner">⏳</span>
+            <span v-else>{{ loading ? '登录中...' : '登 录' }}</span>
           </button>
-
         </form>
 
-
-
-        <!-- 注册链接 -->
-
-        <div class="register-section">
-
-          <span class="divider-text">还没有账号?</span>
-
-          <a href="#" class="register-link" @click.prevent="showRegister = true">立即注册</a>
-
+        <!-- 版本信息 -->
+        <div class="version-info">
+          <span>v2.0.0</span>
+          <span class="separator">|</span>
+          <span>© 2025 AFitness</span>
         </div>
-
-
-
-        <!-- 装饰角标 -->
-
-        <div class="corner corner-tl"></div>
-
-        <div class="corner corner-tr"></div>
-
-        <div class="corner corner-bl"></div>
-
-        <div class="corner corner-br"></div>
-
       </div>
-
-
-
-      <!-- 版本信息 -->
-
-      <div class="version-info">
-
-        <span>v2.0.0</span>
-
-        <span class="separator">|</span>
-
-        <span>© 2025 AFitness</span>
-
-      </div>
-
     </div>
-
-
-
-    <!-- 注册弹窗 -->
-
-    <RegisterModal 
-
-      v-model:visible="showRegister" 
-
-      @success="onRegisterSuccess"
-
-    />
-
-
-
-    <!-- 忘记密码弹窗 -->
-
-    <ForgotPasswordModal 
-
-      v-model:visible="showForgotPassword"
-
-    />
-
   </div>
-
 </template>
 
-
-
 <script setup>
-
 import { ref, reactive } from 'vue'
-
 import { useRouter } from 'vue-router'
-
 import { ElMessage } from 'element-plus'
-
 import { useAuthStore } from '../stores/auth'
 
-
-
 const router = useRouter()
-
 const authStore = useAuthStore()
 
-
-
 // 状态
-
 const loading = ref(false)
-
 const showPassword = ref(false)
-
-const showRegister = ref(false)
-
-const showForgotPassword = ref(false)
-
 const hasError = ref(false)
 
-
-
 // 表单数据
-
 const loginForm = reactive({
-
   username: '',
-
   password: '',
-
   rememberMe: false
-
 })
-
-
 
 const errors = reactive({
-
   username: '',
-
   password: ''
-
 })
 
-
-
 // 清除错误
-
 const clearError = (field) => {
-
   errors[field] = ''
-
   hasError.value = false
-
 }
-
-
 
 // 验证表单
-
 const validateForm = () => {
-
   let valid = true
-
   
-
   if (!loginForm.username) {
-
     errors.username = '请输入用户名'
-
     valid = false
-
   }
-
   
-
   if (!loginForm.password) {
-
     errors.password = '请输入密码'
-
     valid = false
-
   }
-
   
-
   if (!valid) {
-
     hasError.value = true
-
     setTimeout(() => hasError.value = false, 500)
-
   }
-
   
-
   return valid
-
 }
 
-
-
+// 处理登录
 const handleLogin = async () => {
-
   console.log('Login button clicked', loginForm)
-
-  if (!validateForm()) return
-
   
-
+  if (!validateForm()) return
+  
   try {
-
     loading.value = true
-
     console.log('Starting login process...')
-
     
-
     const result = await authStore.login({
-
       username: loginForm.username,
-
       password: loginForm.password,
-
       rememberMe: loginForm.rememberMe
-
     })
-
     
-
     console.log('Login result:', result)
-
     
-
     if (result.success) {
-
       ElMessage.success('登录成功！')
-
       
-
-      // 根据角色跳转到不同界面
-
       setTimeout(() => {
-
-        if (result.isAdmin) {
-
-          router.push('/dashboard')
-
-        } else {
-
-          router.push('/dashboard')
-
-        }
-
+        router.push('/dashboard')
       }, 500)
-
     } else {
-
       ElMessage.error(result.message || '登录失败')
-
       hasError.value = true
-
       setTimeout(() => hasError.value = false, 500)
-
     }
-
   } catch (error) {
-
     console.error('登录失败:', error)
-
-    ElMessage.error(error.response?.data?.message || '登录失败，请稍后重试')
-
+    ElMessage.error('登录失败，请稍后重试')
     hasError.value = true
-
     setTimeout(() => hasError.value = false, 500)
-
   } finally {
-
     loading.value = false
-
   }
-
 }
-
-
-
-const onRegisterSuccess = (username) => {
-
-  showRegister.value = false
-
-  loginForm.username = username
-
-}
-
 </script>
-
-
-
-
 
 <style scoped>
 
