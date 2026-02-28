@@ -4,7 +4,7 @@
  */
 
 import { defineStore } from 'pinia'
-import { fitnessApi } from '../../../api/fitness'
+import { fitnessApi } from '../../../api/fitness.js'
 
 export const useTrainingStore = defineStore('training', {
   state: () => ({

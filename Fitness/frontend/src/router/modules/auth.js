@@ -10,7 +10,7 @@ export const authRoutes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/modules/auth/views/LoginView.vue'),
+    component: () => import('../../modules/auth/views/LoginView.vue'),
     meta: {
       title: '登录',
       requiresAuth: false,

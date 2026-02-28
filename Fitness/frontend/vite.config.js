@@ -7,8 +7,16 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const repoName = process.env.GITHUB_REPOSITORY?.split('/')?.[1]
-const base = process.env.GITHUB_PAGES === 'true' && repoName ? `/${repoName}/` : '/'
+// GitHub Pages配置
+const repoName = process.env.GITHUB_REPOSITORY?.split('/')?.[1] || 'AFitness'
+const isGitHubPages = process.env.GITHUB_PAGES === 'true'
+const base = isGitHubPages ? `/${repoName}/` : '/'
+
+console.log(' Build Configuration:')
+console.log(`- Repository: ${process.env.GITHUB_REPOSITORY}`)
+console.log(`- GitHub Pages: ${isGitHubPages}`)
+console.log(`- Base path: ${base}`)
+console.log(`- Repo name: ${repoName}`)
 
 // Plugin to fix Element Plus and Vant module resolution issues
 function globalThisResolverPlugin() {
@@ -45,88 +53,90 @@ export default defineConfig({
       ],
       dts: 'src/components.d.ts',
     }),
-    // PWA配置
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.svg'],
-      manifest: {
-        name: '健身管理系统',
-        short_name: '健身助手',
-        description: '力量训练负荷与恢复监控系统',
-        theme_color: '#409EFF',
-        background_color: '#ffffff',
-        display: 'standalone',
-        start_url: base,
-        icons: [
-          {
-            src: 'pwa-192x192.svg',
-            sizes: '192x192',
-            type: 'image/svg+xml'
-          },
-          {
-            src: 'pwa-512x512.svg',
-            sizes: '512x512',
-            type: 'image/svg+xml'
-          },
-          {
-            src: 'pwa-512x512.svg',
-            sizes: '512x512',
-            type: 'image/svg+xml',
-            purpose: 'any maskable'
-          }
-        ]
-      },
-      workbox: {
-        // 缓存静态资源
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        // 运行时缓存策略
-        runtimeCaching: [
-          {
-            // API请求缓存 - NetworkFirst策略
-            urlPattern: /^https?:\/\/.*\/api\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 // 24小时
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              },
-              networkTimeoutSeconds: 10
+    // PWA配置 - 在GitHub Pages上禁用Service Worker
+    ...(isGitHubPages ? [] : [
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.svg'],
+        manifest: {
+          name: '健身管理系统',
+          short_name: '健身助手',
+          description: '力量训练负荷与恢复监控系统',
+          theme_color: '#409EFF',
+          background_color: '#ffffff',
+          display: 'standalone',
+          start_url: base,
+          icons: [
+            {
+              src: 'pwa-192x192.svg',
+              sizes: '192x192',
+              type: 'image/svg+xml'
+            },
+            {
+              src: 'pwa-512x512.svg',
+              sizes: '512x512',
+              type: 'image/svg+xml'
+            },
+            {
+              src: 'pwa-512x512.svg',
+              sizes: '512x512',
+              type: 'image/svg+xml',
+              purpose: 'any maskable'
             }
-          },
-          {
-            // 图片缓存 - CacheFirst策略
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'image-cache',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30 // 30天
+          ]
+        },
+        workbox: {
+          // 缓存静态资源
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+          // 运行时缓存策略
+          runtimeCaching: [
+            {
+              // API请求缓存 - NetworkFirst策略
+              urlPattern: /^https?:\/\/.*\/api\/.*/i,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-cache',
+                expiration: {
+                  maxEntries: 100,
+                  maxAgeSeconds: 60 * 60 * 24 // 24小时
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                },
+                networkTimeoutSeconds: 10
+              }
+            },
+            {
+              // 图片缓存 - CacheFirst策略
+              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'image-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24 * 30 // 30天
+                }
+              }
+            },
+            {
+              // 字体缓存 - CacheFirst策略
+              urlPattern: /\.(?:woff|woff2|ttf|eot)$/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'font-cache',
+                expiration: {
+                  maxEntries: 20,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // 1年
+                }
               }
             }
-          },
-          {
-            // 字体缓存 - CacheFirst策略
-            urlPattern: /\.(?:woff|woff2|ttf|eot)$/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'font-cache',
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1年
-              }
-            }
-          }
-        ]
-      },
-      devOptions: {
-        enabled: true // 开发环境启用PWA便于测试
-      }
-    }),
+          ]
+        },
+        devOptions: {
+          enabled: !isGitHubPages // 开发环境启用，GitHub Pages禁用
+        }
+      })
+    ]),
   ],
   resolve: {
     alias: {
@@ -138,6 +148,9 @@ export default defineConfig({
   },
   define: {
     global: 'globalThis',
+    // GitHub Pages环境变量
+    __GITHUB_PAGES__: isGitHubPages,
+    __BASE_PATH__: JSON.stringify(base)
   },
   server: {
     host: '0.0.0.0',
@@ -158,11 +171,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
+    sourcemap: false, // GitHub Pages不需要sourcemap
+    minify: 'terser',
+    target: 'es2015',
     // 启用CSS代码分割
     cssCodeSplit: true,
     // 资源内联阈值（小于4KB的资源内联为base64）
     assetsInlineLimit: 4096,
+    // 构建优化
     rollupOptions: {
       output: {
         // 优化代码分割策略
@@ -189,66 +205,65 @@ export default defineConfig({
           if (id.includes('node_modules/vant')) {
             return 'vant'
           }
-          // 工具库 - 首屏必需
-          if (id.includes('node_modules/axios') || 
+          // 工具库
+          if (id.includes('node_modules/axios') ||
               id.includes('node_modules/dayjs') ||
-              id.includes('node_modules/lodash-es')) {
+              id.includes('node_modules/lodash')) {
             return 'utils'
           }
         },
-        // 优化chunk文件名
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
+        // 文件命名优化
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk'
+          return `js/[name]-[hash].js`
+        },
+        entryFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
-          // 根据文件类型分类存放
           const info = assetInfo.name.split('.')
           const ext = info[info.length - 1]
-          
-          // 图片资源
-          if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
-            return 'assets/images/[name]-[hash].[ext]'
+          if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)) {
+            return `media/[name]-[hash].[ext]`
           }
-          // 字体资源
-          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name)) {
-            return 'assets/fonts/[name]-[hash].[ext]'
+          if (/\.(png|jpe?g|gif|svg|webp|avif)(\?.*)?$/i.test(assetInfo.name)) {
+            return `images/[name]-[hash].[ext]`
           }
-          // CSS资源
-          if (/\.css$/i.test(assetInfo.name)) {
-            return 'assets/css/[name]-[hash].[ext]'
+          if (/\.(woff2?|eot|ttf|otf)(\?.*)?$/i.test(assetInfo.name)) {
+            return `fonts/[name]-[hash].[ext]`
           }
-          // 其他资源
-          return 'assets/[ext]/[name]-[hash].[ext]'
+          return `${ext}/[name]-[hash].[ext]`
         }
       }
     },
-    chunkSizeWarningLimit: 1000,
-    // 压缩选项
-    minify: 'terser',
+    // 压缩配置
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true
+        drop_console: true, // 移除console.log
+        drop_debugger: true, // 移除debugger
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
+      },
+      mangle: {
+        safari10: true
       }
     }
   },
-  optimizeDeps: {
-    include: [
-      'vue', 
-      'vue-router', 
-      'pinia', 
-      'axios', 
-      'dayjs', 
-      'echarts',
-      'vue-echarts',
-      'lodash-es'
-    ]
-  },
-  // CSS预处理器选项
+  // CSS预处理器配置
   css: {
     preprocessorOptions: {
       scss: {
         additionalData: `@use "@/assets/styles/variables.scss" as *;`
       }
     }
+  },
+  // 依赖优化
+  optimizeDeps: {
+    include: [
+      'vue',
+      'vue-router',
+      'pinia',
+      'axios',
+      'element-plus',
+      'vant'
+    ],
+    exclude: ['@shared']
   }
 })

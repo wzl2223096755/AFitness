@@ -10,7 +10,7 @@ export const dashboardRoutes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('@/modules/dashboard/views/DashboardView.vue'),
+    component: () => import('../../modules/dashboard/views/DashboardView.vue'),
     meta: {
       title: '仪表盘',
       requiresAuth: true,
@@ -22,7 +22,7 @@ export const dashboardRoutes = [
   {
     path: '/mobile-dashboard',
     name: 'MobileDashboard',
-    component: () => import('@/views/MobileDashboard.vue'),
+    component: () => import('../../views/MobileDashboard.vue'),
     meta: {
       title: '用户数据看板',
       requiresAuth: true,
