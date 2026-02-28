@@ -6,7 +6,8 @@
   "author": "AFitness Team",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --mode development",
+    "build:prod": "vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .vue,.js,.jsx,.ts,.tsx --fix --ignore-pattern \"**/*.d.ts\" --ignore-pattern \"**/*.test.*\" --ignore-pattern \"**/*.spec.*\" --ignore-pattern \"**/*.pbt.*\"",
     "test:unit": "vitest --run",

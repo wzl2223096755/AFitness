@@ -37,6 +37,18 @@ function globalThisResolverPlugin() {
 
 export default defineConfig({
   base,
+  // 在开发模式下使用简化的入口文件
+  ...(process.env.NODE_ENV === 'development' ? {
+    build: {
+      rollupOptions: {
+        input: {
+          main: resolve(__dirname, 'index.html'),
+          // 使用简化的入口文件进行调试
+          simple: resolve(__dirname, 'src/main-simple.js')
+        }
+      }
+    }
+  } : {}),
   plugins: [
     globalThisResolverPlugin(),
     vue(),
@@ -237,9 +249,9 @@ export default defineConfig({
     // 压缩配置
     terserOptions: {
       compress: {
-        drop_console: true, // 移除console.log
-        drop_debugger: true, // 移除debugger
-        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
+        drop_console: false, // 保留console.log用于调试
+        drop_debugger: false, // 保留debugger
+        pure_funcs: [] // 不移除任何console函数
       },
       mangle: {
         safari10: true
